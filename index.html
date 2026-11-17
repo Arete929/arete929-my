@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.5.0 — 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.5.1 — 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -263,6 +263,9 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 .lhead .lab{font-size:13px;color:var(--sub)}
 .grp{margin:0 0 18px}
 .grp h2{font-size:21px;margin:0 0 7px;display:flex;align-items:baseline;gap:8px}
+.grp h2.gc{color:var(--c);border-left:6px solid var(--c);padding-left:10px}
+.grp h3.sub{margin:12px 0 5px;font-size:13.5px;font-weight:700;color:var(--c);border-left:4px solid var(--c);padding-left:8px;display:flex;align-items:baseline;gap:6px}
+.grp h3.sub small{font-weight:400;color:var(--sub);font-size:12px}
 .grp h2 small{font-family:Pretendard;font-size:12.5px;color:var(--sub)}
 .lrow{--c:#555;display:grid;grid-template-columns:minmax(0,1.7fr) 92px 92px 150px 128px;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:6px;padding:6px 8px 6px 10px;margin-bottom:5px}
 .lrow.priv{background:#f6f3ec}
@@ -372,8 +375,8 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.5.0',
-  deployed:'2026-11-17 15:53'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.5.1',
+  deployed:'2026-11-17 15:55'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -397,7 +400,7 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const okUrl=u=>/^https?:\/\//i.test(String(u||''));
 const main=$('#map');
-let STATE=null, CATS=[], TOK='', SETUP='', V='d', VIEW='map', GUEST=false, FILTER='all', OPEN_AR=false, GROUP='pub', LOG=[];
+let STATE=null, CATS=[], TOK='', SETUP='', V='d', VIEW='map', GUEST=false, FILTER='all', OPEN_AR=false, GROUP='cat', LOG=[];
 
 /* ── 학기 ── */
 const _d=new Date(), NY=_d.getFullYear()%100, NM=_d.getMonth()+1;
@@ -763,12 +766,18 @@ function layList(){
   const all=CATS.filter(c=>c.k!=='ar').flatMap(c=>vis(c));
   const ar=GUEST?[]:STATE.apps.filter(a=>a.arch);
   const cl=a=>okUrl(a.gas), gh=a=>okUrl(a.git);
-  const groups=(GROUP==='pub'
+  const groups=(GROUP==='cat'
+    ?CATS.filter(c=>c.k!=='ar'&&vis(c).length).map(c=>[c.n,vis(c),c])
+    :GROUP==='pub'
     ?[['공개',all.filter(a=>a.pub)],['비공개',all.filter(a=>!a.pub)]]
     :[['clasp · GitHub 둘 다',all.filter(a=>cl(a)&&gh(a))],['clasp만 (GitHub 주소 없음)',all.filter(a=>cl(a)&&!gh(a))],['GitHub만',all.filter(a=>!cl(a)&&gh(a))],['둘 다 없음 (바로가기 등)',all.filter(a=>!cl(a)&&!gh(a))]]).concat([['지난 앱',ar]]);
   const bd=a=>`<span class="bdg">${cl(a)?`<a class="bd" href="${esc(a.gas)}" target="_blank" rel="noopener" title="Apps Script 편집기 열기"><b>clasp</b></a>`:'<span class="bd no"><b>clasp</b></span>'}${gh(a)?`<a class="bd" href="${esc(a.git)}" target="_blank" rel="noopener" title="GitHub 열기"><b>GitHub</b></a>`:'<span class="bd no"><b>GitHub</b></span>'}</span>`;
   const row=a=>`<div class="lrow ${a.pub?'pub':'priv'}" style="--c:${a.cat.c}" data-tid="${a.id}">${nm(a)}<span class="cat">${esc(a.arch?a.tab:a.cat.n)}${a.feed?'<span class="tag2" title="혜원이지·혜원폰 바로가기에 나가는 항목">바로가기 공유</span>':''}${bd(a)}</span>${sw(a)||'<span></span>'}${bd(a)}<span class="lk">${links(a).replace(/^<span class="lk">|<\/span>$/g,'')}${GUEST?'':`<button class="ebtn" data-edit="${a.id}">고치기</button>`}</span></div>`;
-  return `<div class="lhead"><span class="lab">묶어 보기</span><div class="seg" id="grp"><button data-g="pub"${GROUP==='pub'?' class="on"':''}>공개 · 비공개</button><button data-g="src"${GROUP==='src'?' class="on"':''}>clasp · GitHub</button></div>${GUEST?'':'<button class="setbtn" data-add style="margin-left:auto">앱 추가</button>'}</div>${groups.filter(g=>g[1].length).map(g=>`<section class="grp"><h2 class="dh">${g[0]} <small>${g[1].length}개</small></h2>${g[1].map(row).join('')}</section>`).join('')}`;
+  /* 묶음(다리)별: 묶음마다 큰 제목, 다른 묶어 보기에서는 묶음마다 작은 소제목으로 나눈다 */
+  const sub=l=>CATS.filter(c=>c.k!=='ar').map(c=>[c,l.filter(a=>a.cat===c)]).filter(x=>x[1].length).map(([c,m])=>`<h3 class="sub" style="--c:${c.c}">${esc(c.n)} <small>${m.length}개</small></h3>${m.map(row).join('')}`).join('');
+  const body=g=>g[2]?g[1].map(row).join(''):(g[0]==='지난 앱'?g[1].map(row).join(''):sub(g[1]));
+  const gh2=g=>g[2]?`<h2 class="dh gc" style="--c:${g[2].c}">${esc(g[0])} <small>${g[1].length}개 · 공개 ${g[1].filter(a=>a.pub).length}</small></h2>`:`<h2 class="dh">${g[0]} <small>${g[1].length}개</small></h2>`;
+  return `<div class="lhead"><span class="lab">묶어 보기</span><div class="seg" id="grp"><button data-g="cat"${GROUP==='cat'?' class="on"':''}>묶음(다리)별</button><button data-g="pub"${GROUP==='pub'?' class="on"':''}>공개 · 비공개</button><button data-g="src"${GROUP==='src'?' class="on"':''}>clasp · GitHub</button></div>${GUEST?'':'<button class="setbtn" data-add style="margin-left:auto">앱 추가</button>'}</div>${groups.filter(g=>g[1].length).map(g=>`<section class="grp">${gh2(g)}${body(g)}</section>`).join('')}`;
 }
 
 /* ── 연결선 ── */

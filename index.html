@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.4.1 — 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.5.0 — 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -151,6 +151,7 @@ main.dim .tile.x{opacity:.2}
 body:not(.guest) .d-hub,body:not(.guest) .chip{cursor:grab;touch-action:none}
 body:not(.guest) .d-hub.dragging,body:not(.guest) .chip.dragging{cursor:grabbing;z-index:6;box-shadow:0 8px 20px rgba(0,0,0,.2)}
 .dragging *{pointer-events:none}
+.fnote{display:block;font-size:11px;color:var(--sub);margin-top:2px;white-space:nowrap}
 .d-hub.drop{box-shadow:0 0 0 5px color-mix(in srgb,var(--c) 35%,transparent);background:color-mix(in srgb,var(--c) 14%,var(--card))}
 .br.drop,.isl.drop{outline:3px dashed var(--c);outline-offset:4px}
 @media (min-width:1100px){
@@ -371,8 +372,8 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.4.1',
-  deployed:'2026-11-17 15:46'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.5.0',
+  deployed:'2026-11-17 15:53'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -442,12 +443,16 @@ const nm=a=>okUrl(a.u)?`<a class="nm" href="${esc(a.u)}" target="_blank" rel="no
 function tile(a,c,row,extra){
   return `<div class="tile${row?' row':''} ${a.pub?'pub':'priv'}${extra||''}" style="--c:${c.c}" data-tid="${a.id}">${nm(a)}<div class="ctl">${sw(a)}${links(a)}</div></div>`;
 }
+/* 접기: 이름표를 두 번 누르면 그 묶음의 앱이 접혔다 펴진다(이 기기에 기억) */
+let FOLD={}; try{FOLD=JSON.parse(localStorage.getItem('my-fold')||'{}')||{}}catch(e){FOLD={}}
+const isFold=c=>c.k!=='ar'&&!!FOLD[c.n];
 function kids(c,row){
   const L=vis(c);
+  if(isFold(c)) return '';
   if(c.k==='ar'&&!OPEN_AR) return `<button class="more" style="--c:${c.c}" data-more>지난 앱 ${L.length}개 펼치기</button>`;
   return L.map(a=>tile(a,c,row)).join('')+(c.k==='ar'?`<button class="more" style="--c:${c.c}" data-more>지난 앱 접기</button>`:'');
 }
-const hubTxt=c=>`<b class="dh hubt">${esc(c.n)}</b><small class="hubn" data-hub="${c.k}"></small>`;
+const hubTxt=c=>`<b class="dh hubt">${esc(c.n)}</b><small class="hubn" data-hub="${c.k}"></small>${isFold(c)?`<small class="fnote">접힘 · 두 번 누르면 펼쳐요</small>`:''}`;
 const rootHTML=()=>`<div class="root"><span class="dom">my.arete929.kr</span><b class="dh">내 앱 지도</b><span class="cnt" data-root></span></div>`;
 const weight=c=>(c.k==='ar'&&!OPEN_AR?1:vis(c).length)+1.6;
 
@@ -468,7 +473,7 @@ function layB(){
 /* 원형 방사 */
 const chip=(a,c)=>`<div class="chip ${a.pub?'pub':'priv'}" style="--c:${c.c}" data-tid="${a.id}" data-cat="${c.k}">${sw(a)}<button class="cn" data-pop="${a.id}" title="${esc(a.n)}">${esc(a.n)}</button></div>`;
 function layD(){
-  return `<div class="d-stage">${rootHTML()}${visCats().map(c=>`<div class="d-hub" style="--c:${c.c}" data-k="${c.k}">${hubTxt(c)}</div>`+(c.k==='ar'&&!OPEN_AR?`<button class="chip more" style="--c:${c.c}" data-more data-cat="ar">지난 앱 ${vis(c).length}개 펼치기</button>`:vis(c).map(a=>chip(a,c)).join(''))).join('')}<svg class="wires"></svg></div>`;
+  return `<div class="d-stage">${rootHTML()}${visCats().map(c=>`<div class="d-hub" style="--c:${c.c}" data-k="${c.k}">${hubTxt(c)}</div>`+(isFold(c)?'':c.k==='ar'&&!OPEN_AR?`<button class="chip more" style="--c:${c.c}" data-more data-cat="ar">지난 앱 ${vis(c).length}개 펼치기</button>`:vis(c).map(a=>chip(a,c)).join(''))).join('')}<svg class="wires"></svg></div>`;
 }
 function placeD(){
   const st=main.querySelector('.d-stage'); if(!st) return;
@@ -691,6 +696,15 @@ function endDrag(e){
 }
 document.addEventListener('pointerup',endDrag); document.addEventListener('pointercancel',endDrag);
 document.addEventListener('click',e=>{ if(NOCLICK){e.stopPropagation();e.preventDefault()} },true);
+document.addEventListener('dblclick',e=>{
+  if(VIEW!=='map'||!e.target.closest('main')) return;
+  const h=e.target.closest('.d-hub,.hub,.ih,.e-hub'); if(!h) return;
+  const c=CATS.find(x=>x.k===(h.closest('[data-k]')||{dataset:{}}).dataset.k); if(!c||c.k==='ar') return;
+  e.preventDefault(); getSelection().removeAllRanges();
+  if(FOLD[c.n]) delete FOLD[c.n]; else FOLD[c.n]=1;
+  try{localStorage.setItem('my-fold',JSON.stringify(FOLD))}catch(_){ }
+  render(); toast(FOLD[c.n]?`«${c.n}» 접었어요 (이름표를 두 번 누르면 펼쳐요)`:`«${c.n}» 펼쳤어요`);
+});
 function resetPos(){ POS={}; savePos('가지 위치 처음대로'); if(VIEW==='map') post() }
 /* 빈 곳을 마우스로 끌면 화면이 이동(손바닥 끌기). 가로는 main 스크롤, 세로는 페이지 스크롤. 터치는 원래 스크롤에 맡긴다 */
 let PAN=null;

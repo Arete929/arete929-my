@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.6.0 — 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.7.0 — 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -157,6 +157,16 @@ body:not(.guest) .d-hub.dragging,body:not(.guest) .d-sub.dragging,body:not(.gues
 .d-sub .hubn{display:inline;margin-left:6px;font-size:11px}
 .d-sub.l3{padding:2px 10px;background:color-mix(in srgb,var(--c) 7%,var(--card));border-width:1.5px}
 .d-sub.l3 .hubt{font-size:13px}
+.mm{position:fixed;z-index:40;display:flex;gap:4px;background:var(--card);border:1.5px solid var(--ink);border-radius:10px;padding:5px;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.mm[hidden]{display:none}
+.mm button{border:0;background:#f1ece0;border-radius:7px;padding:8px 11px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--ink)}
+.mm button:hover{background:#e3dac6}
+.mm .dg{color:#b5502f}
+.mm-in{position:fixed;z-index:60;font:inherit;font-size:16px;font-weight:700;padding:7px 11px;border:2px solid var(--ink);border-radius:8px;background:#fff;color:var(--ink);outline:none;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.sel{outline:3px solid #1a73e8;outline-offset:3px}
+.root.drop{box-shadow:0 0 0 7px rgba(47,122,85,.45)}
+.dli{width:15px;height:15px;vertical-align:-3px;margin-right:5px;flex:none;display:inline-block}
+.grp h2 .dli{width:20px;height:20px;vertical-align:-3px;margin-right:2px}
 .fnote.in{display:inline;margin:0 0 0 6px}
 .grp h3.sub.d2{margin-left:18px;font-size:13px}.grp h3.sub.d3{margin-left:36px;font-size:12.5px}.grp h3.sub.d4{margin-left:54px;font-size:12.5px}
 .fnote{display:block;font-size:11px;color:var(--sub);margin-top:2px;white-space:nowrap}
@@ -378,14 +388,16 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 <main id="map"><div class="wait">불러오는 중…</div></main>
 <footer class="foot"><div id="footLine"></div><div>ⓒKIMJINHO</div></footer>
 <div class="zoom" id="zoom" hidden><button data-z="-" title="축소" aria-label="축소">−</button><button class="zv" data-z="1" title="100%로 되돌리기">100%</button><button data-z="+" title="확대" aria-label="확대">+</button><button class="zf" data-z="fit" title="한눈에 보이게 맞추기">맞춤</button></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="dl" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11.2" fill="#2f7a55"/><circle cx="4.9" cy="12" r="1.9" fill="#fff"/><path d="M5 12H11.4" stroke="#fff" stroke-width="1.9" stroke-linecap="round" fill="none"/><circle cx="16.3" cy="12" r="4.9" fill="none" stroke="#fff" stroke-width="1.6"/><ellipse cx="16.3" cy="12" rx="2" ry="4.9" fill="none" stroke="#fff" stroke-width="1.2"/></symbol></defs></svg>
+<div class="mm" id="mm" hidden></div>
 <div class="toast" id="toast"></div>
 <script>
 /* ── 여기만 고치면 됩니다 ───────────────────────────── */
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.6.0',
-  deployed:'2026-11-17 16:12'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.7.0',
+  deployed:'2026-11-17 17:08'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -431,15 +443,16 @@ function build(){
   STATE.apps.forEach((a,i)=>{a.tab=normTab(a.tab)||a.tab;a.id='a'+i;a.t=termOf(a);a.arch=!!a.hidden||+a.t.slice(0,2)<SCHOOL_Y;a.cat=null;a.home=null});
   const names=[]; (STATE.cats||[]).concat(STATE.apps.map(a=>a.tab)).forEach(n=>{n=normTab(n); if(n&&names.indexOf(n)<0)names.push(n)});
   const rootIdx={}; let ri=0;   /* 색은 «가장 큰 다리» 이름으로 — 같은 큰 다리 아래 중간 다리는 같은 색 */
-  const all=names.map((n,i)=>{const r=n.split(' / ')[0]; if(!(r in rootIdx)) rootIdx[r]=ri++; return {k:'c'+i,n,c:PAL[rootIdx[r]%PAL.length],apps:STATE.apps.filter(a=>!a.arch&&a.tab===n)}});
-  CATS=all.filter(c=>c.apps.length);
+  const exp=new Set((STATE.cats||[]).map(normTab).filter(Boolean));   /* 앱이 하나도 안 쓰는 가지(빈 가지)는 목록에 이름만 있다 */
+  const all=names.map((n,i)=>{const r=n.split(' / ')[0]; if(!(r in rootIdx)) rootIdx[r]=ri++; return {k:'c'+i,n,c:PAL[rootIdx[r]%PAL.length],apps:STATE.apps.filter(a=>!a.arch&&a.tab===n),explicit:exp.has(n)&&!STATE.apps.some(a=>a.tab===n)}});
+  CATS=all.filter(c=>c.apps.length||c.explicit);
   CATS.forEach(c=>c.apps.forEach(a=>{a.cat=c}));
   const ar=STATE.apps.filter(a=>a.arch);
   if(ar.length){const c={k:'ar',n:'지난 앱',c:AR_COLOR,apps:ar};ar.forEach(a=>{a.cat=c;a.home=CATS.find(x=>x.n===a.tab)||null});CATS.push(c)}
   if(LAYS.some(l=>l[0]===STATE.layout)) V=STATE.layout;
 }
 const vis=c=>GUEST?c.apps.filter(a=>a.pub):c.apps;
-const visCats=()=>CATS.filter(c=>vis(c).length&&!(GUEST&&c.k==='ar'));
+const visCats=()=>CATS.filter(c=>(vis(c).length||(!GUEST&&c.k!=='ar'&&!c.apps.length))&&!(GUEST&&c.k==='ar'));
 const findApp=id=>STATE.apps.find(a=>a.id===id);
 const keyOf=a=>({n:a.n,u:a.u});
 
@@ -452,8 +465,10 @@ function links(a){
   }
   return `<span class="lk">${h}</span>`;
 }
+const DLI='<svg class="dli" viewBox="0 0 24 24" role="img" aria-label="도메인 연결"><title>arete929.kr 에 연결됨</title><use href="#dl"/></svg>';
+const dl=a=>!GUEST&&a.pub?DLI:'';
 const sw=a=>GUEST?'':`<button class="sw" role="switch" aria-checked="${a.pub}" data-id="${a.id}" title="정문(arete929.kr)에 공개"><i></i><span>${a.pub?'공개':'비공개'}</span></button>`;
-const nm=a=>okUrl(a.u)?`<a class="nm" href="${esc(a.u)}" target="_blank" rel="noopener" title="${esc(a.n)}">${esc(a.n)}</a>`:`<span class="nm nolink" title="웹앱 주소가 아직 없습니다">${esc(a.n)}</span>`;
+const nm=a=>okUrl(a.u)?`<a class="nm" href="${esc(a.u)}" target="_blank" rel="noopener" title="${esc(a.n)}">${dl(a)}${esc(a.n)}</a>`:`<span class="nm nolink" title="웹앱 주소가 아직 없습니다">${dl(a)}${esc(a.n)}</span>`;
 function tile(a,c,row,extra){
   return `<div class="tile${row?' row':''} ${a.pub?'pub':'priv'}${extra||''}" style="--c:${c.c}" data-tid="${a.id}">${nm(a)}<div class="ctl">${sw(a)}${links(a)}</div></div>`;
 }
@@ -485,7 +500,7 @@ function layB(){
   return `<div class="b-grid">${cells.join('')}</div><svg class="wires"></svg>`;
 }
 /* 원형 방사 — 묶음 이름의 슬래시( / ) 하나가 한 단계. «체육수업 / 3학년 / 베이스볼5» 는 체육수업 › 3학년 › 베이스볼5 */
-const chip=(a,c)=>`<div class="chip ${a.pub?'pub':'priv'}" style="--c:${c.c}" data-tid="${a.id}" data-cat="${c.k}">${sw(a)}<button class="cn" data-pop="${a.id}" title="${esc(a.n)}">${esc(a.n)}</button></div>`;
+const chip=(a,c)=>`<div class="chip ${a.pub?'pub':'priv'}" style="--c:${c.c}" data-tid="${a.id}" data-cat="${c.k}">${sw(a)}<button class="cn" data-pop="${a.id}" title="${esc(a.n)}">${dl(a)}${esc(a.n)}</button></div>`;
 let NODES=[], NODEMAP={}, ROOTS=[], AR_NODE=null;
 const directOf=n=>n.cat?vis(n.cat):[];
 const totalOf=n=>n.k==='ar'?(n.cat?n.cat.apps.length:0):directOf(n).length+n.kids.reduce((s,k)=>s+totalOf(k),0);
@@ -495,7 +510,7 @@ const isFoldN=n=>n.k!=='ar'&&!!FOLD[n.key];
 const subKs=n=>[n.k].concat(...n.kids.map(subKs));
 function buildTree(){
   NODES=[]; NODEMAP={}; ROOTS=[]; AR_NODE=null;
-  CATS.filter(c=>c.k!=='ar'&&vis(c).length).forEach(c=>{
+  visCats().filter(c=>c.k!=='ar').forEach(c=>{
     let parent=null, path='';
     c.n.split(' / ').forEach((sg,i)=>{
       path=i?path+' / '+sg:sg;
@@ -732,7 +747,20 @@ function dropTarget(D){
   });
   return best;
 }
+function attachHint(D){
+  const n=NODEMAP[D.el.dataset.k]; if(!n||n.k==='ar') return; const ex=new Set(subKs(n));
+  const cx=D.el.offsetLeft+D.el.offsetWidth/2, cy=D.el.offsetTop+D.el.offsetHeight/2; let hit=null;
+  main.querySelectorAll('.d-hub,.d-sub,.root').forEach(e=>{
+    if(hit) return; const k=e.dataset.k; if(k&&(ex.has(k)||k==='ar')) return;
+    if(cx>=e.offsetLeft&&cx<=e.offsetLeft+e.offsetWidth&&cy>=e.offsetTop&&cy<=e.offsetTop+e.offsetHeight) hit=e;
+  });
+  main.querySelectorAll('.drop').forEach(e=>e.classList.remove('drop'));
+  D.attach=hit?(hit.classList.contains('root')?'root':hit.dataset.k):null;
+  if(D.attach&&D.attach===(n.parent?n.parent.k:'root')) D.attach=null;
+  if(D.attach&&hit) hit.classList.add('drop');
+}
 function dropHint(D){
+  if(D.hub&&!D.xy){ attachHint(D); return }
   const a=D.el.dataset.tid&&findApp(D.el.dataset.tid); if(!a) return;
   D.own=a.cat.k; D.target=dropTarget(D);
   main.querySelectorAll('.drop').forEach(e=>e.classList.remove('drop'));
@@ -761,6 +789,7 @@ function endDrag(e){
     savePos(D.hub?`가지 위치 · ${hubName(D.el.dataset.k)}`:`가지 위치 · ${(D.el.querySelector('.nm,.cn')||D.el).textContent.trim().slice(0,16)}`);
     if(D.target&&D.own&&D.target!==D.own) moveApp(findApp(D.el.dataset.tid),D.target,D.xy?null:[D.el.offsetLeft,D.el.offsetTop]);
     else if(D.own) D.el.style.removeProperty('--c');
+    if(D.hub&&D.attach&&NODEMAP[D.el.dataset.k]) mmReparent(NODEMAP[D.el.dataset.k],D.attach==='root'?null:NODEMAP[D.attach]);
   }
 }
 document.addEventListener('pointerup',endDrag); document.addEventListener('pointercancel',endDrag);
@@ -775,6 +804,122 @@ document.addEventListener('dblclick',e=>{
   try{localStorage.setItem('my-fold',JSON.stringify(FOLD))}catch(_){ }
   render(); toast(FOLD[nd.key]?`«${nd.name}» 접었어요 (이름표를 두 번 누르면 펼쳐요)`:`«${nd.name}» 펼쳤어요`);
 });
+/* ── 마인드맵 편집 ── 이름표를 눌러 고르고 → 하위 가지 · 같은 단계 · 앱 추가 · 이름 · 삭제 (Tab / Enter / F2 / Delete 도 같다). 이름표를 다른 이름표(또는 가운데)에 끌어다 놓으면 거기에 붙는다 */
+let SEL=null;
+const mmEl=()=>SEL==='root'?main.querySelector('.root'):main.querySelector(`[data-k="${SEL}"]`);
+const parentPath=key=>{const p=key.split(' / '); p.pop(); return p.join(' / ')};
+const joinPath=(p,n)=>normTab((p?p+' / ':'')+n);
+const catMap=(name,from,to)=>name===from?to:(name.indexOf(from+' / ')===0?to+name.slice(from.length):name);
+const insidePath=(name,p)=>name===p||name.indexOf(p+' / ')===0;
+function mmMark(){ main.querySelectorAll('.sel').forEach(e=>e.classList.remove('sel')); if(!SEL) return; const e=mmEl(); if(e) e.classList.add('sel') }
+function mmPlace(){
+  const mm=$('#mm'); if(!mm) return;
+  if(GUEST||VIEW!=='map'||!SEL||!STATE){ mm.hidden=true; return }
+  const e=mmEl(); if(!e){ SEL=null; mm.hidden=true; return }
+  const n=SEL==='root'?null:NODEMAP[SEL];
+  mm.innerHTML=n?'<button data-mm="child" title="Tab">하위 가지</button><button data-mm="sib" title="Enter">같은 단계</button><button data-mm="app">앱 추가</button><button data-mm="ren" title="F2">이름</button><button data-mm="del" class="dg" title="Delete">삭제</button>':'<button data-mm="child" title="Tab">큰 가지 추가</button>';
+  mm.hidden=false;
+  const r=e.getBoundingClientRect(), w=mm.offsetWidth, h=mm.offsetHeight;
+  let x=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2)), y=r.bottom+8; if(y+h>innerHeight-8) y=Math.max(8,r.top-h-8);
+  mm.style.left=x+'px'; mm.style.top=y+'px';
+}
+function selectNode(k){ SEL=k; mmMark(); mmPlace() }
+function mmInput(rect,value,placeholder,cb){
+  const old=$('#mmIn'); if(old) old.remove();
+  const i=document.createElement('input'); i.id='mmIn'; i.className='mm-in'; i.value=value||''; i.placeholder=placeholder||''; i.maxLength=40; i.autocomplete='off';
+  i.style.left=Math.max(8,Math.min(innerWidth-200,rect.left))+'px'; i.style.top=Math.max(8,rect.top)+'px'; i.style.minWidth=Math.max(160,rect.width||0)+'px';
+  document.body.appendChild(i); i.focus(); i.select();
+  let done=false; const fin=ok=>{ if(done) return; done=true; const v=i.value.trim(); i.remove(); if(ok&&v) cb(v) };
+  i.addEventListener('keydown',e=>{ e.stopPropagation(); if(e.key==='Enter'){e.preventDefault();fin(true)} else if(e.key==='Escape'){e.preventDefault();fin(false)} });
+  i.addEventListener('blur',()=>fin(true));
+}
+/* 먼저 화면부터 바꾸고 저장은 뒤에서 순서대로. 실패하면 되돌린다 */
+const mmSnap=()=>({cats:(STATE.cats||[]).slice(),tabs:STATE.apps.map(a=>a.tab),pos:JSON.parse(JSON.stringify(POS)),fold:Object.assign({},FOLD)});
+function mmRestore(sn){ STATE.cats=sn.cats; STATE.apps.forEach((a,i)=>{a.tab=sn.tabs[i]}); POS=sn.pos; FOLD=sn.fold; try{localStorage.setItem('my-fold',JSON.stringify(FOLD))}catch(_){ } build(); render() }
+let MMQ=Promise.resolve();
+function mmDo(change,act,data,msg){
+  const sn=mmSnap(); change(); build(); render();
+  try{localStorage.setItem('my-fold',JSON.stringify(FOLD))}catch(_){ }
+  toast(msg);
+  MMQ=MMQ.then(async()=>{
+    try{ const j=await api(act,data); saved(j.savedAt,msg) }
+    catch(e){ mmRestore(sn); if(e.code!=='auth') toast(`저장하지 못해 되돌렸어요 · ${e.message||''}`) }
+  });
+}
+function mmKeyMap(obj,from,to,drop){   /* 가지 이름이 바뀌면 그 가지의 끌어 둔 위치·접힘 기록도 새 이름으로 */
+  const out={}; Object.keys(obj).forEach(k=>{
+    const m=k.match(/^(h:)(.*?)(@[ab])?$/), f=m||k.match(/^()(.*)()$/); let path=m?m[2]:k;
+    if(!m&&(k.indexOf(':')>0&&/^[am]:/.test(k))){ out[k]=obj[k]; return }
+    if(drop&&insidePath(path,from)) return;
+    const np=to==null?path:catMap(path,from,to); out[(m?m[1]:'')+np+(m&&m[3]?m[3]:'')]=obj[k];
+  }); return out;
+}
+function mmAdd(parentKey,name){
+  const path=joinPath(parentKey,name); if(!path) return;
+  if((STATE.cats||[]).indexOf(path)>=0||NODES.some(n=>n.key===path)){ toast('이미 있는 가지예요'); return }
+  mmDo(()=>{ STATE.cats=(STATE.cats||[]).concat([path]) },'catAdd',{path},`가지 «${path.split(' / ').pop()}» 를 만들었어요`);
+  const nd=NODES.find(x=>x.key===path); if(nd) selectNode(nd.k);
+}
+function mmRename(n,name){
+  const from=n.key, to=joinPath(parentPath(from),name); if(!to||to===from) return;
+  if(from==='기타'){ toast('«기타»는 이름을 바꿀 수 없어요'); return }
+  if(to.indexOf(from+' / ')===0){ toast('자기 자신 아래로는 옮길 수 없어요'); return }
+  mmDo(()=>{
+    const seen=new Set(), list=[]; (STATE.cats||[]).forEach(c=>{const x=catMap(c,from,to); if(x&&!seen.has(x)){seen.add(x);list.push(x)}});
+    STATE.apps.forEach(a=>{ const x=catMap(a.tab,from,to); if(x!==a.tab){ a.tab=x; if(!seen.has(x)){seen.add(x);list.push(x)} } });
+    STATE.cats=list; POS=mmKeyMap(POS,from,to); FOLD=mmKeyMap(FOLD,from,to); savePos('가지 위치');
+  },'catRename',{from,to},`«${from.split(' / ').pop()}» → «${to.split(' / ').pop()}»`);
+  const nd=NODES.find(x=>x.key===to); if(nd) selectNode(nd.k);
+}
+function mmReparent(n,target){   /* target=null → 가운데에 붙여 큰 가지로 */
+  const to=joinPath(target?target.key:'',n.name), from=n.key; if(to===from) return;
+  if(to.indexOf(from+' / ')===0){ toast('자기 자신 아래로는 옮길 수 없어요'); return }
+  mmDo(()=>{
+    const seen=new Set(), list=[]; (STATE.cats||[]).forEach(c=>{const x=catMap(c,from,to); if(x&&!seen.has(x)){seen.add(x);list.push(x)}});
+    STATE.apps.forEach(a=>{ const x=catMap(a.tab,from,to); if(x!==a.tab){ a.tab=x; if(!seen.has(x)){seen.add(x);list.push(x)} } });
+    if(!seen.has(to)){ list.push(to) }
+    STATE.cats=list; POS=mmKeyMap(POS,from,to); FOLD=mmKeyMap(FOLD,from,to); delete POS['h:'+to]; savePos('가지 위치');
+  },'catRename',{from,to},`«${n.name}» 가지를 ${target?'«'+target.name+'» 아래로':'큰 가지로'} 옮겼어요`);
+}
+async function mmDelete(n){
+  const key=n.key; if(key==='기타'){ toast('«기타»는 앱이 가는 곳이라 지울 수 없어요'); return }
+  const parent=parentPath(key)||'기타', cnt=STATE.apps.filter(a=>insidePath(a.tab,key)).length, subs=NODES.filter(x=>x.key!==key&&x.key.indexOf(key+' / ')===0).length;
+  if(!await uiConfirm(`«${n.name}» 가지를 지울까요?${subs?` 아래 가지 ${subs}개도 함께 사라지고,`:''} ${cnt?`안의 앱 ${cnt}개는 «${parent.split(' / ').pop()}»로 옮겨져요. 앱은 지워지지 않습니다.`:'안에 앱은 없어요.'}`,'지우기')) return;
+  SEL=null;
+  mmDo(()=>{
+    const list=(STATE.cats||[]).filter(c=>!insidePath(c,key)); let moved=0;
+    STATE.apps.forEach(a=>{ if(insidePath(a.tab,key)){ a.tab=parent; moved++ } });
+    if(moved&&list.indexOf(parent)<0) list.push(parent);
+    STATE.cats=list; POS=mmKeyMap(POS,key,null,true); FOLD=mmKeyMap(FOLD,key,null,true); savePos('가지 위치');
+  },'catDel',{path:key},`가지 «${n.name}» 를 지웠어요`);
+}
+function mmCmd(cmd){
+  if(GUEST||!STATE||!SEL) return; const n=SEL==='root'?null:NODEMAP[SEL], e=mmEl(); if(!e) return; const r=e.getBoundingClientRect();
+  if(cmd==='child') mmInput({left:r.left,top:r.bottom+10,width:r.width},'',n?'하위 가지 이름':'큰 가지 이름',v=>mmAdd(n?n.key:'',v));
+  else if(!n) return;
+  else if(cmd==='sib') mmInput({left:r.left,top:r.bottom+10,width:r.width},'','같은 단계 가지 이름',v=>mmAdd(parentPath(n.key),v));
+  else if(cmd==='ren') mmInput({left:r.left,top:r.top,width:r.width},n.name,'새 이름',v=>mmRename(n,v));
+  else if(cmd==='del') mmDelete(n);
+  else if(cmd==='app') openEdit(null,n.key);
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('#mm [data-mm]'); if(b){ mmCmd(b.dataset.mm); return }
+  if(NOCLICK||GUEST||VIEW!=='map'||!STATE) return;
+  if(e.target.closest('#mm,.pop,#dlgOv,.zoom,.mm-in,button,a,.sw,.chip,.tile')) return;
+  const el=e.target.closest('.d-hub,.d-sub,.hub,.ih,.e-hub,.root');
+  if(el){ if(el.matches('.root')) selectNode('root'); else{ const k=(el.closest('[data-k]')||{dataset:{}}).dataset.k, n=NODEMAP[k]; if(n&&n.k!=='ar') selectNode(n.k) } return }
+  if(e.target.closest('main')){ SEL=null; mmMark(); mmPlace() }
+});
+document.addEventListener('keydown',e=>{
+  if(!SEL||GUEST||VIEW!=='map'||$('#dlgOv')||$('#mmIn')||/^(INPUT|TEXTAREA)$/.test((e.target||{}).tagName||'')) return;
+  const n=SEL==='root'?null:NODEMAP[SEL];
+  if(e.key==='Tab'&&!e.shiftKey){ e.preventDefault(); mmCmd('child') }
+  else if(e.key==='Enter'&&n){ e.preventDefault(); mmCmd('sib') }
+  else if(e.key==='F2'&&n){ e.preventDefault(); mmCmd('ren') }
+  else if(e.key==='Delete'&&n){ e.preventDefault(); mmCmd('del') }
+  else if(e.key==='Escape'){ SEL=null; mmMark(); mmPlace() }
+});
+addEventListener('scroll',()=>mmPlace(),{passive:true}); main.addEventListener('scroll',()=>mmPlace(),{passive:true}); addEventListener('resize',()=>mmPlace());
 function resetPos(){ POS={}; savePos('가지 위치 처음대로'); if(VIEW==='map') post() }
 /* 빈 곳을 마우스로 끌면 화면이 이동(손바닥 끌기). 가로는 main 스크롤, 세로는 페이지 스크롤. 터치는 원래 스크롤에 맡긴다 */
 let PAN=null;
@@ -835,6 +980,8 @@ function layList(){
   const cl=a=>okUrl(a.gas), gh=a=>okUrl(a.git);
   const groups=(GROUP==='cat'
     ?ROOTS.map(n=>[n.name,allAppsOf(n),n])
+    :GROUP==='dom'
+    ?[['arete929.kr 에 연결됨',all.filter(a=>a.pub),null,true],['연결 안 됨 (나만 쓰는 앱)',all.filter(a=>!a.pub)]]
     :GROUP==='pub'
     ?[['공개',all.filter(a=>a.pub)],['비공개',all.filter(a=>!a.pub)]]
     :[['clasp · GitHub 둘 다',all.filter(a=>cl(a)&&gh(a))],['clasp만 (GitHub 주소 없음)',all.filter(a=>cl(a)&&!gh(a))],['GitHub만',all.filter(a=>!cl(a)&&gh(a))],['둘 다 없음 (바로가기 등)',all.filter(a=>!cl(a)&&!gh(a))]]).concat([['지난 앱',ar]]);
@@ -849,8 +996,8 @@ function layList(){
     return head+n.kids.map(k=>nodeBlock(k,d+1)).join('')+(dir.length?dh+ind(n.kids.length?d+1:d):'');
   };
   const body=g=>g[2]?nodeBlock(g[2],0):(g[0]==='지난 앱'?g[1].map(row).join(''):sub(g[1]));
-  const gh2=g=>g[2]?`<h2 class="dh gc" style="--c:${g[2].c}">${esc(g[0])} <small>${g[1].length}개 · 공개 ${g[1].filter(a=>a.pub).length}</small></h2>`:`<h2 class="dh">${g[0]} <small>${g[1].length}개</small></h2>`;
-  return `<div class="lhead"><span class="lab">묶어 보기</span><div class="seg" id="grp"><button data-g="cat"${GROUP==='cat'?' class="on"':''}>묶음(다리)별</button><button data-g="pub"${GROUP==='pub'?' class="on"':''}>공개 · 비공개</button><button data-g="src"${GROUP==='src'?' class="on"':''}>clasp · GitHub</button></div>${GUEST?'':'<button class="setbtn" data-add style="margin-left:auto">앱 추가</button>'}</div>${groups.filter(g=>g[1].length).map(g=>`<section class="grp">${gh2(g)}${body(g)}</section>`).join('')}`;
+  const gh2=g=>g[2]?`<h2 class="dh gc" style="--c:${g[2].c}">${esc(g[0])} <small>${g[1].length}개 · 공개 ${g[1].filter(a=>a.pub).length}</small></h2>`:`<h2 class="dh">${g[3]?DLI+' ':''}${g[0]} <small>${g[1].length}개</small></h2>`;
+  return `<div class="lhead"><span class="lab">묶어 보기</span><div class="seg" id="grp"><button data-g="cat"${GROUP==='cat'?' class="on"':''}>묶음(다리)별</button><button data-g="dom"${GROUP==='dom'?' class="on"':''}>도메인 연결</button><button data-g="pub"${GROUP==='pub'?' class="on"':''}>공개 · 비공개</button><button data-g="src"${GROUP==='src'?' class="on"':''}>clasp · GitHub</button></div>${GUEST?'':'<button class="setbtn" data-add style="margin-left:auto">앱 추가</button>'}</div>${groups.filter(g=>g[1].length).map(g=>`<section class="grp">${gh2(g)}${body(g)}</section>`).join('')}`;
 }
 
 /* ── 연결선 ── */
@@ -883,7 +1030,7 @@ function wiresB(){
   svg.innerHTML=s;
 }
 const dNarrow=()=>false;   /* 원형 방사는 폭과 상관없이 방사형으로 둔다(좁으면 옆으로 밀어서 본다) */
-function post(){ if(!STATE||VIEW==='list'||!main.querySelector('.zin')) return; zWidth(); if(V==='a'){applyXY();wiresA()} else if(V==='b'){applyXY();wiresB()} else if(V==='d') placeD(); zBox(); zAuto(); }
+function post(){ if(!STATE||VIEW==='list'||!main.querySelector('.zin')) return; zWidth(); if(V==='a'){applyXY();wiresA()} else if(V==='b'){applyXY();wiresB()} else if(V==='d') placeD(); zBox(); zAuto(); mmMark(); mmPlace(); }
 /* 확대·축소를 한 번도 안 만졌다면 창 폭에 맞춰 한눈에 보이게(저장 안 함) — 배치는 그대로, 크기만 맞춘다 */
 function zAuto(){
   if(!ZAUTO||V!=='d') return; const zi=main.querySelector('.zin'); if(!zi) return;
@@ -1008,6 +1155,7 @@ function openSet(){
   <div class="savedat" id="laySaved">마지막 저장 · ${esc(s.layout||'-')}</div>
   <h3>가지 위치</h3><p class="hint">원형 방사·가지형·섬 지도에서 이름표나 앱 칸을 끌어 옮길 수 있습니다(가지형·섬 지도는 폭 1100px 이상). 이름표를 끌면 딸린 앱이 함께 움직이고 선이 따라옵니다.</p>
   <div class="acct"><button class="btn" data-resetpos>가지 위치 처음대로</button></div><div class="savedat" id="posSaved">마지막 저장 · ${esc(s.layout||'-')}</div>
+  <h3>가지 편집</h3><p class="hint">이름표(가지)를 한 번 누르면 <b>하위 가지 · 같은 단계 · 앱 추가 · 이름 · 삭제</b> 단추가 나옵니다(키보드: Tab · Enter · F2 · Delete). 가운데를 누르면 큰 가지를 더하고, 이름표를 다른 이름표나 가운데에 끌어다 놓으면 거기에 붙습니다. 앱을 끌어서 가지에 놓으면 그 가지로 옮겨집니다. 두 번 누르면 접힙니다.</p>
   <h3>바로가기</h3><div class="acct"><a class="btn" href="${esc(CFG.front)}" target="_blank" rel="noopener">정문 보기 (arete929.kr)</a>${okUrl(STATE.sheetUrl)?`<a class="btn" href="${esc(STATE.sheetUrl)}" target="_blank" rel="noopener">앱 목록 시트 열기</a>`:''}</div>
   <h3>계정</h3><div class="acct"><button class="btn" data-acct="pw">비밀번호 바꾸기</button><button class="btn" data-acct="out">로그아웃</button><button class="btn" data-acct="outall">모든 기기에서 로그아웃</button></div>`,'set');
 }
@@ -1022,9 +1170,9 @@ async function savePw(){
   try{const j=await api('changePw',{pw});TOK=j.tok;saveTok();closeDlg();toast('비밀번호를 바꿨어요')}catch(e){if($('#p_msg'))$('#p_msg').textContent=e.message}
 }
 let EDIT=null;
-function openEdit(a){
-  EDIT=a||null; const v=a||{n:'',d:'',u:'',gas:'',sheet:'',folder:'',git:'',tab:(CATS.find(c=>c.k!=='ar')||{n:'기타'}).n,term:'',hidden:false};
-  const tabs=[...new Set((STATE.cats||[]).concat(STATE.apps.map(x=>x.tab)).map(normTab).filter(Boolean))], terms=recentTerms(5);
+function openEdit(a,preTab){
+  EDIT=a||null; const v=a||{n:'',d:'',u:'',gas:'',sheet:'',folder:'',git:'',tab:preTab||(CATS.find(c=>c.k!=='ar')||{n:'기타'}).n,term:'',hidden:false};
+  const tabs=[...new Set((STATE.cats||[]).concat(STATE.apps.map(x=>x.tab),[v.tab]).map(normTab).filter(Boolean))], terms=recentTerms(5);
   const f=(id,label,val,type)=>`<label class="fld"><span>${label}</span><input id="${id}" type="${type||'text'}" value="${esc(val)}" autocomplete="off"></label>`;
   dlg(`<form id="eform"><div class="dlg-h"><h2 class="dh">${a?'앱 고치기':'앱 추가'}</h2><button type="button" class="dlg-x" data-closedlg aria-label="닫기">×</button></div>
   ${f('f_n','이름',v.n)}${f('f_d','한 줄 설명 (정문에도 보입니다)',v.d)}${f('f_u','웹앱 주소',v.u,'url')}
@@ -1136,6 +1284,9 @@ function demoApi(act,d){
     if(act==='edit'){Object.assign(find(d.key),d.data);S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='add'){S.apps.push(Object.assign({pub:false,feed:false,upd:'2026-11-17',kind:'app',ver:''},d.data));S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='move'){find(d.key).tab=d.tab;S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
+    if(act==='catAdd'){const p=normTab(d.path); if(S.cats.indexOf(p)<0) S.cats.push(p); S.saved.app=S.saved.last=now(); return res({ok:true,savedAt:S.saved.app,state:copy()})}
+    if(act==='catRename'){const f=normTab(d.from), t=normTab(d.to), sn=new Set(), l=[]; S.cats.forEach(c=>{const x=catMap(c,f,t); if(!sn.has(x)){sn.add(x);l.push(x)}}); S.apps.forEach(a=>{const x=catMap(a.tab,f,t); if(x!==a.tab){a.tab=x; if(!sn.has(x)){sn.add(x);l.push(x)}}}); S.cats=l; S.saved.app=S.saved.last=now(); return res({ok:true,savedAt:S.saved.app,state:copy()})}
+    if(act==='catDel'){const p=normTab(d.path), par=parentPath(p)||'기타'; S.cats=S.cats.filter(c=>!insidePath(c,p)); let m=0; S.apps.forEach(a=>{if(insidePath(a.tab,p)){a.tab=par;m++}}); if(m&&S.cats.indexOf(par)<0) S.cats.push(par); S.saved.app=S.saved.last=now(); return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='del'){S.apps.splice(S.apps.indexOf(find(d.key)),1);S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
     res({ok:true,tok:'demo',hasPw:true});
   },120));

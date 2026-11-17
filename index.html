@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.9.0 — 주소 칸 a–z(a.arete929.kr…z) · 앱 카드에서 바로 연결 · 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.10.0 — 주소 칸 «자체 페이지» 모드(구글 주소 거치지 않음) · 주소 칸 a–z(a.arete929.kr…z) · 앱 카드에서 바로 연결 · 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -178,6 +178,11 @@ body:not(.guest) .d-hub.dragging,body:not(.guest) .d-sub.dragging,body:not(.gues
 .slotrow .inp{border:1.5px solid #bfb6a3;border-radius:6px;padding:6px 9px;background:#fff;font-size:16px;color:var(--ink);width:100%;font-family:inherit}
 .slotrow.on .su{border-color:#7fb596}
 .slotrow .sm{font-size:11.5px;color:var(--sub)}
+.mseg{display:inline-flex;border:1px solid #bfb6a3;border-radius:6px;overflow:hidden;background:#fff;align-self:flex-start}
+.mseg .mb{border:0;border-left:1px solid #d9d1c0;background:none;padding:5px 11px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.mseg .mb:first-child{border-left:0}
+.mseg .mb.on{background:var(--ink);color:#fff}
+.slotrow [hidden]{display:none!important}
 .slotrow .ctl{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .slotrow .btn{padding:6px 10px;font-size:12.5px;text-decoration:none;color:var(--ink);display:inline-block}
 .slotrow .btn.f{color:#fff}
@@ -424,8 +429,8 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.9.0',
-  deployed:'2026-11-18 00:06'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.10.0',
+  deployed:'2026-11-18 01:40'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -1206,8 +1211,8 @@ function openSet(){
 }
 let SLOTS_ALL=false;
 function slotRowHTML(l){
-  const r=SL()[l], has=!!r, on=has&&r.on!==false;
-  return `<div class="slotrow${on?' on':has?' off':''}" data-l="${l}"><div class="dom">${l}<i>.arete929.kr</i></div><div class="f"><input class="inp sn" maxlength="40" placeholder="이름 (선택)" value="${esc(has?r.n:'')}" autocomplete="off"><input class="inp su" type="url" maxlength="500" placeholder="링크를 붙여 넣으세요 (https://…)" value="${esc(has?r.u:'')}" autocomplete="off"><div class="sm">${has?(on?'연결 중':'꺼 둠')+' · 저장 '+esc((r.at||'').slice(5,16)):'비어 있음'}</div></div><div class="ctl">${has?`<button class="ssw${on?' on':''}" data-slotsw="${l}"><i></i>${on?'연결':'꺼짐'}</button>`:''}<button class="btn f" data-slotsave="${l}">저장</button>${has?`<a class="btn" href="https://${l}.arete929.kr/" target="_blank" rel="noopener">열기</a><button class="btn" data-slotdel="${l}">지우기</button>`:''}</div></div>`;
+  const r=SL()[l], has=!!r, on=has&&r.on!==false, host=has&&r.m==='host';
+  return `<div class="slotrow${on?' on':has?' off':''}" data-l="${l}" data-m="${host?'host':'go'}"><div class="dom">${l}<i>.arete929.kr</i></div><div class="f"><input class="inp sn" maxlength="40" placeholder="이름 (선택)" value="${esc(has?r.n:'')}" autocomplete="off"><div class="mseg" role="group" aria-label="연결 방식"><button type="button" class="mb${host?'':' on'}" data-slotm="go">링크로 이동</button><button type="button" class="mb${host?' on':''}" data-slotm="host" title="구글 주소를 거치지 않고 이 주소 그대로 보여 줍니다 — 만 13세 미만 계정도 열립니다">자체 페이지</button></div><input class="inp su" type="url" maxlength="500" placeholder="링크를 붙여 넣으세요 (https://…)" value="${esc(has&&!host?r.u:'')}" autocomplete="off"${host?' hidden':''}><div class="sm hostnote"${host?'':' hidden'}>이 주소 그대로 <b>pages 저장소의 «${l}» 폴더</b>를 보여 줍니다(구글 주소를 거치지 않음)</div><div class="sm">${has?(on?'연결 중':'꺼 둠')+(host?' · 자체 페이지':'')+' · 저장 '+esc((r.at||'').slice(5,16)):'비어 있음'}</div></div><div class="ctl">${has?`<button class="ssw${on?' on':''}" data-slotsw="${l}"><i></i>${on?'연결':'꺼짐'}</button>`:''}<button class="btn f" data-slotsave="${l}">저장</button>${has?`<a class="btn" href="https://${l}.arete929.kr/" target="_blank" rel="noopener">열기</a><button class="btn" data-slotdel="${l}">지우기</button>`:''}</div></div>`;
 }
 function slotsBody(){
   const used=SLOT_LETTERS.filter(l=>SL()[l]), freeAll=SLOT_LETTERS.filter(l=>!SL()[l]);
@@ -1224,9 +1229,9 @@ function openSlots(){
   $('#dlgOv .dlg').style.width='min(820px,100%)';
 }
 function slotsRefresh(){ const b=$('#slotBody'); if(b) b.innerHTML=slotsBody(); const t=$('#slotSaved'); if(t&&STATE.saved&&STATE.saved.slots) t.textContent='저장됨 · '+STATE.saved.slots }
-async function slotSave(l,u,n,on,msg){
+async function slotSave(l,u,n,on,msg,m){
   try{
-    const j=await api('slotSet',{letter:l,u:u,n:n,on:on});
+    const j=await api('slotSet',{letter:l,u:u,n:n,on:on,m:m||'go'});
     STATE.slots=j.slots; STATE.saved=STATE.saved||{}; STATE.saved.slots=STATE.saved.last=j.savedAt;
     saved(j.savedAt,msg||`주소 칸 ${l} ${u?'저장':'비움'}`); slotsRefresh(); render();
     return true;
@@ -1309,8 +1314,9 @@ document.addEventListener('click',async e=>{
   if(!STATE) return;
   if(t.dataset.slots!==undefined){openSlots();return}
   if(t.dataset.slotmore!==undefined){SLOTS_ALL=!SLOTS_ALL;slotsRefresh();return}
-  if(t.dataset.slotsave){const row=t.closest('.slotrow'), l=t.dataset.slotsave, u=row.querySelector('.su').value.trim(), n=row.querySelector('.sn').value.trim(); if(!u){toast('링크를 붙여 넣어 주세요');return} const cur=SL()[l]; t.disabled=true; await slotSave(l,u,n,cur?cur.on!==false:true); t.disabled=false; return}
-  if(t.dataset.slotsw){const l=t.dataset.slotsw, cur=SL()[l]; if(cur) await slotSave(l,cur.u,cur.n,cur.on===false,`주소 칸 ${l} ${cur.on===false?'연결':'꺼 둠'}`); return}
+  if(t.dataset.slotm){const row=t.closest('.slotrow'), m=t.dataset.slotm; row.dataset.m=m; row.querySelectorAll('.mb').forEach(b=>b.classList.toggle('on',b===t)); row.querySelector('.su').hidden=(m==='host'); row.querySelector('.hostnote').hidden=(m!=='host'); return}
+  if(t.dataset.slotsave){const row=t.closest('.slotrow'), l=t.dataset.slotsave, m=row.dataset.m==='host'?'host':'go', u=row.querySelector('.su').value.trim(), n=row.querySelector('.sn').value.trim(); if(m==='go'&&!u){toast('링크를 붙여 넣어 주세요');return} const cur=SL()[l]; t.disabled=true; await slotSave(l,m==='host'?'':u,n,cur?cur.on!==false:true,m==='host'?`주소 칸 ${l} 자체 페이지`:undefined,m); t.disabled=false; return}
+  if(t.dataset.slotsw){const l=t.dataset.slotsw, cur=SL()[l]; if(cur) await slotSave(l,cur.u,cur.n,cur.on===false,`주소 칸 ${l} ${cur.on===false?'연결':'꺼 둠'}`,cur.m); return}
   if(t.dataset.slotdel){const l=t.dataset.slotdel; if(!await uiConfirm(`${l}.arete929.kr 칸을 비울까요? 이 주소로 들어오면 «연결 안 된 주소» 안내가 나옵니다.`,'비우기')) return; await slotSave(l,'','',true); return}
   if(t.dataset.sl){const p=t.closest('.pop'); p.querySelectorAll('.lt').forEach(b=>b.classList.toggle('pick',b===t)); const go=p.querySelector('.go'); go.disabled=false; go.dataset.letter=t.dataset.sl; go.textContent=`${t.dataset.sl} 칸에 연결 (${t.dataset.sl}.arete929.kr)`; return}
   if(t.dataset.slotgo){const a=findApp(t.dataset.slotgo), l=t.dataset.letter; if(a&&l){ closePop(); if(await slotSave(l,a.u,a.n,true,`${a.n} → ${l}.arete929.kr`)) toast(`${l}.arete929.kr 에 «${a.n}» 을(를) 연결했어요`) } return}
@@ -1368,7 +1374,7 @@ function demoApi(act,d){
     if(act==='edit'){Object.assign(find(d.key),d.data);S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='add'){S.apps.push(Object.assign({pub:false,feed:false,upd:'2026-11-17',kind:'app',ver:''},d.data));S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='move'){find(d.key).tab=d.tab;S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
-    if(act==='slotSet'){S.slots=S.slots||{}; const l=String(d.letter||'').toLowerCase(); if(!/^[a-z]$/.test(l)) return res({ok:false,error:'칸은 a 부터 z 까지입니다.'}); if(!d.u){delete S.slots[l]} else if(!/^https:\/\//i.test(d.u)){return res({ok:false,error:'링크는 https:// 로 시작해야 합니다.'})} else {S.slots[l]={u:d.u,n:d.n||'',on:d.on!==false,at:now()}} S.saved.slots=S.saved.last=now(); return res({ok:true,savedAt:S.saved.slots,slots:JSON.parse(JSON.stringify(S.slots))})}
+    if(act==='slotSet'){S.slots=S.slots||{}; const l=String(d.letter||'').toLowerCase(); if(!/^[a-z]$/.test(l)) return res({ok:false,error:'칸은 a 부터 z 까지입니다.'}); if(d.m==='host'){S.slots[l]={u:'',n:d.n||'',m:'host',on:d.on!==false,at:now()}} else if(!d.u){delete S.slots[l]} else if(!/^https:\/\//i.test(d.u)){return res({ok:false,error:'링크는 https:// 로 시작해야 합니다.'})} else {S.slots[l]={u:d.u,n:d.n||'',m:'go',on:d.on!==false,at:now()}} S.saved.slots=S.saved.last=now(); return res({ok:true,savedAt:S.saved.slots,slots:JSON.parse(JSON.stringify(S.slots))})}
     if(act==='catAdd'){const p=normTab(d.path); if(S.cats.indexOf(p)<0) S.cats.push(p); S.saved.app=S.saved.last=now(); return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='catRename'){const f=normTab(d.from), t=normTab(d.to), sn=new Set(), l=[]; S.cats.forEach(c=>{const x=catMap(c,f,t); if(!sn.has(x)){sn.add(x);l.push(x)}}); S.apps.forEach(a=>{const x=catMap(a.tab,f,t); if(x!==a.tab){a.tab=x; if(!sn.has(x)){sn.add(x);l.push(x)}}}); S.cats=l; S.saved.app=S.saved.last=now(); return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='catDel'){const p=normTab(d.path), par=parentPath(p)||'기타'; S.cats=S.cats.filter(c=>!insidePath(c,p)); let m=0; S.apps.forEach(a=>{if(insidePath(a.tab,p)){a.tab=par;m++}}); if(m&&S.cats.indexOf(par)<0) S.cats.push(par); S.saved.app=S.saved.last=now(); return res({ok:true,savedAt:S.saved.app,state:copy()})}

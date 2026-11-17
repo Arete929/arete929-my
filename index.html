@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.2.0 — 고른 모양을 모든 화면에서 · 가지 끌기 확대 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.3.0 — 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -155,6 +155,18 @@ body:not(.guest) .d-hub.dragging,body:not(.guest) .chip.dragging{cursor:grabbing
   body:not(.guest) .lay-a .hub,body:not(.guest) .lay-a .tile,body:not(.guest) .lay-b .ih,body:not(.guest) .lay-b .tile{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
   body:not(.guest) .lay-a .dragging,body:not(.guest) .lay-b .dragging{cursor:grabbing;z-index:6;box-shadow:0 8px 20px rgba(0,0,0,.2)}
 }
+/* 확대·축소: 지도 전체를 .zin 안에 넣고 scale 로 키운다. .zbox 가 키운 만큼의 자리를 잡아 준다 */
+.zbox{position:relative;margin:0 auto}
+.zin{position:relative;transform-origin:0 0}
+.lay-a,.lay-b,.lay-e,.lay-f{overflow-x:auto}
+.zoom{position:fixed;right:14px;bottom:14px;z-index:30;display:flex;border:1.5px solid var(--ink);border-radius:8px;background:var(--card);box-shadow:0 4px 14px rgba(0,0,0,.18);overflow:hidden}
+.zoom[hidden]{display:none}
+.zoom button{border:0;border-left:1px solid #d9d1c0;background:none;min-width:42px;height:40px;padding:0 10px;font:inherit;font-size:19px;font-weight:700;cursor:pointer;color:var(--ink)}
+.zoom button:first-child{border-left:0}
+.zoom button:hover{background:#efe9da}
+.zoom button:disabled{opacity:.35;cursor:default}
+.zoom .zv{font-size:12.5px;min-width:58px;font-variant-numeric:tabular-nums}
+.zoom .zf{font-size:13px}
 .pop{position:fixed;z-index:50;width:236px;background:var(--card);border:1px solid #bfb6a3;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.14);padding:11px}
 .pop b{display:block;font-size:14px;margin-bottom:2px}
 .pop small{color:var(--sub);font-size:12px}
@@ -348,14 +360,15 @@ body:not(.guest) .d-hub.dragging,body:not(.guest) .chip.dragging{cursor:grabbing
 </header>
 <main id="map"><div class="wait">불러오는 중…</div></main>
 <footer class="foot"><div id="footLine"></div><div>ⓒKIMJINHO</div></footer>
+<div class="zoom" id="zoom" hidden><button data-z="-" title="축소" aria-label="축소">−</button><button class="zv" data-z="1" title="100%로 되돌리기">100%</button><button data-z="+" title="확대" aria-label="확대">+</button><button class="zf" data-z="fit" title="한눈에 보이게 맞추기">맞춤</button></div>
 <div class="toast" id="toast"></div>
 <script>
 /* ── 여기만 고치면 됩니다 ───────────────────────────── */
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.2.0',
-  deployed:'2026-11-17 12:11'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.3.0',
+  deployed:'2026-11-17 15:28'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -519,6 +532,38 @@ function drawD(){
   svg.innerHTML=s;
 }
 let POS={}, pt;
+/* ── 확대·축소 ── 모양마다 따로 기억(이 기기 localStorage) */
+const ZSTEPS=[.4,.5,.6,.7,.8,.9,1,1.15,1.3,1.5,1.75,2,2.5];
+let Z=1, ZS={}; try{ZS=JSON.parse(localStorage.getItem('my-zoom')||'{}')||{}}catch(e){ZS={}}
+const zClamp=z=>Math.max(ZSTEPS[0],Math.min(ZSTEPS[ZSTEPS.length-1],z));
+function zWidth(){
+  const zi=main.querySelector('.zin'); if(!zi) return;
+  const cs=getComputedStyle(main), B=Math.max(280,main.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight));
+  zi.style.width=B+'px'; zi.style.transform=Z===1?'':`scale(${Z})`;
+}
+function zBox(){
+  const zb=main.querySelector('.zbox'), zi=zb&&zb.firstElementChild; if(!zi) return;
+  zb.style.width=Math.ceil(zi.scrollWidth*Z)+'px'; zb.style.height=Math.ceil(zi.scrollHeight*Z)+'px';
+  const z=$('#zoom'); if(z){ z.querySelector('.zv').textContent=Math.round(Z*100)+'%'; z.querySelector('[data-z="-"]').disabled=Z<=ZSTEPS[0]+.001; z.querySelector('[data-z="+"]').disabled=Z>=ZSTEPS[ZSTEPS.length-1]-.001 }
+}
+function zSet(z){
+  z=zClamp(z); if(Math.abs(z-Z)<.001) return;
+  const zb=main.querySelector('.zbox'); let fx=0,fy=0;
+  if(zb){ const r=zb.getBoundingClientRect(); fx=(main.scrollLeft+main.clientWidth/2-(r.left-main.getBoundingClientRect().left+main.scrollLeft))/Z; fy=(innerHeight/2-r.top)/Z }
+  Z=z; ZS[V]=Z; try{localStorage.setItem('my-zoom',JSON.stringify(ZS))}catch(e){}
+  closePop(); post();
+  if(zb){ const r=zb.getBoundingClientRect(), mr=main.getBoundingClientRect(); main.scrollLeft=fx*Z+(r.left-mr.left+main.scrollLeft)-main.clientWidth/2; scrollBy(0,r.top+fy*Z-innerHeight/2) }
+}
+function zStep(dir){
+  const i=dir>0?ZSTEPS.findIndex(s=>s>Z+.001):(()=>{let k=-1;ZSTEPS.forEach((s,j)=>{if(s<Z-.001)k=j});return k})();
+  if(i>=0) zSet(ZSTEPS[i]);
+}
+function zFit(){
+  const zi=main.querySelector('.zin'); if(!zi) return;
+  const save=Z; Z=1; zWidth(); const B=zi.clientWidth, sw=Math.max(zi.scrollWidth,B), sh=zi.scrollHeight; Z=save;
+  let f=B/sw; if(V==='d'){ const top=document.querySelector('.top').offsetHeight; f=Math.min(f,(innerHeight-top-24)/sh) }
+  zSet(Math.floor(zClamp(f)*100)/100);   /* 계단에 안 맞는 값도 그대로 쓴다 */
+}
 function posLoad(){
   if(STATE&&STATE.pos&&typeof STATE.pos==='object'){POS=JSON.parse(JSON.stringify(STATE.pos));return}
   try{POS=JSON.parse(localStorage.getItem('my-pos')||'{}')||{}}catch(e){POS={}}
@@ -558,11 +603,11 @@ document.addEventListener('pointerdown',e=>{
 });
 document.addEventListener('pointermove',e=>{
   const D=DRAG; if(!D||e.pointerId!==D.pid) return;
-  const dx=e.clientX-D.sx, dy=e.clientY-D.sy;
-  if(!D.moved){ if(Math.hypot(dx,dy)<5) return; D.moved=true; D.el.classList.add('dragging'); closePop(); try{D.el.setPointerCapture(e.pointerId)}catch(_){ } }
+  const dx=(e.clientX-D.sx)/Z, dy=(e.clientY-D.sy)/Z;   /* 확대·축소한 만큼 되돌려 지도 안 거리로 */
+  if(!D.moved){ if(Math.hypot(dx*Z,dy*Z)<5) return; D.moved=true; D.el.classList.add('dragging'); closePop(); try{D.el.setPointerCapture(e.pointerId)}catch(_){ } }
   if(D.xy){
-    const mr=main.getBoundingClientRect(), r=D.el.getBoundingClientRect(), cur=D.el._o||[0,0], bx=r.left-cur[0], by=r.top-cur[1];
-    const nx=Math.max(mr.left+2-bx,Math.min(mr.right-r.width-2-bx,D.start[0]+dx)), ny=Math.max(mr.top+2-by,Math.min(mr.top+main.scrollHeight-r.height-2-by,D.start[1]+dy));
+    const mr=main.querySelector('.zin').getBoundingClientRect(), r=D.el.getBoundingClientRect(), cur=D.el._o||[0,0], bx=r.left-cur[0]*Z, by=r.top-cur[1]*Z;
+    const nx=Math.max((mr.left+2-bx)/Z,Math.min((mr.right-r.width-2-bx)/Z,D.start[0]+dx)), ny=Math.max((mr.top+2-by)/Z,Math.min((mr.bottom-r.height-2-by)/Z,D.start[1]+dy));
     POS[D.key]=[+(nx/D.W).toFixed(4),+(ny/D.W).toFixed(4)]; applyXY(); if(V==='a') wiresA(); else wiresB(); return;
   }
   /* 안 넘어가게: 가지(=이름표+딸린 앱들) 또는 앱 하나의 네모가 칸 안에 머물게 */
@@ -586,6 +631,10 @@ function endDrag(e){
 document.addEventListener('pointerup',endDrag); document.addEventListener('pointercancel',endDrag);
 document.addEventListener('click',e=>{ if(NOCLICK){e.stopPropagation();e.preventDefault()} },true);
 function resetPos(){ POS={}; savePos('가지 위치 처음대로'); if(VIEW==='map') post() }
+$('#zoom').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-z]'); if(!b||b.disabled) return; const k=b.dataset.z;
+  if(k==='+') zStep(1); else if(k==='-') zStep(-1); else if(k==='1') zSet(1); else if(k==='fit') zFit();
+});
 function openPop(a,anchor){
   closePop(); const p=document.createElement('div'); p.className='pop';
   p.innerHTML=`<b>${esc(a.n)}</b><small>${esc(a.cat.n)} · ${a.pub?'공개':'비공개'}${a.d?' · '+esc(a.d):''}</small><div class="pb">${okUrl(a.u)?`<a class="pbtn" href="${esc(a.u)}" target="_blank" rel="noopener">열기</a><button class="pbtn" data-copy="${a.id}">${COPY}<span>주소 복사</span></button>`:''}${!GUEST&&okUrl(a.sheet)?`<a class="pbtn" href="${esc(a.sheet)}" target="_blank" rel="noopener"><img src="${SHEET_IMG}" alt=""><span>시트</span></a>`:''}${!GUEST&&okUrl(a.folder)?`<a class="pbtn" href="${esc(a.folder)}" target="_blank" rel="noopener">${FOLDER}<span>폴더</span></a>`:''}${GUEST?'':`<button class="pbtn" data-edit="${a.id}">고치기</button>`}</div>`;
@@ -633,9 +682,9 @@ function layList(){
 }
 
 /* ── 연결선 ── */
-function hostRect(){const hb=main.getBoundingClientRect();return el=>{const r=el.getBoundingClientRect();return{l:r.left-hb.left,r:r.right-hb.left,t:r.top-hb.top,b:r.bottom-hb.top,cx:(r.left+r.right)/2-hb.left,cy:(r.top+r.bottom)/2-hb.top}}}
+function hostRect(){const hb=main.querySelector('.zin').getBoundingClientRect(), k=Z||1;return el=>{const r=el.getBoundingClientRect();return{l:(r.left-hb.left)/k,r:(r.right-hb.left)/k,t:(r.top-hb.top)/k,b:(r.bottom-hb.top)/k,cx:((r.left+r.right)/2-hb.left)/k,cy:((r.top+r.bottom)/2-hb.top)/k}}}
 const curve=(x1,y1,x2,y2)=>{const m=(x1+x2)/2;return `M${x1},${y1} C${m},${y1} ${m},${y2} ${x2},${y2}`};
-function sizeSvg(svg){svg.setAttribute('width',main.scrollWidth);svg.setAttribute('height',main.scrollHeight)}
+function sizeSvg(svg){const zi=main.querySelector('.zin');svg.setAttribute('width',zi.scrollWidth);svg.setAttribute('height',zi.scrollHeight)}
 function wiresA(){
   const svg=main.querySelector('.wires'); if(!svg) return;
   if(innerWidth<1100){svg.innerHTML='';return}
@@ -662,7 +711,7 @@ function wiresB(){
   svg.innerHTML=s;
 }
 const dNarrow=()=>false;   /* 원형 방사는 폭과 상관없이 방사형으로 둔다(좁으면 옆으로 밀어서 본다) */
-function post(){ if(!STATE||VIEW==='list') return; if(V==='a'){applyXY();wiresA()} else if(V==='b'){applyXY();wiresB()} else if(V==='d') placeD(); }
+function post(){ if(!STATE||VIEW==='list'||!main.querySelector('.zin')) return; zWidth(); if(V==='a'){applyXY();wiresA()} else if(V==='b'){applyXY();wiresB()} else if(V==='d') placeD(); zBox(); }
 
 /* ── 숫자 · 거르기 · 저장 시각 ── */
 function counts(){
@@ -692,7 +741,10 @@ function render(){
   $$('#mode button').forEach(b=>b.classList.toggle('on',(b.dataset.m==='guest')===GUEST));
   const lay=VIEW==='list'?'list':V;
   main.className='lay-'+lay;
-  main.innerHTML=visCats().length||VIEW==='list'?({list:layList,a:layA,b:layB,d:layD,e:layE,f:layF}[lay]||layE)():`<div class="wait">${GUEST?'공개한 앱이 없습니다.':'앱이 없습니다. «목록»에서 앱을 추가해 주세요.'}</div>`;
+  Z=zClamp(ZS[lay]||1); const hasMap=VIEW!=='list'&&visCats().length>0;
+  const body=visCats().length||VIEW==='list'?({list:layList,a:layA,b:layB,d:layD,e:layE,f:layF}[lay]||layE)():`<div class="wait">${GUEST?'공개한 앱이 없습니다.':'앱이 없습니다. «목록»에서 앱을 추가해 주세요.'}</div>`;
+  main.innerHTML=hasMap?`<div class="zbox"><div class="zin">${body}</div></div>`:body;
+  $('#zoom').hidden=!hasMap;
   counts(); applyFilter(); drawLog();
   requestAnimationFrame(post);
 }

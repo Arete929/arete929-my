@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.7.0 — 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.8.0 — 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -165,8 +165,8 @@ body:not(.guest) .d-hub.dragging,body:not(.guest) .d-sub.dragging,body:not(.gues
 .mm-in{position:fixed;z-index:60;font:inherit;font-size:16px;font-weight:700;padding:7px 11px;border:2px solid var(--ink);border-radius:8px;background:#fff;color:var(--ink);outline:none;box-shadow:0 6px 18px rgba(0,0,0,.2)}
 .sel{outline:3px solid #1a73e8;outline-offset:3px}
 .root.drop{box-shadow:0 0 0 7px rgba(47,122,85,.45)}
-.dli{width:15px;height:15px;vertical-align:-3px;margin-right:5px;flex:none;display:inline-block}
-.grp h2 .dli{width:20px;height:20px;vertical-align:-3px;margin-right:2px}
+.ico{display:inline-block;margin-right:5px;font-size:14px;line-height:1;flex:none;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;font-style:normal}
+.pk.ek{font-size:18px;padding:4px 8px;line-height:1.2}
 .fnote.in{display:inline;margin:0 0 0 6px}
 .grp h3.sub.d2{margin-left:18px;font-size:13px}.grp h3.sub.d3{margin-left:36px;font-size:12.5px}.grp h3.sub.d4{margin-left:54px;font-size:12.5px}
 .fnote{display:block;font-size:11px;color:var(--sub);margin-top:2px;white-space:nowrap}
@@ -388,7 +388,6 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 <main id="map"><div class="wait">불러오는 중…</div></main>
 <footer class="foot"><div id="footLine"></div><div>ⓒKIMJINHO</div></footer>
 <div class="zoom" id="zoom" hidden><button data-z="-" title="축소" aria-label="축소">−</button><button class="zv" data-z="1" title="100%로 되돌리기">100%</button><button data-z="+" title="확대" aria-label="확대">+</button><button class="zf" data-z="fit" title="한눈에 보이게 맞추기">맞춤</button></div>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="dl" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11.2" fill="#2f7a55"/><circle cx="4.9" cy="12" r="1.9" fill="#fff"/><path d="M5 12H11.4" stroke="#fff" stroke-width="1.9" stroke-linecap="round" fill="none"/><circle cx="16.3" cy="12" r="4.9" fill="none" stroke="#fff" stroke-width="1.6"/><ellipse cx="16.3" cy="12" rx="2" ry="4.9" fill="none" stroke="#fff" stroke-width="1.2"/></symbol></defs></svg>
 <div class="mm" id="mm" hidden></div>
 <div class="toast" id="toast"></div>
 <script>
@@ -396,8 +395,8 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.7.0',
-  deployed:'2026-11-17 17:08'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.8.0',
+  deployed:'2026-11-17 22:58'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -465,10 +464,13 @@ function links(a){
   }
   return `<span class="lk">${h}</span>`;
 }
-const DLI='<svg class="dli" viewBox="0 0 24 24" role="img" aria-label="도메인 연결"><title>arete929.kr 에 연결됨</title><use href="#dl"/></svg>';
-const dl=a=>!GUEST&&a.pub?DLI:'';
+/* 앱 아이콘(이모지) — 시트의 «아이콘» 칸. 비어 있거나 기본(📱)이면 이름에서 알아맞혀 보여 준다 */
+const GUESS=[[/세특|생기부/,'✍️'],[/배드민턴/,'🏸'],[/배구|발리/,'🏐'],[/넷볼/,'🥅'],[/킨볼/,'🔴'],[/베이스볼|야구/,'⚾'],[/축구|족구/,'⚽'],[/농구/,'🏀'],[/걷기/,'🚶'],[/PAPS|체력|운동/,'💪'],[/대회|체육의 날|리그/,'🏆'],[/점수|성적|채점|수행|평가|분석/,'📝'],[/출석|출결/,'🗓️'],[/설문|투표|추천/,'🗳️'],[/쿠폰|칭찬/,'🎟️'],[/대시보드|전광판|순위/,'📊'],[/명렬|명단|짝꿍|모둠|섞기|편성|자리|짝순환/,'👥'],[/시간표|학사일정|일정|예약/,'📅'],[/진도|수업/,'📚'],[/선정|선수|종목/,'🎯'],[/영어|TickTick|태스크|할일/,'✅'],[/가정통신|신청|접수|민원|보수/,'📮'],[/급식/,'🍚'],[/역할|청소/,'🧹'],[/GAS|웹앱/,'🧩'],[/유콜|전환기/,'📞'],[/훈련|프로그램/,'🏃'],[/도우미|생성/,'🪄']];
+const EMOJIS=['✍️','📝','📊','🗓️','📅','📚','🏐','🥅','⚾','🏸','⚽','🏆','🏃','🚶','🎟️','🗳️','👥','🎯','✅','📮','🧩','🪄','🔗','🍚'];
+const iconOf=a=>{ const i=String(a.icon||'').trim(); if(i&&i!=='📱') return i; for(const [re,e] of GUESS) if(re.test(a.n)) return e; return '📱' };
+const ic=a=>`<span class="ico" aria-hidden="true">${esc(iconOf(a))}</span>`;
 const sw=a=>GUEST?'':`<button class="sw" role="switch" aria-checked="${a.pub}" data-id="${a.id}" title="정문(arete929.kr)에 공개"><i></i><span>${a.pub?'공개':'비공개'}</span></button>`;
-const nm=a=>okUrl(a.u)?`<a class="nm" href="${esc(a.u)}" target="_blank" rel="noopener" title="${esc(a.n)}">${dl(a)}${esc(a.n)}</a>`:`<span class="nm nolink" title="웹앱 주소가 아직 없습니다">${dl(a)}${esc(a.n)}</span>`;
+const nm=a=>okUrl(a.u)?`<a class="nm" href="${esc(a.u)}" target="_blank" rel="noopener" title="${esc(a.n)}">${ic(a)}${esc(a.n)}</a>`:`<span class="nm nolink" title="웹앱 주소가 아직 없습니다">${ic(a)}${esc(a.n)}</span>`;
 function tile(a,c,row,extra){
   return `<div class="tile${row?' row':''} ${a.pub?'pub':'priv'}${extra||''}" style="--c:${c.c}" data-tid="${a.id}">${nm(a)}<div class="ctl">${sw(a)}${links(a)}</div></div>`;
 }
@@ -500,7 +502,7 @@ function layB(){
   return `<div class="b-grid">${cells.join('')}</div><svg class="wires"></svg>`;
 }
 /* 원형 방사 — 묶음 이름의 슬래시( / ) 하나가 한 단계. «체육수업 / 3학년 / 베이스볼5» 는 체육수업 › 3학년 › 베이스볼5 */
-const chip=(a,c)=>`<div class="chip ${a.pub?'pub':'priv'}" style="--c:${c.c}" data-tid="${a.id}" data-cat="${c.k}">${sw(a)}<button class="cn" data-pop="${a.id}" title="${esc(a.n)}">${dl(a)}${esc(a.n)}</button></div>`;
+const chip=(a,c)=>`<div class="chip ${a.pub?'pub':'priv'}" style="--c:${c.c}" data-tid="${a.id}" data-cat="${c.k}">${sw(a)}<button class="cn" data-pop="${a.id}" title="${esc(a.n)}">${ic(a)}${esc(a.n)}</button></div>`;
 let NODES=[], NODEMAP={}, ROOTS=[], AR_NODE=null;
 const directOf=n=>n.cat?vis(n.cat):[];
 const totalOf=n=>n.k==='ar'?(n.cat?n.cat.apps.length:0):directOf(n).length+n.kids.reduce((s,k)=>s+totalOf(k),0);
@@ -942,7 +944,7 @@ $('#zoom').addEventListener('click',e=>{
 });
 function openPop(a,anchor){
   closePop(); const p=document.createElement('div'); p.className='pop';
-  p.innerHTML=`<b>${esc(a.n)}</b><small>${esc(a.cat.n)} · ${a.pub?'공개':'비공개'}${a.d?' · '+esc(a.d):''}</small><div class="pb">${okUrl(a.u)?`<a class="pbtn" href="${esc(a.u)}" target="_blank" rel="noopener">열기</a><button class="pbtn" data-copy="${a.id}">${COPY}<span>주소 복사</span></button>`:''}${!GUEST&&okUrl(a.sheet)?`<a class="pbtn" href="${esc(a.sheet)}" target="_blank" rel="noopener"><img src="${SHEET_IMG}" alt=""><span>시트</span></a>`:''}${!GUEST&&okUrl(a.folder)?`<a class="pbtn" href="${esc(a.folder)}" target="_blank" rel="noopener">${FOLDER}<span>폴더</span></a>`:''}${GUEST?'':`<button class="pbtn" data-edit="${a.id}">고치기</button>`}</div>`;
+  p.innerHTML=`<b>${ic(a)}${esc(a.n)}</b><small>${esc(a.cat.n)} · ${a.pub?'공개':'비공개'}${a.d?' · '+esc(a.d):''}</small><div class="pb">${okUrl(a.u)?`<a class="pbtn" href="${esc(a.u)}" target="_blank" rel="noopener">열기</a><button class="pbtn" data-copy="${a.id}">${COPY}<span>주소 복사</span></button>`:''}${!GUEST&&okUrl(a.sheet)?`<a class="pbtn" href="${esc(a.sheet)}" target="_blank" rel="noopener"><img src="${SHEET_IMG}" alt=""><span>시트</span></a>`:''}${!GUEST&&okUrl(a.folder)?`<a class="pbtn" href="${esc(a.folder)}" target="_blank" rel="noopener">${FOLDER}<span>폴더</span></a>`:''}${GUEST?'':`<button class="pbtn" data-edit="${a.id}">고치기</button>`}</div>`;
   document.body.appendChild(p); const r=anchor.getBoundingClientRect();
   let x=Math.min(innerWidth-p.offsetWidth-8,Math.max(8,r.left)), y=r.bottom+6; if(y+p.offsetHeight>innerHeight-8) y=r.top-p.offsetHeight-6;
   p.style.left=x+'px'; p.style.top=Math.max(8,y)+'px';
@@ -996,7 +998,7 @@ function layList(){
     return head+n.kids.map(k=>nodeBlock(k,d+1)).join('')+(dir.length?dh+ind(n.kids.length?d+1:d):'');
   };
   const body=g=>g[2]?nodeBlock(g[2],0):(g[0]==='지난 앱'?g[1].map(row).join(''):sub(g[1]));
-  const gh2=g=>g[2]?`<h2 class="dh gc" style="--c:${g[2].c}">${esc(g[0])} <small>${g[1].length}개 · 공개 ${g[1].filter(a=>a.pub).length}</small></h2>`:`<h2 class="dh">${g[3]?DLI+' ':''}${g[0]} <small>${g[1].length}개</small></h2>`;
+  const gh2=g=>g[2]?`<h2 class="dh gc" style="--c:${g[2].c}">${esc(g[0])} <small>${g[1].length}개 · 공개 ${g[1].filter(a=>a.pub).length}</small></h2>`:`<h2 class="dh">${g[3]?'🔗 ':''}${g[0]} <small>${g[1].length}개</small></h2>`;
   return `<div class="lhead"><span class="lab">묶어 보기</span><div class="seg" id="grp"><button data-g="cat"${GROUP==='cat'?' class="on"':''}>묶음(다리)별</button><button data-g="dom"${GROUP==='dom'?' class="on"':''}>도메인 연결</button><button data-g="pub"${GROUP==='pub'?' class="on"':''}>공개 · 비공개</button><button data-g="src"${GROUP==='src'?' class="on"':''}>clasp · GitHub</button></div>${GUEST?'':'<button class="setbtn" data-add style="margin-left:auto">앱 추가</button>'}</div>${groups.filter(g=>g[1].length).map(g=>`<section class="grp">${gh2(g)}${body(g)}</section>`).join('')}`;
 }
 
@@ -1171,11 +1173,13 @@ async function savePw(){
 }
 let EDIT=null;
 function openEdit(a,preTab){
-  EDIT=a||null; const v=a||{n:'',d:'',u:'',gas:'',sheet:'',folder:'',git:'',tab:preTab||(CATS.find(c=>c.k!=='ar')||{n:'기타'}).n,term:'',hidden:false};
+  EDIT=a||null; const v=a||{n:'',d:'',u:'',gas:'',sheet:'',folder:'',git:'',tab:preTab||(CATS.find(c=>c.k!=='ar')||{n:'기타'}).n,term:'',hidden:false,icon:''};
   const tabs=[...new Set((STATE.cats||[]).concat(STATE.apps.map(x=>x.tab),[v.tab]).map(normTab).filter(Boolean))], terms=recentTerms(5);
   const f=(id,label,val,type)=>`<label class="fld"><span>${label}</span><input id="${id}" type="${type||'text'}" value="${esc(val)}" autocomplete="off"></label>`;
   dlg(`<form id="eform"><div class="dlg-h"><h2 class="dh">${a?'앱 고치기':'앱 추가'}</h2><button type="button" class="dlg-x" data-closedlg aria-label="닫기">×</button></div>
-  ${f('f_n','이름',v.n)}${f('f_d','한 줄 설명 (정문에도 보입니다)',v.d)}${f('f_u','웹앱 주소',v.u,'url')}
+  ${f('f_n','이름',v.n)}
+  <div class="fld"><span>아이콘 (이모지 — 앱이 무엇인지 한눈에 알아보는 표시)</span><div class="pick" id="p_icon"><button type="button" class="pk${(!v.icon||v.icon==='📱'||!EMOJIS.includes(v.icon))?' on':''}" data-pk="">자동</button>${EMOJIS.map(e=>`<button type="button" class="pk ek${e===v.icon?' on':''}" data-pk="${e}">${e}</button>`).join('')}</div>
+  <label class="fld" style="margin-top:6px"><span>직접 넣기 (이모지 하나)</span><input id="f_icon" type="text" maxlength="8" autocomplete="off" value="${esc(v.icon&&v.icon!=='📱'&&!EMOJIS.includes(v.icon)?v.icon:'')}" placeholder="비워 두면 위에서 고른 것 / 자동"></label></div>${f('f_d','한 줄 설명 (정문에도 보입니다)',v.d)}${f('f_u','웹앱 주소',v.u,'url')}
   <div class="two">${f('f_sheet','구글 시트 주소',v.sheet,'url')}${f('f_folder','드라이브 폴더 주소',v.folder,'url')}${f('f_gas','Apps Script 편집기 주소 (clasp)',v.gas,'url')}${f('f_git','GitHub 주소',v.git,'url')}</div>
   <div class="fld"><span>묶음</span><div class="pick" id="p_tab">${tabs.map(t=>`<button type="button" class="pk${t===v.tab?' on':''}" data-pk="${esc(t)}">${esc(t)}</button>`).join('')}</div></div>
   ${f('f_tabnew','새 묶음 이름 (새로 만들 때만)','')}
@@ -1187,7 +1191,7 @@ function openEdit(a,preTab){
 const picked=id=>{const b=$(`#${id} .pk.on`);return b?b.dataset.pk:''};
 async function saveEdit(){
   const val=id=>$('#'+id).value.trim();
-  const data={n:val('f_n'),d:val('f_d'),u:val('f_u'),gas:val('f_gas'),sheet:val('f_sheet'),folder:val('f_folder'),git:val('f_git'),tab:val('f_tabnew')||picked('p_tab'),term:picked('p_term'),hidden:!!picked('p_hid')};
+  const data={n:val('f_n'),d:val('f_d'),u:val('f_u'),gas:val('f_gas'),sheet:val('f_sheet'),folder:val('f_folder'),git:val('f_git'),tab:val('f_tabnew')||picked('p_tab'),term:picked('p_term'),hidden:!!picked('p_hid'),icon:val('f_icon')||picked('p_icon')};
   const msg=$('#e_msg');
   if(!data.n){msg.textContent='이름을 넣어 주세요.';return}
   for(const k of ['u','gas','sheet','folder','git']) if(data[k]&&!okUrl(data[k])){msg.textContent='주소는 https:// 로 시작해야 합니다.';return}

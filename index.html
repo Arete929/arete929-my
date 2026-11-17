@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.0.0 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.1.0 — 지도 가지를 끌어 옮기기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -146,6 +146,10 @@ main.dim .tile.x{opacity:.2}
 .cn{border:0;background:none;padding:0;cursor:pointer;font-weight:600;font-size:12.5px;overflow:hidden;text-overflow:ellipsis}
 .cn:hover{text-decoration:underline}
 .chip.more{padding:6px 10px;border-style:dashed;color:var(--sub);font-size:12.5px}
+.d-stage{user-select:none;-webkit-user-select:none}
+body:not(.guest) .d-hub,body:not(.guest) .chip{cursor:grab;touch-action:none}
+body:not(.guest) .d-hub.dragging,body:not(.guest) .chip.dragging{cursor:grabbing;z-index:6;box-shadow:0 8px 20px rgba(0,0,0,.2)}
+.dragging *{pointer-events:none}
 .pop{position:fixed;z-index:50;width:236px;background:var(--card);border:1px solid #bfb6a3;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.14);padding:11px}
 .pop b{display:block;font-size:14px;margin-bottom:2px}
 .pop small{color:var(--sub);font-size:12px}
@@ -345,7 +349,7 @@ main.dim .tile.x{opacity:.2}
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.0.0',
+  version:'v2.1.0',
   deployed:''                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
@@ -449,7 +453,7 @@ function placeD(){
   const W=st.clientWidth, hubs=[...st.querySelectorAll('.d-hub')]; if(!hubs.length) return;
   const wOf=k=>weight(CATS.find(x=>x.k===k));
   const total=hubs.reduce((s,h)=>s+wOf(h.dataset.k),0);
-  const put=(el,x,y)=>{el.style.left=x+'px';el.style.top=y+'px'};
+  const put=(el,x,y)=>{el._a=[x,y];el.style.left=x+'px';el.style.top=y+'px'};
   function attempt(H){
     st.style.height=H+'px';
     const cx=W/2, cy=H/2, RX=W/2-6, RY=H/2-6, boxes=[], M=5;
@@ -481,10 +485,80 @@ function placeD(){
   let H=Math.max(780,Math.min(980,W*.64)), plan=null;
   while(!(plan=attempt(H))&&H<2400) H+=80;
   plan=plan||attempt.last||[];
-  const svg=st.querySelector('.wires'); svg.setAttribute('width',W); svg.setAttribute('height',H);
-  const ctr=b=>[b.x+b.w/2,b.y+b.h/2];
-  svg.innerHTML=plan.map(([f,t,col,big])=>{const [x1,y1]=ctr(f),[x2,y2]=ctr(t);return `<path d="M${x1},${y1} L${x2},${y2}" stroke="${col}" stroke-width="${big?4:1.4}" opacity="${big?.9:.55}" stroke-linecap="round"/>`}).join('');
+  st._H=H; applyPos();
 }
+/* 가지 옮기기 — 처음 자리(el._a)에 저장해 둔 옮긴 만큼(POS, 칸 너비 비율)을 더해 놓고, 선은 실제 자리에서 다시 긋는다 */
+const hubName=k=>(CATS.find(x=>x.k===k)||{}).n||k;
+const hubKey=h=>'h:'+hubName(h.dataset.k);
+function chipKey(ch){ if(ch.dataset.tid){const a=findApp(ch.dataset.tid); return 'a:'+(a?a.n:ch.dataset.tid)} return 'm:'+(ch.dataset.cat||'') }
+const posOf=(k,W)=>{const o=POS[k]||[0,0];return[o[0]*W,o[1]*W]};
+function applyPos(){
+  const st=main.querySelector('.d-stage'); if(!st) return; const W=st.clientWidth, H=st._H||st.clientHeight;
+  const set=(el,x,y)=>{el.style.left=Math.max(2,Math.min(W-el.offsetWidth-2,x))+'px';el.style.top=Math.max(2,Math.min(H-el.offsetHeight-2,y))+'px'};
+  st.querySelectorAll('.d-hub').forEach(h=>{ if(!h._a) return; h._o=posOf(hubKey(h),W); set(h,h._a[0]+h._o[0],h._a[1]+h._o[1]) });
+  st.querySelectorAll('.chip').forEach(ch=>{
+    if(!ch._a) return; const hub=st.querySelector(`.d-hub[data-k="${ch.dataset.cat}"]`), ho=hub&&hub._o||[0,0];
+    ch._o=posOf(chipKey(ch),W); set(ch,ch._a[0]+ho[0]+ch._o[0],ch._a[1]+ho[1]+ch._o[1]);
+  });
+  drawD();
+}
+function drawD(){
+  const st=main.querySelector('.d-stage'); if(!st) return; const svg=st.querySelector('.wires'), root=st.querySelector('.root'); if(!svg||!root) return;
+  svg.setAttribute('width',st.clientWidth); svg.setAttribute('height',st._H||st.clientHeight);
+  const ctr=el=>[el.offsetLeft+el.offsetWidth/2,el.offsetTop+el.offsetHeight/2], [rx,ry]=ctr(root); let s='';
+  st.querySelectorAll('.d-hub').forEach(h=>{
+    const col=h.style.getPropertyValue('--c'), [hx,hy]=ctr(h);
+    s+=`<path d="M${rx},${ry} L${hx},${hy}" stroke="${col}" stroke-width="4" opacity=".9" stroke-linecap="round"/>`;
+    st.querySelectorAll(`.chip[data-cat="${h.dataset.k}"]`).forEach(ch=>{const [x,y]=ctr(ch);s+=`<path d="M${hx},${hy} L${x},${y}" stroke="${col}" stroke-width="1.4" opacity=".55" stroke-linecap="round"/>`});
+  });
+  svg.innerHTML=s;
+}
+let POS={}, pt;
+function posLoad(){
+  if(STATE&&STATE.pos&&typeof STATE.pos==='object'){POS=JSON.parse(JSON.stringify(STATE.pos));return}
+  try{POS=JSON.parse(localStorage.getItem('my-pos')||'{}')||{}}catch(e){POS={}}
+}
+function savePos(what){
+  try{localStorage.setItem('my-pos',JSON.stringify(POS))}catch(e){}
+  clearTimeout(pt); const snap=JSON.parse(JSON.stringify(POS));
+  pt=setTimeout(async()=>{
+    try{const j=await api('pos',{pos:snap}); STATE.pos=snap; STATE.saved.layout=j.savedAt; saved(j.savedAt,what||'가지 위치'); const s=$('#posSaved'); if(s){s.textContent=`저장됨 · ${j.savedAt}`}}
+    catch(e){ if(e.code!=='auth') toast('이 기기에만 저장했어요 (서버에 저장하지 못했습니다)') }
+  },500);
+}
+let DRAG=null, NOCLICK=false;
+document.addEventListener('pointerdown',e=>{
+  if(GUEST||VIEW!=='map'||V!=='d'||dNarrow()||(e.pointerType==='mouse'&&e.button!==0)) return;
+  const el=e.target.closest('.d-hub,.chip'); if(!el||!el.closest('.d-stage')) return;
+  const st=el.closest('.d-stage'), hub=el.classList.contains('d-hub');
+  DRAG={el,st,hub,pid:e.pointerId,sx:e.clientX,sy:e.clientY,moved:false,key:hub?hubKey(el):chipKey(el),W:st.clientWidth,H:st._H||st.clientHeight};
+  DRAG.start=posOf(DRAG.key,DRAG.W);
+});
+document.addEventListener('pointermove',e=>{
+  const D=DRAG; if(!D||e.pointerId!==D.pid) return;
+  const dx=e.clientX-D.sx, dy=e.clientY-D.sy;
+  if(!D.moved){ if(Math.hypot(dx,dy)<5) return; D.moved=true; D.el.classList.add('dragging'); closePop(); try{D.el.setPointerCapture(e.pointerId)}catch(_){ } }
+  /* 안 넘어가게: 가지(=이름표+딸린 앱들) 또는 앱 하나의 네모가 칸 안에 머물게 */
+  const members=D.hub?[D.el,...D.st.querySelectorAll(`.chip[data-cat="${D.el.dataset.k}"]`)]:[D.el];
+  let lo=[-1e9,-1e9], hi=[1e9,1e9];
+  members.forEach(m=>{
+    const base=D.hub?(m===D.el?[0,0]:(m._o||[0,0])):[0,0], hubO=!D.hub?((D.st.querySelector(`.d-hub[data-k="${D.el.dataset.cat}"]`)||{})._o||[0,0]):[0,0];
+    const ax=m._a[0]+base[0]+hubO[0], ay=m._a[1]+base[1]+hubO[1];
+    lo[0]=Math.max(lo[0],2-ax); hi[0]=Math.min(hi[0],D.W-m.offsetWidth-2-ax);
+    lo[1]=Math.max(lo[1],2-ay); hi[1]=Math.min(hi[1],D.H-m.offsetHeight-2-ay);
+  });
+  const nx=Math.max(lo[0],Math.min(hi[0],D.start[0]+dx)), ny=Math.max(lo[1],Math.min(hi[1],D.start[1]+dy));
+  POS[D.key]=[+(nx/D.W).toFixed(4),+(ny/D.W).toFixed(4)];
+  applyPos();
+});
+function endDrag(e){
+  const D=DRAG; if(!D||(e&&e.pointerId!==D.pid)) return; DRAG=null;
+  D.el.classList.remove('dragging');
+  if(D.moved){ NOCLICK=true; setTimeout(()=>{NOCLICK=false},0); savePos(D.hub?`가지 위치 · ${hubName(D.el.dataset.k)}`:`가지 위치 · ${D.el.textContent.trim().slice(0,16)}`) }
+}
+document.addEventListener('pointerup',endDrag); document.addEventListener('pointercancel',endDrag);
+document.addEventListener('click',e=>{ if(NOCLICK){e.stopPropagation();e.preventDefault()} },true);
+function resetPos(){ POS={}; savePos('가지 위치 처음대로'); if(V==='d'&&VIEW==='map'&&!dNarrow()) placeD() }
 function openPop(a,anchor){
   closePop(); const p=document.createElement('div'); p.className='pop';
   p.innerHTML=`<b>${esc(a.n)}</b><small>${esc(a.cat.n)} · ${a.pub?'공개':'비공개'}${a.d?' · '+esc(a.d):''}</small><div class="pb">${okUrl(a.u)?`<a class="pbtn" href="${esc(a.u)}" target="_blank" rel="noopener">열기</a><button class="pbtn" data-copy="${a.id}">${COPY}<span>주소 복사</span></button>`:''}${!GUEST&&okUrl(a.sheet)?`<a class="pbtn" href="${esc(a.sheet)}" target="_blank" rel="noopener"><img src="${SHEET_IMG}" alt=""><span>시트</span></a>`:''}${!GUEST&&okUrl(a.folder)?`<a class="pbtn" href="${esc(a.folder)}" target="_blank" rel="noopener">${FOLDER}<span>폴더</span></a>`:''}${GUEST?'':`<button class="pbtn" data-edit="${a.id}">고치기</button>`}</div>`;
@@ -612,7 +686,7 @@ async function api(act,data){
   return j;
 }
 function adopt(state){
-  STATE=state; build();
+  STATE=state; build(); posLoad();
   const s=STATE.saved||{};
   LOG=[[s.share,'공개 스위치'],[s.layout,'지도 모양'],[s.app,'앱 정보']].filter(x=>x[0]).map(x=>({t:x[0],x:x[1]})).sort((a,b)=>a.t<b.t?1:-1);
   $('#stampTxt').textContent=`마지막 저장 · ${s.last||'-'}`;
@@ -673,6 +747,8 @@ function openSet(){
   <h3>지도 모양</h3><p class="hint">고르면 바로 바뀌고 저장됩니다. 원형 방사는 폰처럼 좁은 화면에서 조직도 모양으로 보입니다.</p>
   <div class="lays">${LAYS.map(([k,n,d,svg])=>`<button class="lay${k===V?' on':''}" data-lay="${k}"><svg viewBox="0 0 120 76">${svg}</svg><b>${n}${k==='d'?'<span class="def">기본</span>':''}</b><small>${d}</small></button>`).join('')}</div>
   <div class="savedat" id="laySaved">마지막 저장 · ${esc(s.layout||'-')}</div>
+  <h3>가지 위치</h3><p class="hint">원형 방사 지도에서 이름표나 앱 칸을 끌어 옮길 수 있습니다. 이름표를 끌면 딸린 앱이 함께 움직이고 선이 따라옵니다.</p>
+  <div class="acct"><button class="btn" data-resetpos>가지 위치 처음대로</button></div><div class="savedat" id="posSaved">마지막 저장 · ${esc(s.layout||'-')}</div>
   <h3>바로가기</h3><div class="acct"><a class="btn" href="${esc(CFG.front)}" target="_blank" rel="noopener">정문 보기 (arete929.kr)</a>${okUrl(STATE.sheetUrl)?`<a class="btn" href="${esc(STATE.sheetUrl)}" target="_blank" rel="noopener">앱 목록 시트 열기</a>`:''}</div>
   <h3>계정</h3><div class="acct"><button class="btn" data-acct="pw">비밀번호 바꾸기</button><button class="btn" data-acct="out">로그아웃</button><button class="btn" data-acct="outall">모든 기기에서 로그아웃</button></div>`,'set');
 }
@@ -749,6 +825,7 @@ document.addEventListener('click',async e=>{
   if(t.dataset.closedlg!==undefined){closeDlg();return}
   if(t.id==='reload'){loadState();return}
   if(!STATE) return;
+  if(t.dataset.resetpos!==undefined){if(!Object.keys(POS).length){toast('옮긴 가지가 없어요');return} if(!await uiConfirm('옮겨 둔 가지 위치를 모두 처음대로 되돌릴까요?','되돌리기')) return; resetPos(); toast('처음 자리로 되돌렸어요'); return}
   if(t.dataset.pop){openPop(findApp(t.dataset.pop),t);return}
   if(t.id==='openSet'){openSet();return}
   if(t.dataset.edit){closePop();openEdit(findApp(t.dataset.edit));return}
@@ -796,6 +873,7 @@ function demoApi(act,d){
     if(act==='state') return res(copy());
     if(act==='pub'){find(d.key).pub=d.pub;S.saved.share=S.saved.last=now();return res({ok:true,savedAt:S.saved.share})}
     if(act==='layout'){S.layout=d.layout;S.saved.layout=S.saved.last=now();return res({ok:true,savedAt:S.saved.layout})}
+    if(act==='pos'){S.pos=d.pos;S.saved.layout=S.saved.last=now();return res({ok:true,savedAt:S.saved.layout})}
     if(act==='edit'){Object.assign(find(d.key),d.data);S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='add'){S.apps.push(Object.assign({pub:false,feed:false,upd:'2026-11-17',kind:'app',ver:''},d.data));S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='del'){S.apps.splice(S.apps.indexOf(find(d.key)),1);S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}

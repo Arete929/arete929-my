@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.3.1 — 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.4.0 — 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -151,6 +151,8 @@ main.dim .tile.x{opacity:.2}
 body:not(.guest) .d-hub,body:not(.guest) .chip{cursor:grab;touch-action:none}
 body:not(.guest) .d-hub.dragging,body:not(.guest) .chip.dragging{cursor:grabbing;z-index:6;box-shadow:0 8px 20px rgba(0,0,0,.2)}
 .dragging *{pointer-events:none}
+.d-hub.drop{box-shadow:0 0 0 5px color-mix(in srgb,var(--c) 35%,transparent);background:color-mix(in srgb,var(--c) 14%,var(--card))}
+.br.drop,.isl.drop{outline:3px dashed var(--c);outline-offset:4px}
 @media (min-width:1100px){
   body:not(.guest) .lay-a .hub,body:not(.guest) .lay-a .tile,body:not(.guest) .lay-b .ih,body:not(.guest) .lay-b .tile{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
   body:not(.guest) .lay-a .dragging,body:not(.guest) .lay-b .dragging{cursor:grabbing;z-index:6;box-shadow:0 8px 20px rgba(0,0,0,.2)}
@@ -369,8 +371,8 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.3.1',
-  deployed:'2026-11-17 15:35'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.4.0',
+  deployed:'2026-11-17 15:43'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -505,8 +507,15 @@ function placeD(){
   let H=Math.max(780,Math.min(980,W*.64)), plan=null;
   while(!(plan=attempt(H))&&H<2400) H+=80;
   plan=plan||attempt.last||[];
-  st._H=H; applyPos();
+  st._H=H;
+  if(PEND){   /* 다른 묶음으로 옮긴 앱은 사용자가 놓은 자리에 그대로 두고, 새 가지의 처음 자리 기준으로 옮긴 만큼을 다시 계산 */
+    const ch=[...st.querySelectorAll('.chip[data-tid]')].find(c=>chipKey(c)===PEND.key), hub=ch&&st.querySelector(`.d-hub[data-k="${ch.dataset.cat}"]`);
+    if(ch&&hub&&ch._a){ const ho=posOf(hubKey(hub),W); POS[PEND.key]=[+((PEND.x-ch._a[0]-ho[0])/W).toFixed(4),+((PEND.y-ch._a[1]-ho[1])/W).toFixed(4)]; savePos('앱 위치') }
+    PEND=null;
+  }
+  applyPos();
 }
+let PEND=null;
 /* 가지 옮기기 — 처음 자리(el._a)에 저장해 둔 옮긴 만큼(POS, 칸 너비 비율)을 더해 놓고, 선은 실제 자리에서 다시 긋는다 */
 const hubName=k=>(CATS.find(x=>x.k===k)||{}).n||k;
 const hubKey=h=>'h:'+hubName(h.dataset.k);
@@ -610,7 +619,7 @@ document.addEventListener('pointermove',e=>{
   if(D.xy){
     const mr=main.querySelector('.zin').getBoundingClientRect(), r=D.el.getBoundingClientRect(), cur=D.el._o||[0,0], bx=r.left-cur[0]*Z, by=r.top-cur[1]*Z;
     const nx=Math.max((mr.left+2-bx)/Z,Math.min((mr.right-r.width-2-bx)/Z,D.start[0]+dx)), ny=Math.max((mr.top+2-by)/Z,Math.min((mr.bottom-r.height-2-by)/Z,D.start[1]+dy));
-    POS[D.key]=[+(nx/D.W).toFixed(4),+(ny/D.W).toFixed(4)]; applyXY(); if(V==='a') wiresA(); else wiresB(); return;
+    POS[D.key]=[+(nx/D.W).toFixed(4),+(ny/D.W).toFixed(4)]; applyXY(); if(V==='a') wiresA(); else wiresB(); dropHint(D); return;
   }
   /* 안 넘어가게: 가지(=이름표+딸린 앱들) 또는 앱 하나의 네모가 칸 안에 머물게 */
   const members=D.hub?[D.el,...D.st.querySelectorAll(`.chip[data-cat="${D.el.dataset.k}"]`)]:[D.el];
@@ -623,12 +632,61 @@ document.addEventListener('pointermove',e=>{
   });
   const nx=Math.max(lo[0],Math.min(hi[0],D.start[0]+dx)), ny=Math.max(lo[1],Math.min(hi[1],D.start[1]+dy));
   POS[D.key]=[+(nx/D.W).toFixed(4),+(ny/D.W).toFixed(4)];
-  applyPos();
+  applyPos(); dropHint(D);
 });
+/* 앱을 다른 묶음 쪽에 놓으면 그 묶음의 가지로 옮긴다 */
+function dropTarget(D){
+  if(D.hub||!D.el.dataset.tid) return null;
+  const a=findApp(D.el.dataset.tid); if(!a||a.cat.k==='ar') return null; const own=a.cat.k;
+  if(D.xy){   /* 가지형·섬 지도: 앱 칸 가운데가 들어 있는 가지(섬) */
+    const r=D.el.getBoundingClientRect(), cx=(r.left+r.right)/2, cy=(r.top+r.bottom)/2;
+    const inside=s=>{const q=s.getBoundingClientRect(); return cx>=q.left&&cx<=q.right&&cy>=q.top&&cy<=q.bottom};
+    const ownEl=D.el.closest('.br[data-k],.isl[data-k]'); if(ownEl&&inside(ownEl)) return own;   /* 자기 가지 안이면 그대로 */
+    const hit=[...main.querySelectorAll('.br[data-k],.isl[data-k]')].find(s=>s.dataset.k!=='ar'&&s!==ownEl&&inside(s));
+    return hit?hit.dataset.k:own;
+  }
+  /* 원형 방사: 앱 가운데에서 가장 가까운 이름표·앱(40px 안)이 속한 묶음. 자기 묶음은 15px 더 봐 준다 */
+  const st=D.st, cx=D.el.offsetLeft+D.el.offsetWidth/2, cy=D.el.offsetTop+D.el.offsetHeight/2; let best=own, bd=1e9;
+  CATS.forEach(c=>{
+    if(c.k==='ar') return;
+    let m=1e9; [...st.querySelectorAll(`.d-hub[data-k="${c.k}"],.chip[data-cat="${c.k}"]`)].forEach(e=>{
+      if(e===D.el||e.classList.contains('more')) return;
+      const dx=Math.max(e.offsetLeft-cx,0,cx-(e.offsetLeft+e.offsetWidth)), dy=Math.max(e.offsetTop-cy,0,cy-(e.offsetTop+e.offsetHeight)); m=Math.min(m,Math.hypot(dx,dy));
+    });
+    if(c.k===own) m-=15;
+    if(m<=40&&m<bd){bd=m;best=c.k}
+  });
+  return best;
+}
+function dropHint(D){
+  const a=D.el.dataset.tid&&findApp(D.el.dataset.tid); if(!a) return;
+  D.own=a.cat.k; D.target=dropTarget(D);
+  main.querySelectorAll('.drop').forEach(e=>e.classList.remove('drop'));
+  const k=D.target||D.own, c=CATS.find(x=>x.k===k);
+  if(c) D.el.style.setProperty('--c',c.c);
+  if(k!==D.own){ const t=D.xy?main.querySelector(`.br[data-k="${k}"],.isl[data-k="${k}"]`):D.st.querySelector(`.d-hub[data-k="${k}"]`); if(t) t.classList.add('drop') }
+}
+let MOVING=false;
+async function moveApp(a,k,keepAt){
+  const c=CATS.find(x=>x.k===k); if(!c||MOVING) return render();
+  MOVING=true;
+  try{
+    const j=await api('move',{key:keyOf(a),tab:c.n}), pos=JSON.parse(JSON.stringify(POS)), name=a.n, keepLog=LOG.slice();
+    if(keepAt) PEND={key:'a:'+name,x:keepAt[0],y:keepAt[1]}; else { delete pos['a:'+name+'@'+V]; }
+    adopt(j.state); POS=pos; LOG=keepLog; if(!keepAt) savePos('앱 위치');
+    saved(j.savedAt,`${name} · «${c.n}»로 옮김`); toast(`«${name}»을(를) «${c.n}»로 옮겼어요`);
+  }catch(e){ if(e.code!=='auth') toast(e.message||'옮기지 못했어요'); render() }
+  finally{ MOVING=false }
+}
 function endDrag(e){
   const D=DRAG; if(!D||(e&&e.pointerId!==D.pid)) return; DRAG=null;
-  D.el.classList.remove('dragging');
-  if(D.moved){ NOCLICK=true; setTimeout(()=>{NOCLICK=false},0); savePos(D.hub?`가지 위치 · ${hubName(D.el.dataset.k)}`:`가지 위치 · ${(D.el.querySelector('.nm,.cn')||D.el).textContent.trim().slice(0,16)}`) }
+  D.el.classList.remove('dragging'); main.querySelectorAll('.drop').forEach(x=>x.classList.remove('drop'));
+  if(D.moved){
+    NOCLICK=true; setTimeout(()=>{NOCLICK=false},0);
+    savePos(D.hub?`가지 위치 · ${hubName(D.el.dataset.k)}`:`가지 위치 · ${(D.el.querySelector('.nm,.cn')||D.el).textContent.trim().slice(0,16)}`);
+    if(D.target&&D.own&&D.target!==D.own) moveApp(findApp(D.el.dataset.tid),D.target,D.xy?null:[D.el.offsetLeft,D.el.offsetTop]);
+    else if(D.own) D.el.style.removeProperty('--c');
+  }
 }
 document.addEventListener('pointerup',endDrag); document.addEventListener('pointercancel',endDrag);
 document.addEventListener('click',e=>{ if(NOCLICK){e.stopPropagation();e.preventDefault()} },true);
@@ -972,6 +1030,7 @@ function demoApi(act,d){
     if(act==='pos'){S.pos=d.pos;S.saved.layout=S.saved.last=now();return res({ok:true,savedAt:S.saved.layout})}
     if(act==='edit'){Object.assign(find(d.key),d.data);S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='add'){S.apps.push(Object.assign({pub:false,feed:false,upd:'2026-11-17',kind:'app',ver:''},d.data));S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
+    if(act==='move'){find(d.key).tab=d.tab;S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='del'){S.apps.splice(S.apps.indexOf(find(d.key)),1);S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
     res({ok:true,tok:'demo',hasPw:true});
   },120));

@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.3.0 — 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.3.1 — 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -157,7 +157,9 @@ body:not(.guest) .d-hub.dragging,body:not(.guest) .chip.dragging{cursor:grabbing
 }
 /* 확대·축소: 지도 전체를 .zin 안에 넣고 scale 로 키운다. .zbox 가 키운 만큼의 자리를 잡아 준다 */
 .zbox{position:relative;margin:0 auto}
-.zin{position:relative;transform-origin:0 0}
+.zin{position:relative;transform-origin:0 0;cursor:grab}
+.zin button,.zin a,.zin .sw{cursor:pointer}
+main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-user-select:none}
 .lay-a,.lay-b,.lay-e,.lay-f{overflow-x:auto}
 .zoom{position:fixed;right:14px;bottom:14px;z-index:30;display:flex;border:1.5px solid var(--ink);border-radius:8px;background:var(--card);box-shadow:0 4px 14px rgba(0,0,0,.18);overflow:hidden}
 .zoom[hidden]{display:none}
@@ -367,8 +369,8 @@ body:not(.guest) .d-hub.dragging,body:not(.guest) .chip.dragging{cursor:grabbing
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.3.0',
-  deployed:'2026-11-17 15:28'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.3.1',
+  deployed:'2026-11-17 15:35'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -631,6 +633,21 @@ function endDrag(e){
 document.addEventListener('pointerup',endDrag); document.addEventListener('pointercancel',endDrag);
 document.addEventListener('click',e=>{ if(NOCLICK){e.stopPropagation();e.preventDefault()} },true);
 function resetPos(){ POS={}; savePos('가지 위치 처음대로'); if(VIEW==='map') post() }
+/* 빈 곳을 마우스로 끌면 화면이 이동(손바닥 끌기). 가로는 main 스크롤, 세로는 페이지 스크롤. 터치는 원래 스크롤에 맡긴다 */
+let PAN=null;
+main.addEventListener('pointerdown',e=>{
+  if(e.pointerType==='touch'||e.button!==0||DRAG||VIEW!=='map'||!e.target.closest('.zin')) return;
+  if(e.target.closest('.d-hub,.chip,.tile,.hub,.ih,.pop,button,a,input,.sw,.more')) return;
+  PAN={pid:e.pointerId,sx:e.clientX,sy:e.clientY,l:main.scrollLeft,t:scrollY,moved:false};
+});
+main.addEventListener('pointermove',e=>{
+  const P=PAN; if(!P||e.pointerId!==P.pid) return;
+  const dx=e.clientX-P.sx, dy=e.clientY-P.sy;
+  if(!P.moved){ if(Math.hypot(dx,dy)<4) return; P.moved=true; main.classList.add('panning'); try{main.setPointerCapture(e.pointerId)}catch(_){ } closePop() }
+  main.scrollLeft=P.l-dx; scrollTo(scrollX,P.t-dy);
+});
+function endPan(e){ const P=PAN; if(!P||(e&&e.pointerId!==P.pid)) return; PAN=null; main.classList.remove('panning'); if(P.moved){NOCLICK=true;setTimeout(()=>{NOCLICK=false},0)} }
+main.addEventListener('pointerup',endPan); main.addEventListener('pointercancel',endPan);
 $('#zoom').addEventListener('click',e=>{
   const b=e.target.closest('button[data-z]'); if(!b||b.disabled) return; const k=b.dataset.z;
   if(k==='+') zStep(1); else if(k==='-') zStep(-1); else if(k==='1') zSet(1); else if(k==='fit') zFit();

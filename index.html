@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.4.0 — 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.4.1 — 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -371,8 +371,8 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.4.0',
-  deployed:'2026-11-17 15:43'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.4.1',
+  deployed:'2026-11-17 15:46'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -666,17 +666,18 @@ function dropHint(D){
   if(c) D.el.style.setProperty('--c',c.c);
   if(k!==D.own){ const t=D.xy?main.querySelector(`.br[data-k="${k}"],.isl[data-k="${k}"]`):D.st.querySelector(`.d-hub[data-k="${k}"]`); if(t) t.classList.add('drop') }
 }
-let MOVING=false;
-async function moveApp(a,k,keepAt){
-  const c=CATS.find(x=>x.k===k); if(!c||MOVING) return render();
-  MOVING=true;
-  try{
-    const j=await api('move',{key:keyOf(a),tab:c.n}), pos=JSON.parse(JSON.stringify(POS)), name=a.n, keepLog=LOG.slice();
-    if(keepAt) PEND={key:'a:'+name,x:keepAt[0],y:keepAt[1]}; else { delete pos['a:'+name+'@'+V]; }
-    adopt(j.state); POS=pos; LOG=keepLog; if(!keepAt) savePos('앱 위치');
-    saved(j.savedAt,`${name} · «${c.n}»로 옮김`); toast(`«${name}»을(를) «${c.n}»로 옮겼어요`);
-  }catch(e){ if(e.code!=='auth') toast(e.message||'옮기지 못했어요'); render() }
-  finally{ MOVING=false }
+/* 놓자마자 화면부터 바꾸고(서버 응답을 기다리지 않는다), 저장은 뒤에서 순서대로 보낸다. 실패하면 원래 묶음으로 되돌린다 */
+let MQ=Promise.resolve();
+function moveApp(a,k,keepAt){
+  const c=CATS.find(x=>x.k===k); if(!c) return render();
+  const name=a.n, key=keyOf(a), old=a.tab;
+  a.tab=c.n;
+  if(keepAt) PEND={key:'a:'+name,x:keepAt[0],y:keepAt[1]}; else { delete POS['a:'+name+'@'+V]; savePos('앱 위치') }
+  build(); render(); toast(`«${name}»을(를) «${c.n}»로 옮겼어요`);
+  MQ=MQ.then(async()=>{
+    try{ const j=await api('move',{key,tab:c.n}); saved(j.savedAt,`${name} · «${c.n}»로 옮김`) }
+    catch(e){ a.tab=old; build(); render(); if(e.code!=='auth') toast(`저장하지 못해 «${name}»을(를) «${old}»로 되돌렸어요`) }
+  });
 }
 function endDrag(e){
   const D=DRAG; if(!D||(e&&e.pointerId!==D.pid)) return; DRAG=null;

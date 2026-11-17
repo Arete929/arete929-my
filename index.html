@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.5.2 — 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.6.0 — 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -132,10 +132,11 @@ main.dim .tile.x{opacity:.2}
 
 /* ── 원형 방사 ── */
 .lay-d{padding:14px 20px 20px}
-.d-stage{position:relative;max-width:1440px;min-width:800px;margin:0 auto}
+.d-stage{position:relative;margin:0 auto}
+.d-world{position:absolute;left:0;top:0;width:0;height:0}
 .lay-d{overflow-x:auto}
-.d-stage>.root{position:absolute;z-index:3;width:168px;height:168px;border-radius:50%;display:grid;place-content:center;padding:10px}
-.d-stage>.root b{font-size:26px}
+.d-world>.root{position:absolute;z-index:3;width:168px;height:168px;border-radius:50%;display:grid;place-content:center;padding:10px}
+.d-world>.root b{font-size:26px}
 .d-hub{position:absolute;z-index:3;border:2px solid var(--c);background:var(--card);border-radius:8px;padding:5px 10px;text-align:center;white-space:nowrap}
 .d-hub .hubt{display:block;font-size:18px}
 .chip{position:absolute;z-index:2;display:flex;align-items:center;gap:6px;background:var(--card);border:1.5px solid var(--c);border-radius:6px;padding:4px 9px 4px 6px;white-space:nowrap;max-width:210px}
@@ -148,10 +149,18 @@ main.dim .tile.x{opacity:.2}
 .cn:hover{text-decoration:underline}
 .chip.more{padding:6px 10px;border-style:dashed;color:var(--sub);font-size:12.5px}
 .d-stage{user-select:none;-webkit-user-select:none}
-body:not(.guest) .d-hub,body:not(.guest) .chip{cursor:grab;touch-action:none}
-body:not(.guest) .d-hub.dragging,body:not(.guest) .chip.dragging{cursor:grabbing;z-index:6;box-shadow:0 8px 20px rgba(0,0,0,.2)}
+body:not(.guest) .d-hub,body:not(.guest) .d-sub,body:not(.guest) .chip{cursor:grab;touch-action:none}
+body:not(.guest) .d-hub.dragging,body:not(.guest) .d-sub.dragging,body:not(.guest) .chip.dragging{cursor:grabbing;z-index:6;box-shadow:0 8px 20px rgba(0,0,0,.2)}
 .dragging *{pointer-events:none}
+.d-sub{position:absolute;z-index:3;border:2px solid var(--c);background:color-mix(in srgb,var(--c) 14%,var(--card));border-radius:999px;padding:3px 13px;white-space:nowrap;text-align:center}
+.d-sub .hubt{display:inline;font-size:15px;color:var(--c)}
+.d-sub .hubn{display:inline;margin-left:6px;font-size:11px}
+.d-sub.l3{padding:2px 10px;background:color-mix(in srgb,var(--c) 7%,var(--card));border-width:1.5px}
+.d-sub.l3 .hubt{font-size:13px}
+.fnote.in{display:inline;margin:0 0 0 6px}
+.grp h3.sub.d2{margin-left:18px;font-size:13px}.grp h3.sub.d3{margin-left:36px;font-size:12.5px}.grp h3.sub.d4{margin-left:54px;font-size:12.5px}
 .fnote{display:block;font-size:11px;color:var(--sub);margin-top:2px;white-space:nowrap}
+.d-sub.drop{box-shadow:0 0 0 5px color-mix(in srgb,var(--c) 35%,transparent);background:color-mix(in srgb,var(--c) 26%,var(--card))}
 .d-hub.drop{box-shadow:0 0 0 5px color-mix(in srgb,var(--c) 35%,transparent);background:color-mix(in srgb,var(--c) 14%,var(--card))}
 .br.drop,.isl.drop{outline:3px dashed var(--c);outline-offset:4px}
 @media (min-width:1100px){
@@ -375,8 +384,8 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.5.2',
-  deployed:'2026-11-17 15:59'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.6.0',
+  deployed:'2026-11-17 16:12'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -417,10 +426,12 @@ const termName=t=>`20${t.slice(0,2)} ${t.slice(3)}학기`;
 function recentTerms(n){const out=[];let y=SCHOOL_Y,s=+NOW_TERM.slice(3);for(let i=0;i<n;i++){out.push(y+'-'+s);if(s===2)s=1;else{s=2;y--}}return out}
 
 /* ── 데이터 → 묶음 ── */
+const normTab=s=>String(s==null?'':s).split('/').map(x=>x.trim()).filter(Boolean).join(' / ');
 function build(){
-  STATE.apps.forEach((a,i)=>{a.id='a'+i;a.t=termOf(a);a.arch=!!a.hidden||+a.t.slice(0,2)<SCHOOL_Y;a.cat=null;a.home=null});
-  const names=(STATE.cats||[]).slice(); STATE.apps.forEach(a=>{if(names.indexOf(a.tab)<0)names.push(a.tab)});
-  const all=names.map((n,i)=>({k:'c'+i,n,c:PAL[i%PAL.length],apps:STATE.apps.filter(a=>!a.arch&&a.tab===n)}));
+  STATE.apps.forEach((a,i)=>{a.tab=normTab(a.tab)||a.tab;a.id='a'+i;a.t=termOf(a);a.arch=!!a.hidden||+a.t.slice(0,2)<SCHOOL_Y;a.cat=null;a.home=null});
+  const names=[]; (STATE.cats||[]).concat(STATE.apps.map(a=>a.tab)).forEach(n=>{n=normTab(n); if(n&&names.indexOf(n)<0)names.push(n)});
+  const rootIdx={}; let ri=0;   /* 색은 «가장 큰 다리» 이름으로 — 같은 큰 다리 아래 중간 다리는 같은 색 */
+  const all=names.map((n,i)=>{const r=n.split(' / ')[0]; if(!(r in rootIdx)) rootIdx[r]=ri++; return {k:'c'+i,n,c:PAL[rootIdx[r]%PAL.length],apps:STATE.apps.filter(a=>!a.arch&&a.tab===n)}});
   CATS=all.filter(c=>c.apps.length);
   CATS.forEach(c=>c.apps.forEach(a=>{a.cat=c}));
   const ar=STATE.apps.filter(a=>a.arch);
@@ -473,87 +484,149 @@ function layB(){
   if(!GUEST) cells.push(`<section class="isl log"><header class="ih"><b class="dh hubt">최근 저장</b></header><ol id="log"></ol></section>`);
   return `<div class="b-grid">${cells.join('')}</div><svg class="wires"></svg>`;
 }
-/* 원형 방사 */
+/* 원형 방사 — 묶음 이름의 슬래시( / ) 하나가 한 단계. «체육수업 / 3학년 / 베이스볼5» 는 체육수업 › 3학년 › 베이스볼5 */
 const chip=(a,c)=>`<div class="chip ${a.pub?'pub':'priv'}" style="--c:${c.c}" data-tid="${a.id}" data-cat="${c.k}">${sw(a)}<button class="cn" data-pop="${a.id}" title="${esc(a.n)}">${esc(a.n)}</button></div>`;
+let NODES=[], NODEMAP={}, ROOTS=[], AR_NODE=null;
+const directOf=n=>n.cat?vis(n.cat):[];
+const totalOf=n=>n.k==='ar'?(n.cat?n.cat.apps.length:0):directOf(n).length+n.kids.reduce((s,k)=>s+totalOf(k),0);
+const allAppsOf=n=>directOf(n).concat(...n.kids.map(allAppsOf));
+const wN=n=>n.k==='ar'?(OPEN_AR?vis(n.cat).length:1)+1.6:directOf(n).length+n.kids.reduce((s,k)=>s+wN(k),0)+1.6;
+const isFoldN=n=>n.k!=='ar'&&!!FOLD[n.key];
+const subKs=n=>[n.k].concat(...n.kids.map(subKs));
+function buildTree(){
+  NODES=[]; NODEMAP={}; ROOTS=[]; AR_NODE=null;
+  CATS.filter(c=>c.k!=='ar'&&vis(c).length).forEach(c=>{
+    let parent=null, path='';
+    c.n.split(' / ').forEach((sg,i)=>{
+      path=i?path+' / '+sg:sg;
+      let nd=NODES.find(x=>x.key===path);
+      if(!nd){ nd={k:null,key:path,name:sg,depth:i,parent,kids:[],cat:null,c:c.c}; NODES.push(nd); (parent?parent.kids:ROOTS).push(nd) }
+      parent=nd;
+    });
+    parent.cat=c; parent.k=c.k;
+  });
+  NODES.forEach((n,i)=>{ if(!n.k) n.k='p'+i; NODEMAP[n.k]=n });
+  const ar=visCats().find(c=>c.k==='ar');
+  if(ar){ AR_NODE={k:'ar',key:'지난 앱',name:'지난 앱',depth:0,parent:null,kids:[],cat:ar,c:ar.c}; NODEMAP.ar=AR_NODE }
+}
+const nodeTxt=n=>n.depth
+  ?`<b class="dh hubt">${esc(n.name)}</b><small class="hubn" data-th="${n.k}"></small>${isFoldN(n)?'<small class="fnote in">접힘</small>':''}`
+  :`<b class="dh hubt">${esc(n.name)}</b><small class="hubn" data-th="${n.k}"></small>${isFoldN(n)?'<small class="fnote">접힘 · 두 번 누르면 펼쳐요</small>':''}`;
+function nodeHTML(n){
+  const hub=`<div class="${n.depth?'d-sub'+(n.depth>1?' l3':''):'d-hub'}" style="--c:${n.c}" data-k="${n.k}" data-p="${n.parent?n.parent.k:''}">${nodeTxt(n)}</div>`;
+  if(isFoldN(n)) return hub;
+  if(n.k==='ar') return hub+(OPEN_AR?vis(n.cat).map(a=>chip(a,n.cat)).join(''):`<button class="chip more" style="--c:${n.c}" data-more data-cat="ar">지난 앱 ${vis(n.cat).length}개 펼치기</button>`);
+  return hub+n.kids.map(nodeHTML).join('')+directOf(n).map(a=>chip(a,n.cat)).join('');
+}
 function layD(){
-  return `<div class="d-stage">${rootHTML()}${visCats().map(c=>`<div class="d-hub" style="--c:${c.c}" data-k="${c.k}">${hubTxt(c)}</div>`+(isFold(c)?'':c.k==='ar'&&!OPEN_AR?`<button class="chip more" style="--c:${c.c}" data-more data-cat="ar">지난 앱 ${vis(c).length}개 펼치기</button>`:vis(c).map(a=>chip(a,c)).join(''))).join('')}<svg class="wires"></svg></div>`;
+  const roots=ROOTS.concat(AR_NODE?[AR_NODE]:[]);
+  return `<div class="d-stage"><div class="d-world">${rootHTML()}${roots.map(nodeHTML).join('')}<svg class="wires"></svg></div></div>`;
 }
 function placeD(){
   const st=main.querySelector('.d-stage'); if(!st) return;
-  const W=st.clientWidth, hubs=[...st.querySelectorAll('.d-hub')]; if(!hubs.length) return;
-  const wOf=k=>weight(CATS.find(x=>x.k===k));
-  const total=hubs.reduce((s,h)=>s+wOf(h.dataset.k),0);
+  const W=DW, roots=ROOTS.concat(AR_NODE?[AR_NODE]:[]).filter(n=>st.querySelector(`[data-k="${n.k}"]`)); if(!roots.length) return;
+  const total=roots.reduce((s,n)=>s+wN(n),0), R=[.34,.52,.66,.76,.84];
   const put=(el,x,y)=>{el._a=[x,y];el.style.left=x+'px';el.style.top=y+'px'};
   function attempt(H){
     st.style.height=H+'px';
-    const cx=W/2, cy=H/2, RX=W/2-6, RY=H/2-6, boxes=[], M=5;
+    const cx=W/2, cy=H/2, RX=W/2-6, RY=H/2-6, boxes=[], M=5, jobs=[];
     const root=st.querySelector('.root'), rw=root.offsetWidth, rh=root.offsetHeight;
     put(root,cx-rw/2,cy-rh/2); boxes.push({x:cx-rw/2,y:cy-rh/2,w:rw,h:rh});
     const hit=b=>b.x<4||b.y<4||b.x+b.w>W-4||b.y+b.h>H-4||boxes.some(o=>b.x<o.x+o.w+M&&o.x<b.x+b.w+M&&b.y<o.y+o.h+M&&o.y<b.y+b.h+M);
-    let ang=-Math.PI/2-Math.PI*wOf(hubs[0].dataset.k)/total, ok=true; const plan=[];
-    hubs.forEach(h=>{
-      const k=h.dataset.k, a0=ang, a1=ang+2*Math.PI*wOf(k)/total, mid=(a0+a1)/2; ang=a1;
-      const hw=h.offsetWidth, hh=h.offsetHeight, hx=cx+Math.cos(mid)*RX*.36-hw/2, hy=cy+Math.sin(mid)*RY*.36-hh/2;
-      put(h,hx,hy); const hb={x:hx,y:hy,w:hw,h:hh}; boxes.push(hb);
-      [...st.querySelectorAll(`.chip[data-cat="${k}"]`)].forEach(ch=>{
+    /* 1) 이름표(큰 다리·중간 다리)를 단계마다 안쪽 → 바깥 둥근 띠에 놓는다 */
+    function node(n,a0,a1){
+      const el=st.querySelector(`[data-k="${n.k}"]`); if(!el) return;
+      const mid=(a0+a1)/2, r=R[Math.min(n.depth,4)], w=el.offsetWidth, h=el.offsetHeight;
+      const x=cx+Math.cos(mid)*RX*r-w/2, y=cy+Math.sin(mid)*RY*r-h/2;
+      put(el,x,y); boxes.push({x,y,w,h});
+      const kids=isFoldN(n)?[]:n.kids, nd=(isFoldN(n)||n.k==='ar')?0:directOf(n).length;
+      const tw=kids.reduce((s,k)=>s+wN(k),0)+nd; let a=a0, dMid=mid;
+      if(kids.length&&tw){ const span=a1-a0; kids.forEach(k=>{const b=a+span*wN(k)/tw; node(k,a,b); a=b}); if(nd) dMid=(a+a1)/2 }
+      jobs.push({n,mid:dMid,span:(a1-a0)/2-.02});
+    }
+    let ang=-Math.PI/2-Math.PI*wN(roots[0])/total;
+    roots.forEach(n=>{const a1=ang+2*Math.PI*wN(n)/total; node(n,ang,a1); ang=a1});
+    /* 2) 앱 칸은 깊은 이름표부터 — 자기 이름표 바깥쪽에서 빈 자리를 찾아 놓는다 */
+    let ok=true;
+    jobs.reverse().forEach(j=>{
+      const n=j.n; if(isFoldN(n)) return;
+      const oel=st.querySelector(`[data-k="${n.k}"]`), own=n.kids.length&&oel?[oel.offsetLeft+oel.offsetWidth/2,oel.offsetTop+oel.offsetHeight/2]:null;   /* 아래 단계가 있는 이름표의 «구분 없음» 앱은 이름표에서 너무 멀리 안 놓는다 */
+      [...st.querySelectorAll(`.chip[data-cat="${n.k==='ar'?'ar':(n.cat?n.cat.k:'-')}"]`)].forEach(ch=>{
         const w=ch.offsetWidth, hgt=ch.offsetHeight; let done=false;
-        for(let t=.56;t<=1.001&&!done;t+=.075){
-          const span=(a1-a0)/2-.02;
-          for(let s=0;s<=span&&!done;s+=.03){
+        for(let t=Math.min(.9,R[Math.min(n.depth,4)]+.18);t<=1.001&&!done;t+=.075){
+          for(let s=0;s<=j.span&&!done;s+=.03){
             for(const sg of s?[1,-1]:[1]){
-              const th=mid+sg*s, b={x:cx+Math.cos(th)*RX*t-w/2,y:cy+Math.sin(th)*RY*t-hgt/2,w,h:hgt};
-              if(!hit(b)){boxes.push(b);put(ch,b.x,b.y);plan.push([hb,b,ch.style.getPropertyValue('--c')]);done=true;break}
+              const th=j.mid+sg*s, b={x:cx+Math.cos(th)*RX*t-w/2,y:cy+Math.sin(th)*RY*t-hgt/2,w,h:hgt};
+              if(!hit(b)&&(!own||Math.hypot(b.x+w/2-own[0],b.y+hgt/2-own[1])<=330)){boxes.push(b);put(ch,b.x,b.y);done=true;break}
             }
           }
         }
         if(!done) ok=false;
       });
-      plan.push([{x:cx-1,y:cy-1,w:2,h:2},hb,h.style.getPropertyValue('--c'),1]);
     });
-    return ok?plan:(attempt.last=plan,null);
+    return ok;
   }
-  let H=Math.max(780,Math.min(980,W*.64)), plan=null;
-  while(!(plan=attempt(H))&&H<2400) H+=80;
-  plan=plan||attempt.last||[];
-  st._H=H;
+  let H=Math.max(780,Math.min(980,W*.64));
+  while(!attempt(H)&&H<2600) H+=80;
+  st._H=H;   /* 가로는 늘 DW(1440) 고정 — 창 크기가 달라도 배치의 모양·크기가 같다 */
   if(PEND){   /* 다른 묶음으로 옮긴 앱은 사용자가 놓은 자리에 그대로 두고, 새 가지의 처음 자리 기준으로 옮긴 만큼을 다시 계산 */
-    const ch=[...st.querySelectorAll('.chip[data-tid]')].find(c=>chipKey(c)===PEND.key), hub=ch&&st.querySelector(`.d-hub[data-k="${ch.dataset.cat}"]`);
-    if(ch&&hub&&ch._a){ const ho=posOf(hubKey(hub),W); POS[PEND.key]=[+((PEND.x-ch._a[0]-ho[0])/W).toFixed(4),+((PEND.y-ch._a[1]-ho[1])/W).toFixed(4)]; savePos('앱 위치') }
+    const ch=[...st.querySelectorAll('.chip[data-tid]')].find(c=>chipKey(c)===PEND.key), own=ch&&st.querySelector(`[data-k="${ch.dataset.cat}"]`);
+    if(ch&&own&&ch._a){ applyPos(); const oe=own._e||[0,0]; POS[PEND.key]=[+((PEND.x-ch._a[0]-oe[0])/W).toFixed(4),+((PEND.y-ch._a[1]-oe[1])/W).toFixed(4)]; savePos('앱 위치') }
     PEND=null;
   }
-  applyPos();
+  applyPos(); fitWorld();
 }
 let PEND=null;
-/* 가지 옮기기 — 처음 자리(el._a)에 저장해 둔 옮긴 만큼(POS, 칸 너비 비율)을 더해 놓고, 선은 실제 자리에서 다시 긋는다 */
-const hubName=k=>(CATS.find(x=>x.k===k)||{}).n||k;
+const DW=1440;
+/* 지도 바탕은 끌어 놓은 곳까지 넓어진다: 바탕(.d-world)을 가장 왼쪽·위쪽 요소에 맞춰 옮기고 틀 크기를 다시 잡는다. anchor 가 있으면 화면에서 그 요소가 안 움직이게 스크롤을 맞춘다 */
+function fitWorld(anchor){
+  const st=main.querySelector('.d-stage'); if(!st) return; const wd=st.querySelector('.d-world'); if(!wd) return;
+  let minX=0,minY=0,maxX=DW,maxY=st._H||0;
+  wd.querySelectorAll('.d-hub,.d-sub,.chip,.root').forEach(e=>{
+    if(!e._a) return; const x=e.offsetLeft, y=e.offsetTop;
+    minX=Math.min(minX,x-24); minY=Math.min(minY,y-24); maxX=Math.max(maxX,x+e.offsetWidth+24); maxY=Math.max(maxY,y+e.offsetHeight+24);
+  });
+  const pr=anchor&&anchor.getBoundingClientRect();
+  wd.style.left=(-minX)+'px'; wd.style.top=(-minY)+'px'; st.style.width=Math.ceil(maxX-minX)+'px'; st.style.height=Math.ceil(maxY-minY)+'px'; st._ox=minX; st._oy=minY;
+  zBox();
+  if(pr){ const nr=anchor.getBoundingClientRect(), dx=nr.left-pr.left, dy=nr.top-pr.top; if(Math.abs(dx)>.5||Math.abs(dy)>.5){ main.scrollLeft+=dx; scrollBy(0,dy) } }
+}
+/* 가지 옮기기 — 처음 자리(el._a)에 저장해 둔 옮긴 만큼(POS, 칸 너비 비율)을 더해 놓고, 선은 실제 자리에서 다시 긋는다.
+   이름표의 옮긴 만큼은 그 아래 모든 이름표·앱에 겹쳐 더해진다(el._e = 위쪽 이름표들의 옮긴 만큼 + 자기 것) */
+const hubName=k=>{const n=NODEMAP[k]; if(n) return n.key; const c=CATS.find(x=>x.k===k); return c?c.n:k};
 const hubKey=h=>'h:'+hubName(h.dataset.k);
 function chipKey(ch){ if(ch.dataset.tid){const a=findApp(ch.dataset.tid); return 'a:'+(a?a.n:ch.dataset.tid)} return 'm:'+(ch.dataset.cat||'') }
 const posOf=(k,W)=>{const o=POS[k]||[0,0];return[o[0]*W,o[1]*W]};
 function applyPos(){
-  const st=main.querySelector('.d-stage'); if(!st) return; const W=st.clientWidth, H=st._H||st.clientHeight;
-  const set=(el,x,y)=>{el.style.left=Math.max(2,Math.min(W-el.offsetWidth-2,x))+'px';el.style.top=Math.max(2,Math.min(H-el.offsetHeight-2,y))+'px'};
-  st.querySelectorAll('.d-hub').forEach(h=>{ if(!h._a) return; h._o=posOf(hubKey(h),W); set(h,h._a[0]+h._o[0],h._a[1]+h._o[1]) });
+  const st=main.querySelector('.d-stage'); if(!st) return; const W=DW;
+  const set=(el,x,y)=>{el.style.left=x+'px';el.style.top=y+'px'};
+  const byK={};
+  st.querySelectorAll('.d-hub,.d-sub').forEach(h=>{   /* 문서 순서 = 위쪽 이름표가 먼저 */
+    byK[h.dataset.k]=h; if(!h._a) return;
+    const p=byK[h.dataset.p], pe=p&&p._e||[0,0]; h._o=posOf(hubKey(h),W); h._e=[pe[0]+h._o[0],pe[1]+h._o[1]];
+    set(h,h._a[0]+h._e[0],h._a[1]+h._e[1]);
+  });
   st.querySelectorAll('.chip').forEach(ch=>{
-    if(!ch._a) return; const hub=st.querySelector(`.d-hub[data-k="${ch.dataset.cat}"]`), ho=hub&&hub._o||[0,0];
-    ch._o=posOf(chipKey(ch),W); set(ch,ch._a[0]+ho[0]+ch._o[0],ch._a[1]+ho[1]+ch._o[1]);
+    if(!ch._a) return; const own=byK[ch.dataset.cat], oe=own&&own._e||[0,0];
+    ch._o=posOf(chipKey(ch),W); ch._e=[oe[0]+ch._o[0],oe[1]+ch._o[1]]; set(ch,ch._a[0]+ch._e[0],ch._a[1]+ch._e[1]);
   });
   drawD();
 }
 function drawD(){
   const st=main.querySelector('.d-stage'); if(!st) return; const svg=st.querySelector('.wires'), root=st.querySelector('.root'); if(!svg||!root) return;
-  svg.setAttribute('width',st.clientWidth); svg.setAttribute('height',st._H||st.clientHeight);
-  const ctr=el=>[el.offsetLeft+el.offsetWidth/2,el.offsetTop+el.offsetHeight/2], [rx,ry]=ctr(root); let s='';
-  st.querySelectorAll('.d-hub').forEach(h=>{
-    const col=h.style.getPropertyValue('--c'), [hx,hy]=ctr(h);
-    s+=`<path d="M${rx},${ry} L${hx},${hy}" stroke="${col}" stroke-width="4" opacity=".9" stroke-linecap="round"/>`;
-    st.querySelectorAll(`.chip[data-cat="${h.dataset.k}"]`).forEach(ch=>{const [x,y]=ctr(ch);s+=`<path d="M${hx},${hy} L${x},${y}" stroke="${col}" stroke-width="1.4" opacity=".55" stroke-linecap="round"/>`});
+  svg.setAttribute('width',DW); svg.setAttribute('height',st._H||st.clientHeight);
+  const ctr=el=>[el.offsetLeft+el.offsetWidth/2,el.offsetTop+el.offsetHeight/2]; let s=''; const byK={};
+  st.querySelectorAll('.d-hub,.d-sub').forEach(h=>{
+    byK[h.dataset.k]=h; const p=byK[h.dataset.p]||root, [px,py]=ctr(p), [hx,hy]=ctr(h), top=h.classList.contains('d-hub'), deep=h.classList.contains('l3');
+    s+=`<path d="M${px},${py} L${hx},${hy}" stroke="${h.style.getPropertyValue('--c')}" stroke-width="${top?4:deep?2:2.6}" opacity="${top?.9:.78}" stroke-linecap="round"/>`;
   });
+  st.querySelectorAll('.chip').forEach(ch=>{const o=byK[ch.dataset.cat]; if(!o) return; const [ox,oy]=ctr(o), [x,y]=ctr(ch); s+=`<path d="M${ox},${oy} L${x},${y}" stroke="${o.style.getPropertyValue('--c')}" stroke-width="1.4" opacity=".55" stroke-linecap="round"/>`});
   svg.innerHTML=s;
 }
 let POS={}, pt;
 /* ── 확대·축소 ── 모양마다 따로 기억(이 기기 localStorage) */
 const ZSTEPS=[.4,.5,.6,.7,.8,.9,1,1.15,1.3,1.5,1.75,2,2.5];
-let Z=1, ZS={}; try{ZS=JSON.parse(localStorage.getItem('my-zoom')||'{}')||{}}catch(e){ZS={}}
+let Z=1, ZS={}, ZAUTO=false; try{ZS=JSON.parse(localStorage.getItem('my-zoom')||'{}')||{}}catch(e){ZS={}}
 const zClamp=z=>Math.max(ZSTEPS[0],Math.min(ZSTEPS[ZSTEPS.length-1],z));
 function zWidth(){
   const zi=main.querySelector('.zin'); if(!zi) return;
@@ -569,7 +642,7 @@ function zSet(z){
   z=zClamp(z); if(Math.abs(z-Z)<.001) return;
   const zb=main.querySelector('.zbox'); let fx=0,fy=0;
   if(zb){ const r=zb.getBoundingClientRect(); fx=(main.scrollLeft+main.clientWidth/2-(r.left-main.getBoundingClientRect().left+main.scrollLeft))/Z; fy=(innerHeight/2-r.top)/Z }
-  Z=z; ZS[V]=Z; try{localStorage.setItem('my-zoom',JSON.stringify(ZS))}catch(e){}
+  Z=z; ZS[V]=Z; ZAUTO=false; try{localStorage.setItem('my-zoom',JSON.stringify(ZS))}catch(e){}
   closePop(); post();
   if(zb){ const r=zb.getBoundingClientRect(), mr=main.getBoundingClientRect(); main.scrollLeft=fx*Z+(r.left-mr.left+main.scrollLeft)-main.clientWidth/2; scrollBy(0,r.top+fy*Z-innerHeight/2) }
 }
@@ -615,9 +688,9 @@ document.addEventListener('pointerdown',e=>{
     DRAG.start=posOf(DRAG.key,W); return;
   }
   if(V!=='d') return;
-  const el=e.target.closest('.d-hub,.chip'); if(!el||!el.closest('.d-stage')) return;
-  const st=el.closest('.d-stage'), hub=el.classList.contains('d-hub');
-  DRAG={el,st,hub,pid:e.pointerId,sx:e.clientX,sy:e.clientY,moved:false,key:hub?hubKey(el):chipKey(el),W:st.clientWidth,H:st._H||st.clientHeight};
+  const el=e.target.closest('.d-hub,.d-sub,.chip'); if(!el||!el.closest('.d-stage')) return;
+  const st=el.closest('.d-stage'), hub=el.matches('.d-hub,.d-sub');
+  DRAG={el,st,hub,pid:e.pointerId,sx:e.clientX,sy:e.clientY,moved:false,key:hub?hubKey(el):chipKey(el),W:DW,H:st._H||st.clientHeight};
   DRAG.start=posOf(DRAG.key,DRAG.W);
 });
 document.addEventListener('pointermove',e=>{
@@ -630,17 +703,10 @@ document.addEventListener('pointermove',e=>{
     POS[D.key]=[+(nx/D.W).toFixed(4),+(ny/D.W).toFixed(4)]; applyXY(); if(V==='a') wiresA(); else wiresB(); dropHint(D); return;
   }
   /* 안 넘어가게: 가지(=이름표+딸린 앱들) 또는 앱 하나의 네모가 칸 안에 머물게 */
-  const members=D.hub?[D.el,...D.st.querySelectorAll(`.chip[data-cat="${D.el.dataset.k}"]`)]:[D.el];
-  let lo=[-1e9,-1e9], hi=[1e9,1e9];
-  members.forEach(m=>{
-    const base=D.hub?(m===D.el?[0,0]:(m._o||[0,0])):[0,0], hubO=!D.hub?((D.st.querySelector(`.d-hub[data-k="${D.el.dataset.cat}"]`)||{})._o||[0,0]):[0,0];
-    const ax=m._a[0]+base[0]+hubO[0], ay=m._a[1]+base[1]+hubO[1];
-    lo[0]=Math.max(lo[0],2-ax); hi[0]=Math.min(hi[0],D.W-m.offsetWidth-2-ax);
-    lo[1]=Math.max(lo[1],2-ay); hi[1]=Math.min(hi[1],D.H-m.offsetHeight-2-ay);
-  });
-  const nx=Math.max(lo[0],Math.min(hi[0],D.start[0]+dx)), ny=Math.max(lo[1],Math.min(hi[1],D.start[1]+dy));
+  /* 칸 밖으로도 자유롭게(바탕이 따라 넓어진다). 저장값 한도(±2.9 × 칸 너비)만 지킨다 */
+  const lim=2.9*D.W, nx=Math.max(-lim,Math.min(lim,D.start[0]+dx)), ny=Math.max(-lim,Math.min(lim,D.start[1]+dy));
   POS[D.key]=[+(nx/D.W).toFixed(4),+(ny/D.W).toFixed(4)];
-  applyPos(); dropHint(D);
+  applyPos(); fitWorld(D.el); dropHint(D);
 });
 /* 앱을 다른 묶음 쪽에 놓으면 그 묶음의 가지로 옮긴다 */
 function dropTarget(D){
@@ -653,16 +719,16 @@ function dropTarget(D){
     const hit=[...main.querySelectorAll('.br[data-k],.isl[data-k]')].find(s=>s.dataset.k!=='ar'&&s!==ownEl&&inside(s));
     return hit?hit.dataset.k:own;
   }
-  /* 원형 방사: 앱 가운데에서 가장 가까운 이름표·앱(40px 안)이 속한 묶음. 자기 묶음은 15px 더 봐 준다 */
+  /* 원형 방사: 앱 가운데에서 가장 가까운 이름표·앱(40px 안)이 속한 묶음(어느 단계든). 자기 묶음은 15px 더 봐 준다 */
   const st=D.st, cx=D.el.offsetLeft+D.el.offsetWidth/2, cy=D.el.offsetTop+D.el.offsetHeight/2; let best=own, bd=1e9;
-  CATS.forEach(c=>{
-    if(c.k==='ar') return;
-    let m=1e9; [...st.querySelectorAll(`.d-hub[data-k="${c.k}"],.chip[data-cat="${c.k}"]`)].forEach(e=>{
+  NODES.forEach(nd=>{
+    if(nd.k==='ar') return;
+    let m=1e9; [...st.querySelectorAll(`[data-k="${nd.k}"],.chip[data-cat="${nd.k}"]`)].forEach(e=>{
       if(e===D.el||e.classList.contains('more')) return;
       const dx=Math.max(e.offsetLeft-cx,0,cx-(e.offsetLeft+e.offsetWidth)), dy=Math.max(e.offsetTop-cy,0,cy-(e.offsetTop+e.offsetHeight)); m=Math.min(m,Math.hypot(dx,dy));
     });
-    if(c.k===own) m-=15;
-    if(m<=40&&m<bd){bd=m;best=c.k}
+    if(nd.k===own) m-=15;
+    if(m<=40&&m<bd){bd=m;best=nd.k}
   });
   return best;
 }
@@ -670,20 +736,20 @@ function dropHint(D){
   const a=D.el.dataset.tid&&findApp(D.el.dataset.tid); if(!a) return;
   D.own=a.cat.k; D.target=dropTarget(D);
   main.querySelectorAll('.drop').forEach(e=>e.classList.remove('drop'));
-  const k=D.target||D.own, c=CATS.find(x=>x.k===k);
+  const k=D.target||D.own, c=NODEMAP[k];
   if(c) D.el.style.setProperty('--c',c.c);
-  if(k!==D.own){ const t=D.xy?main.querySelector(`.br[data-k="${k}"],.isl[data-k="${k}"]`):D.st.querySelector(`.d-hub[data-k="${k}"]`); if(t) t.classList.add('drop') }
+  if(k!==D.own){ const t=D.xy?main.querySelector(`.br[data-k="${k}"],.isl[data-k="${k}"]`):D.st.querySelector(`[data-k="${k}"]`); if(t) t.classList.add('drop') }
 }
 /* 놓자마자 화면부터 바꾸고(서버 응답을 기다리지 않는다), 저장은 뒤에서 순서대로 보낸다. 실패하면 원래 묶음으로 되돌린다 */
 let MQ=Promise.resolve();
 function moveApp(a,k,keepAt){
-  const c=CATS.find(x=>x.k===k); if(!c) return render();
+  const c=NODEMAP[k]; if(!c) return render();
   const name=a.n, key=keyOf(a), old=a.tab;
-  a.tab=c.n;
+  a.tab=c.key;
   if(keepAt) PEND={key:'a:'+name,x:keepAt[0],y:keepAt[1]}; else { delete POS['a:'+name+'@'+V]; savePos('앱 위치') }
-  build(); render(); toast(`«${name}»을(를) «${c.n}»로 옮겼어요`);
+  build(); render(); toast(`«${name}»을(를) «${c.key}»로 옮겼어요`);
   MQ=MQ.then(async()=>{
-    try{ const j=await api('move',{key,tab:c.n}); saved(j.savedAt,`${name} · «${c.n}»로 옮김`) }
+    try{ const j=await api('move',{key,tab:c.key}); saved(j.savedAt,`${name} · «${c.key}»로 옮김`) }
     catch(e){ a.tab=old; build(); render(); if(e.code!=='auth') toast(`저장하지 못해 «${name}»을(를) «${old}»로 되돌렸어요`) }
   });
 }
@@ -701,20 +767,20 @@ document.addEventListener('pointerup',endDrag); document.addEventListener('point
 document.addEventListener('click',e=>{ if(NOCLICK){e.stopPropagation();e.preventDefault()} },true);
 document.addEventListener('dblclick',e=>{
   if(VIEW!=='map'||!e.target.closest('main')) return;
-  const h=e.target.closest('.d-hub,.hub,.ih,.e-hub'); if(!h) return;
-  const c=CATS.find(x=>x.k===(h.closest('[data-k]')||{dataset:{}}).dataset.k); if(!c) return;
+  const h=e.target.closest('.d-hub,.d-sub,.hub,.ih,.e-hub'); if(!h) return;
+  const k=(h.closest('[data-k]')||{dataset:{}}).dataset.k, nd=NODEMAP[k]; if(!nd) return;
   e.preventDefault(); getSelection().removeAllRanges();
-  if(c.k==='ar'){ OPEN_AR=!OPEN_AR; render(); toast(OPEN_AR?'지난 앱을 펼쳤어요':'지난 앱을 접었어요 (이름표를 두 번 누르면 펼쳐요)'); return }
-  if(FOLD[c.n]) delete FOLD[c.n]; else FOLD[c.n]=1;
+  if(k==='ar'){ OPEN_AR=!OPEN_AR; render(); toast(OPEN_AR?'지난 앱을 펼쳤어요':'지난 앱을 접었어요 (이름표를 두 번 누르면 펼쳐요)'); return }
+  if(FOLD[nd.key]) delete FOLD[nd.key]; else FOLD[nd.key]=1;
   try{localStorage.setItem('my-fold',JSON.stringify(FOLD))}catch(_){ }
-  render(); toast(FOLD[c.n]?`«${c.n}» 접었어요 (이름표를 두 번 누르면 펼쳐요)`:`«${c.n}» 펼쳤어요`);
+  render(); toast(FOLD[nd.key]?`«${nd.name}» 접었어요 (이름표를 두 번 누르면 펼쳐요)`:`«${nd.name}» 펼쳤어요`);
 });
 function resetPos(){ POS={}; savePos('가지 위치 처음대로'); if(VIEW==='map') post() }
 /* 빈 곳을 마우스로 끌면 화면이 이동(손바닥 끌기). 가로는 main 스크롤, 세로는 페이지 스크롤. 터치는 원래 스크롤에 맡긴다 */
 let PAN=null;
 main.addEventListener('pointerdown',e=>{
   if(e.pointerType==='touch'||e.button!==0||DRAG||VIEW!=='map'||!e.target.closest('.zin')) return;
-  if(e.target.closest('.d-hub,.chip,.tile,.hub,.ih,.pop,button,a,input,.sw,.more')) return;
+  if(e.target.closest('.d-hub,.d-sub,.chip,.tile,.hub,.ih,.pop,button,a,input,.sw,.more')) return;
   PAN={pid:e.pointerId,sx:e.clientX,sy:e.clientY,l:main.scrollLeft,t:scrollY,moved:false};
 });
 main.addEventListener('pointermove',e=>{
@@ -768,15 +834,21 @@ function layList(){
   const ar=GUEST?[]:STATE.apps.filter(a=>a.arch);
   const cl=a=>okUrl(a.gas), gh=a=>okUrl(a.git);
   const groups=(GROUP==='cat'
-    ?CATS.filter(c=>c.k!=='ar'&&vis(c).length).map(c=>[c.n,vis(c),c])
+    ?ROOTS.map(n=>[n.name,allAppsOf(n),n])
     :GROUP==='pub'
     ?[['공개',all.filter(a=>a.pub)],['비공개',all.filter(a=>!a.pub)]]
     :[['clasp · GitHub 둘 다',all.filter(a=>cl(a)&&gh(a))],['clasp만 (GitHub 주소 없음)',all.filter(a=>cl(a)&&!gh(a))],['GitHub만',all.filter(a=>!cl(a)&&gh(a))],['둘 다 없음 (바로가기 등)',all.filter(a=>!cl(a)&&!gh(a))]]).concat([['지난 앱',ar]]);
   const bd=a=>`<span class="bdg">${cl(a)?`<a class="bd" href="${esc(a.gas)}" target="_blank" rel="noopener" title="Apps Script 편집기 열기"><b>clasp</b></a>`:'<span class="bd no"><b>clasp</b></span>'}${gh(a)?`<a class="bd" href="${esc(a.git)}" target="_blank" rel="noopener" title="GitHub 열기"><b>GitHub</b></a>`:'<span class="bd no"><b>GitHub</b></span>'}</span>`;
-  const row=a=>`<div class="lrow ${a.pub?'pub':'priv'}" style="--c:${a.cat.c}" data-tid="${a.id}">${nm(a)}<span class="cat">${esc(a.arch?a.tab:a.cat.n)}${a.feed?'<span class="tag2" title="혜원이지·혜원폰 바로가기에 나가는 항목">바로가기 공유</span>':''}${bd(a)}</span>${sw(a)||'<span></span>'}${bd(a)}<span class="lk">${links(a).replace(/^<span class="lk">|<\/span>$/g,'')}${GUEST?'':`<button class="ebtn" data-edit="${a.id}">고치기</button>`}</span></div>`;
+  const row=a=>`<div class="lrow ${a.pub?'pub':'priv'}" style="--c:${a.cat.c}" data-tid="${a.id}">${nm(a)}<span class="cat" title="${esc(a.arch?a.tab:a.cat.n)}">${esc(a.arch?a.tab:a.cat.n.split(' / ').pop())}${a.feed?'<span class="tag2" title="혜원이지·혜원폰 바로가기에 나가는 항목">바로가기 공유</span>':''}${bd(a)}</span>${sw(a)||'<span></span>'}${bd(a)}<span class="lk">${links(a).replace(/^<span class="lk">|<\/span>$/g,'')}${GUEST?'':`<button class="ebtn" data-edit="${a.id}">고치기</button>`}</span></div>`;
   /* 묶음(다리)별: 묶음마다 큰 제목, 다른 묶어 보기에서는 묶음마다 작은 소제목으로 나눈다 */
-  const sub=l=>CATS.filter(c=>c.k!=='ar').map(c=>[c,l.filter(a=>a.cat===c)]).filter(x=>x[1].length).map(([c,m])=>`<h3 class="sub" style="--c:${c.c}">${esc(c.n)} <small>${m.length}개</small></h3>${m.map(row).join('')}`).join('');
-  const body=g=>g[2]?g[1].map(row).join(''):(g[0]==='지난 앱'?g[1].map(row).join(''):sub(g[1]));
+  const sub=l=>CATS.filter(c=>c.k!=='ar').map(c=>[c,l.filter(a=>a.cat===c)]).filter(x=>x[1].length).map(([c,m])=>`<h3 class="sub" style="--c:${c.c}">${esc(c.n.replace(/ \/ /g,' › '))} <small>${m.length}개</small></h3>${m.map(row).join('')}`).join('');
+  const nodeBlock=(n,d)=>{
+    const dir=directOf(n), ind=m=>`<div style="margin-left:${Math.max(0,m-1)*18}px">${dir.map(row).join('')}</div>`;
+    const head=d?`<h3 class="sub d${Math.min(d,4)}" style="--c:${n.c}">${esc(n.name)} <small>${totalOf(n)}개</small></h3>`:'';
+    const dh=n.kids.length&&dir.length?`<h3 class="sub d${Math.min(d+1,4)}" style="--c:${n.c}">구분 없음 <small>${dir.length}개</small></h3>`:'';
+    return head+n.kids.map(k=>nodeBlock(k,d+1)).join('')+(dir.length?dh+ind(n.kids.length?d+1:d):'');
+  };
+  const body=g=>g[2]?nodeBlock(g[2],0):(g[0]==='지난 앱'?g[1].map(row).join(''):sub(g[1]));
   const gh2=g=>g[2]?`<h2 class="dh gc" style="--c:${g[2].c}">${esc(g[0])} <small>${g[1].length}개 · 공개 ${g[1].filter(a=>a.pub).length}</small></h2>`:`<h2 class="dh">${g[0]} <small>${g[1].length}개</small></h2>`;
   return `<div class="lhead"><span class="lab">묶어 보기</span><div class="seg" id="grp"><button data-g="cat"${GROUP==='cat'?' class="on"':''}>묶음(다리)별</button><button data-g="pub"${GROUP==='pub'?' class="on"':''}>공개 · 비공개</button><button data-g="src"${GROUP==='src'?' class="on"':''}>clasp · GitHub</button></div>${GUEST?'':'<button class="setbtn" data-add style="margin-left:auto">앱 추가</button>'}</div>${groups.filter(g=>g[1].length).map(g=>`<section class="grp">${gh2(g)}${body(g)}</section>`).join('')}`;
 }
@@ -811,12 +883,20 @@ function wiresB(){
   svg.innerHTML=s;
 }
 const dNarrow=()=>false;   /* 원형 방사는 폭과 상관없이 방사형으로 둔다(좁으면 옆으로 밀어서 본다) */
-function post(){ if(!STATE||VIEW==='list'||!main.querySelector('.zin')) return; zWidth(); if(V==='a'){applyXY();wiresA()} else if(V==='b'){applyXY();wiresB()} else if(V==='d') placeD(); zBox(); }
+function post(){ if(!STATE||VIEW==='list'||!main.querySelector('.zin')) return; zWidth(); if(V==='a'){applyXY();wiresA()} else if(V==='b'){applyXY();wiresB()} else if(V==='d') placeD(); zBox(); zAuto(); }
+/* 확대·축소를 한 번도 안 만졌다면 창 폭에 맞춰 한눈에 보이게(저장 안 함) — 배치는 그대로, 크기만 맞춘다 */
+function zAuto(){
+  if(!ZAUTO||V!=='d') return; const zi=main.querySelector('.zin'); if(!zi) return;
+  const f=Math.max(ZSTEPS[0],Math.min(1,Math.floor(zi.clientWidth/Math.max(zi.scrollWidth,1)*100)/100));
+  if(Math.abs(f-Z)>.001){ Z=f; zWidth(); zBox() }
+}
 
 /* ── 숫자 · 거르기 · 저장 시각 ── */
 function counts(){
   const act=CATS.filter(c=>c.k!=='ar').flatMap(c=>c.apps), pub=act.filter(a=>a.pub).length;
   $$('[data-hub]').forEach(el=>{const c=CATS.find(x=>x.k===el.dataset.hub); if(!c) return; const p=c.apps.filter(a=>a.pub).length; el.textContent=c.k==='ar'?`${c.apps.length}개`:GUEST?`${p}개`:`${c.apps.length}개 · 공개 ${p}`});
+  $$('[data-th]').forEach(el=>{const n=NODEMAP[el.dataset.th]; if(!n) return; const t=totalOf(n), p=allAppsOf(n).filter(a=>a.pub).length;
+    el.textContent=n.k==='ar'?`${t}개`:n.depth?`${t}개`:GUEST?`${p}개`:`${t}개 · 공개 ${p}`});
   $$('[data-root]').forEach(el=>el.textContent=GUEST?`공개 앱 ${pub}개`:`앱 ${act.length}개 · 공개 ${pub}`);
   $('[data-n=all]').textContent=act.length; $('[data-n=pub]').textContent=pub; $('[data-n=priv]').textContent=act.length-pub;
 }
@@ -836,12 +916,12 @@ let st; function saved(t,what){
 function render(){
   if(!STATE) return;
   closePop();
-  document.body.classList.toggle('guest',GUEST);
+  document.body.classList.toggle('guest',GUEST); buildTree();
   $$('#view button').forEach(b=>b.classList.toggle('on',b.dataset.w===VIEW));
   $$('#mode button').forEach(b=>b.classList.toggle('on',(b.dataset.m==='guest')===GUEST));
   const lay=VIEW==='list'?'list':V;
   main.className='lay-'+lay;
-  Z=zClamp(ZS[lay]||1); const hasMap=VIEW!=='list'&&visCats().length>0;
+  ZAUTO=ZS[lay]===undefined; Z=zClamp(ZS[lay]||1); const hasMap=VIEW!=='list'&&visCats().length>0;
   const body=visCats().length||VIEW==='list'?({list:layList,a:layA,b:layB,d:layD,e:layE,f:layF}[lay]||layE)():`<div class="wait">${GUEST?'공개한 앱이 없습니다.':'앱이 없습니다. «목록»에서 앱을 추가해 주세요.'}</div>`;
   main.innerHTML=hasMap?`<div class="zbox"><div class="zin">${body}</div></div>`:body;
   $('#zoom').hidden=!hasMap;
@@ -944,7 +1024,7 @@ async function savePw(){
 let EDIT=null;
 function openEdit(a){
   EDIT=a||null; const v=a||{n:'',d:'',u:'',gas:'',sheet:'',folder:'',git:'',tab:(CATS.find(c=>c.k!=='ar')||{n:'기타'}).n,term:'',hidden:false};
-  const tabs=[...new Set((STATE.cats||[]).concat(STATE.apps.map(x=>x.tab)))], terms=recentTerms(5);
+  const tabs=[...new Set((STATE.cats||[]).concat(STATE.apps.map(x=>x.tab)).map(normTab).filter(Boolean))], terms=recentTerms(5);
   const f=(id,label,val,type)=>`<label class="fld"><span>${label}</span><input id="${id}" type="${type||'text'}" value="${esc(val)}" autocomplete="off"></label>`;
   dlg(`<form id="eform"><div class="dlg-h"><h2 class="dh">${a?'앱 고치기':'앱 추가'}</h2><button type="button" class="dlg-x" data-closedlg aria-label="닫기">×</button></div>
   ${f('f_n','이름',v.n)}${f('f_d','한 줄 설명 (정문에도 보입니다)',v.d)}${f('f_u','웹앱 주소',v.u,'url')}

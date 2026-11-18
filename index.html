@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.11.0 — 주소 칸을 머리글로 꺼냄 · HTML 붙여넣기(파일 올리기·미리보기) · 주소 칸 «자체 페이지» 모드(구글 주소 거치지 않음) · 주소 칸 a–z(a.arete929.kr…z) · 앱 카드에서 바로 연결 · 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.11.1 — «HTML 붙여넣기» → «화면 HTML»(툴팁·안내: 스크립트는 JSON API 로) · 주소 칸을 머리글로 꺼냄 · HTML 붙여넣기(파일 올리기·미리보기) · 주소 칸 «자체 페이지» 모드(구글 주소 거치지 않음) · 주소 칸 a–z(a.arete929.kr…z) · 앱 카드에서 바로 연결 · 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -184,6 +184,7 @@ body:not(.guest) .d-hub.dragging,body:not(.guest) .d-sub.dragging,body:not(.gues
 .mseg .mb.on{background:var(--ink);color:#fff}
 .slotrow [hidden]{display:none!important}
 .pgbox{display:flex;flex-direction:column;gap:6px}
+.pghint{background:#fff7e0;border:1px solid #ecd9a0;border-radius:6px;padding:6px 9px;color:#6b5314;line-height:1.5}
 .slotrow .sh{font-family:Consolas,'Courier New',monospace;font-size:13px;min-height:130px;resize:vertical;white-space:pre;overflow:auto}
 .pgtools{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .pgfile{display:inline-block;cursor:pointer}
@@ -434,8 +435,8 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.11.0',
-  deployed:'2026-11-18 15:05'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.11.1',
+  deployed:'2026-11-18 15:25'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -1215,7 +1216,7 @@ function openSet(){
 let SLOTS_ALL=false;
 function slotRowHTML(l){
   const r=SL()[l], has=!!r, on=has&&r.on!==false, mo=has?(r.m==='host'||r.m==='page'?r.m:'go'):'go', host=mo==='host', pg=mo==='page';
-  return `<div class="slotrow${on?' on':has?' off':''}" data-l="${l}" data-m="${mo}"><div class="dom">${l}<i>.arete929.kr</i></div><div class="f"><input class="inp sn" maxlength="40" placeholder="이름 (선택)" value="${esc(has?r.n:'')}" autocomplete="off"><div class="mseg" role="group" aria-label="연결 방식"><button type="button" class="mb${mo==='go'?' on':''}" data-slotm="go">링크로 이동</button><button type="button" class="mb${pg?' on':''}" data-slotm="page" title="HTML 을 여기에 붙여 넣거나 파일로 올리면 이 주소에서 바로 열립니다 — 구글 주소를 거치지 않아 만 13세 미만 계정도 열립니다">HTML 붙여넣기</button><button type="button" class="mb${host?' on':''}" data-slotm="host" title="GitHub pages 저장소의 글자 폴더를 보여 줍니다(파일이 여러 개인 앱)">자체 페이지(저장소)</button></div><input class="inp su" type="url" maxlength="500" placeholder="링크를 붙여 넣으세요 (https://…)" value="${esc(has&&mo==='go'?r.u:'')}" autocomplete="off"${mo==='go'?'':' hidden'}><div class="sm hostnote"${host?'':' hidden'}>이 주소 그대로 <b>pages 저장소의 «${l}» 폴더</b>를 보여 줍니다(구글 주소를 거치지 않음)</div><div class="pgbox"${pg?'':' hidden'}><textarea class="inp sh" rows="7" spellcheck="false" placeholder="여기에 HTML 전체를 붙여 넣으세요 (&lt;!doctype html&gt;…)">${pg&&r.pl?'':''}</textarea><div class="pgtools"><label class="btn pgfile">파일 올리기<input type="file" class="pgf" accept=".html,.htm,text/html" hidden></label><button type="button" class="btn" data-slotprev>미리보기</button><span class="sm pgsize">${pg&&r.pl?(r.pl<1000?r.pl+'자':Math.round(r.pl/1000)+'K자')+' 저장됨 · «불러오기»를 누르면 수정할 수 있어요':'0자 / 400K자'}</span>${pg&&r.pl?'<button type="button" class="btn" data-slotload>저장된 내용 불러오기</button>':''}</div></div><div class="sm">${has?(on?'연결 중':'꺼 둠')+(host?' · 자체 페이지(저장소)':pg?' · HTML 붙여넣기':'')+' · 저장 '+esc((r.at||'').slice(5,16)):'비어 있음'}</div></div><div class="ctl">${has?`<button class="ssw${on?' on':''}" data-slotsw="${l}"><i></i>${on?'연결':'꺼짐'}</button>`:''}<button class="btn f" data-slotsave="${l}">저장</button>${has?`<a class="btn" href="https://${l}.arete929.kr/" target="_blank" rel="noopener">열기</a><button class="btn" data-slotdel="${l}">지우기</button>`:''}</div></div>`;
+  return `<div class="slotrow${on?' on':has?' off':''}" data-l="${l}" data-m="${mo}"><div class="dom">${l}<i>.arete929.kr</i></div><div class="f"><input class="inp sn" maxlength="40" placeholder="이름 (선택)" value="${esc(has?r.n:'')}" autocomplete="off"><div class="mseg" role="group" aria-label="연결 방식"><button type="button" class="mb${mo==='go'?' on':''}" data-slotm="go">링크로 이동</button><button type="button" class="mb${pg?' on':''}" data-slotm="page" title="이 칸에 «화면 HTML»을 붙여 넣거나 .html 파일로 올리면 이 주소(글자.arete929.kr)에서 바로 열립니다. 구글 주소를 거치지 않아 만 13세 미만 계정도 열립니다. ※ 이 화면이 데이터를 쓰려면 앱스크립트(clasp)는 화면을 내지 말고 JSON API 로 바꿔야 합니다(화면이 fetch 로 그 API 를 부릅니다).">화면 HTML</button><button type="button" class="mb${host?' on':''}" data-slotm="host" title="GitHub pages 저장소의 글자 폴더를 보여 줍니다(파일이 여러 개인 앱)">자체 페이지(저장소)</button></div><input class="inp su" type="url" maxlength="500" placeholder="링크를 붙여 넣으세요 (https://…)" value="${esc(has&&mo==='go'?r.u:'')}" autocomplete="off"${mo==='go'?'':' hidden'}><div class="sm hostnote"${host?'':' hidden'}>이 주소 그대로 <b>pages 저장소의 «${l}» 폴더</b>를 보여 줍니다(구글 주소를 거치지 않음)</div><div class="pgbox"${pg?'':' hidden'}><div class="sm pghint" title="이 칸에 «화면 HTML»을 붙여 넣거나 .html 파일로 올리면 이 주소(글자.arete929.kr)에서 바로 열립니다. 구글 주소를 거치지 않아 만 13세 미만 계정도 열립니다. ※ 이 화면이 데이터를 쓰려면 앱스크립트(clasp)는 화면을 내지 말고 JSON API 로 바꿔야 합니다(화면이 fetch 로 그 API 를 부릅니다).">이 칸은 학생이 보는 <b>화면(HTML)</b>입니다. 데이터는 앱스크립트를 <b>JSON API</b>로 바꿔 화면이 불러오게 하세요.</div><textarea class="inp sh" rows="7" spellcheck="false" placeholder="여기에 화면 HTML 전체를 붙여 넣으세요 (&lt;!doctype html&gt;…)">${pg&&r.pl?'':''}</textarea><div class="pgtools"><label class="btn pgfile">파일 올리기<input type="file" class="pgf" accept=".html,.htm,text/html" hidden></label><button type="button" class="btn" data-slotprev>미리보기</button><span class="sm pgsize">${pg&&r.pl?(r.pl<1000?r.pl+'자':Math.round(r.pl/1000)+'K자')+' 저장됨 · «불러오기»를 누르면 수정할 수 있어요':'0자 / 400K자'}</span>${pg&&r.pl?'<button type="button" class="btn" data-slotload>저장된 내용 불러오기</button>':''}</div></div><div class="sm">${has?(on?'연결 중':'꺼 둠')+(host?' · 자체 페이지(저장소)':pg?' · 화면 HTML':'')+' · 저장 '+esc((r.at||'').slice(5,16)):'비어 있음'}</div></div><div class="ctl">${has?`<button class="ssw${on?' on':''}" data-slotsw="${l}"><i></i>${on?'연결':'꺼짐'}</button>`:''}<button class="btn f" data-slotsave="${l}">저장</button>${has?`<a class="btn" href="https://${l}.arete929.kr/" target="_blank" rel="noopener">열기</a><button class="btn" data-slotdel="${l}">지우기</button>`:''}</div></div>`;
 }
 function slotsBody(){
   const used=SLOT_LETTERS.filter(l=>SL()[l]), freeAll=SLOT_LETTERS.filter(l=>!SL()[l]);
@@ -1227,7 +1228,7 @@ function slotsBody(){
 function openSlots(){
   const s=(STATE&&STATE.saved)||{};
   dlg(`<div class="dlg-h"><h2 class="dh">주소 칸 a–z</h2><button class="dlg-x" data-closedlg aria-label="닫기">×</button></div>
-  <p class="hint">링크를 넣고 저장하면 몇 초 안에 <b>a.arete929.kr</b> 이 그 사이트로 연결됩니다(이동 방식 — 주소창에는 대상 주소가 보입니다). 비워 두거나 꺼 두면 «아직 연결 안 된 주소» 안내가 나옵니다. 앱 칸을 눌러도 바로 연결할 수 있습니다.</p>
+  <p class="hint">링크를 넣고 저장하면 몇 초 안에 <b>a.arete929.kr</b> 이 그 사이트로 연결됩니다(이동 방식 — 주소창에는 대상 주소가 보입니다). 비워 두거나 꺼 두면 «아직 연결 안 된 주소» 안내가 나옵니다. 앱 칸을 눌러도 바로 연결할 수 있습니다. <b>«화면 HTML»</b>은 학생이 보는 화면을 붙여 넣는 방식이고, 그 화면이 쓰는 앱스크립트는 화면을 내지 않는 <b>JSON API</b>로 만들어야 합니다.</p>
   <div class="savedat" id="slotSaved">마지막 저장 · ${esc(s.slots||'-')}</div><div id="slotBody">${slotsBody()}</div>`,'slots');
   $('#dlgOv .dlg').style.width='min(820px,100%)';
 }
@@ -1328,7 +1329,7 @@ document.addEventListener('click',async e=>{
   if(t.dataset.slotsave){const row=t.closest('.slotrow'), l=t.dataset.slotsave, m=row.dataset.m==='host'?'host':row.dataset.m==='page'?'page':'go', u=row.querySelector('.su').value.trim(), n=row.querySelector('.sn').value.trim(), cur=SL()[l];
     if(m==='go'&&!u){toast('링크를 붙여 넣어 주세요');return}
     let html; if(m==='page'){ const ta=row.querySelector('.sh'), v=ta.value; if(v.trim()){ if(v.length>400000){toast('HTML 이 너무 커요 (40만 자까지)');return} html=v } else if(!(cur&&cur.m==='page'&&cur.pl)){toast('HTML 을 붙여 넣거나 파일을 올려 주세요');return} else if(ta.dataset.loaded){toast('내용이 비어 있어요');return} }
-    t.disabled=true; await slotSave(l,m==='go'?u:'',n,cur?cur.on!==false:true,m==='host'?`주소 칸 ${l} 자체 페이지`:m==='page'?`주소 칸 ${l} HTML 붙여넣기`:undefined,m,html); t.disabled=false; return}
+    t.disabled=true; await slotSave(l,m==='go'?u:'',n,cur?cur.on!==false:true,m==='host'?`주소 칸 ${l} 자체 페이지`:m==='page'?`주소 칸 ${l} 화면 HTML`:undefined,m,html); t.disabled=false; return}
   if(t.dataset.slotsw){const l=t.dataset.slotsw, cur=SL()[l]; if(cur) await slotSave(l,cur.u,cur.n,cur.on===false,`주소 칸 ${l} ${cur.on===false?'연결':'꺼 둠'}`,cur.m); return}
   if(t.dataset.slotdel){const l=t.dataset.slotdel; if(!await uiConfirm(`${l}.arete929.kr 칸을 비울까요? 이 주소로 들어오면 «연결 안 된 주소» 안내가 나옵니다.`,'비우기')) return; await slotSave(l,'','',true); return}
   if(t.dataset.sl){const p=t.closest('.pop'); p.querySelectorAll('.lt').forEach(b=>b.classList.toggle('pick',b===t)); const go=p.querySelector('.go'); go.disabled=false; go.dataset.letter=t.dataset.sl; go.textContent=`${t.dataset.sl} 칸에 연결 (${t.dataset.sl}.arete929.kr)`; return}

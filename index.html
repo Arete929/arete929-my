@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.16.2 — 관문 보기 가운데 상자도 끌어 옮기기 | @version 2.16.1 — 관문 보기 끌기: 아래로 제한 없이(바탕이 늘어남) | @version 2.16.0 — 관문 보기에서 이름표·칸을 끌어 옮기기(위치 저장) | @version 2.15.0 — «주소 칸»을 «관문»으로 이름 바꿈 · «관문» 보기(연결한 칸만 따로 마인드맵, 방식별/주제별 묶기) · 칸마다 주제 | @version 2.13.0 — 화면 HTML 칸에 «📋 붙여넣기»(클립보드에서 바로)·«🗑 코드 비우기» 버튼 | @version 2.12.0 — 주소 칸 아코디언(접었다 펼치기) · 화면 HTML 코드 아코디언(코드 있음 표시) · 글자 말고 이름 짓기(vote 등) · 수정·삭제 | @version 2.11.1 — «HTML 붙여넣기» → «화면 HTML»(툴팁·안내: 스크립트는 JSON API 로) · 주소 칸을 머리글로 꺼냄 · HTML 붙여넣기(파일 올리기·미리보기) · 주소 칸 «자체 페이지» 모드(구글 주소 거치지 않음) · 주소 칸 a–z(a.arete929.kr…z) · 앱 카드에서 바로 연결 · 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.17.0 — 지도 모양 «차트형»(가운데 제목에서 양쪽으로 갈라지는 트리, 직각선, 가지 색은 앱 지도처럼) | @version 2.16.2 — 관문 보기 가운데 상자도 끌어 옮기기 | @version 2.16.1 — 관문 보기 끌기: 아래로 제한 없이(바탕이 늘어남) | @version 2.16.0 — 관문 보기에서 이름표·칸을 끌어 옮기기(위치 저장) | @version 2.15.0 — «주소 칸»을 «관문»으로 이름 바꿈 · «관문» 보기(연결한 칸만 따로 마인드맵, 방식별/주제별 묶기) · 칸마다 주제 | @version 2.13.0 — 화면 HTML 칸에 «📋 붙여넣기»(클립보드에서 바로)·«🗑 코드 비우기» 버튼 | @version 2.12.0 — 주소 칸 아코디언(접었다 펼치기) · 화면 HTML 코드 아코디언(코드 있음 표시) · 글자 말고 이름 짓기(vote 등) · 수정·삭제 | @version 2.11.1 — «HTML 붙여넣기» → «화면 HTML»(툴팁·안내: 스크립트는 JSON API 로) · 주소 칸을 머리글로 꺼냄 · HTML 붙여넣기(파일 올리기·미리보기) · 주소 칸 «자체 페이지» 모드(구글 주소 거치지 않음) · 주소 칸 a–z(a.arete929.kr…z) · 앱 카드에서 바로 연결 · 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -262,6 +262,25 @@ body:not(.guest) .d-hub.dragging,body:not(.guest) .d-sub.dragging,body:not(.gues
 .zin{position:relative;transform-origin:0 0;cursor:grab}
 .zin button,.zin a,.zin .sw{cursor:pointer}
 main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-user-select:none}
+/* v2.17 — 차트형(계통도): 가운데 제목에서 양쪽으로 갈라지는 트리. 같은 모양의 작은 상자 + 직각선 */
+.lay-t{position:relative;padding:22px 20px 30px;overflow-x:auto}
+.t-wrap{position:relative;width:max-content;min-width:100%;display:flex;justify-content:center}
+.t-item{display:flex;align-items:center}
+.t-item.t-l{flex-direction:row-reverse}
+.t-kids{display:flex;flex-direction:column;justify-content:center;gap:7px;margin-left:34px}
+.t-l>.t-kids{margin-left:0;margin-right:34px}
+.t-kids>.t-item:has(>.t-kids){margin:6px 0}
+.t-top>.t-kids{gap:14px;margin-left:44px}
+.t-top>.t-kids.t-kl{margin-left:0;margin-right:44px}
+.t-top>.root{flex:none;width:auto;min-width:150px;max-width:230px;border-radius:10px;padding:10px 18px}
+.t-top>.root b{font-size:24px}
+.t-hub{flex:none;position:relative;z-index:2;border:2px solid var(--c);background:color-mix(in srgb,var(--c) 11%,var(--card));border-radius:8px;padding:3px 11px;white-space:nowrap;cursor:pointer;text-align:center}
+.t-hub .hubt{display:inline;font-size:14.5px;color:var(--c)}
+.t-hub .hubn{margin-left:6px;font-size:11px}
+.t-hub .fnote{display:inline;margin-left:6px}
+.lay-t .chip{position:relative;z-index:2;flex:none;max-width:270px;padding:3px 9px 3px 6px}
+.lay-t .chip.more{background:transparent}
+.t-hub.sel{box-shadow:0 0 0 3px rgba(26,115,232,.35)}
 /* v2.15 — 관문 보기: 연결한 a~z.arete929.kr 만 따로 마인드맵 */
 .lay-g{position:relative;padding:22px 20px 30px;overflow-x:auto}
 .g-bar{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap;max-width:1400px;margin:0 auto 6px;padding:14px 20px 0}
@@ -523,8 +542,8 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.16.2',
-  deployed:'2026-11-20 00:58'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.17.0',
+  deployed:'2026-11-20 01:09'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -545,7 +564,9 @@ const LAYS=[
  ['e','조직도','위에서 아래로 7갈래. PC에서 한눈에',
   '<rect x="45" y="4" width="30" height="9" rx="2" fill="#24221e"/><path d="M60 13 V18 M12 18 H108 M12 18 V23 M36 18 V23 M60 18 V23 M84 18 V23 M108 18 V23" stroke="#24221e" stroke-width="1.4" fill="none"/><g fill="#fffdf8" stroke="#b9b09c"><rect x="3" y="23" width="18" height="6"/><rect x="27" y="23" width="18" height="6"/><rect x="51" y="23" width="18" height="6"/><rect x="75" y="23" width="18" height="6"/><rect x="99" y="23" width="18" height="6"/><rect x="5" y="33" width="16" height="6"/><rect x="5" y="42" width="16" height="6"/><rect x="5" y="51" width="16" height="6"/><rect x="29" y="33" width="16" height="6"/><rect x="29" y="42" width="16" height="6"/><rect x="53" y="33" width="16" height="6"/><rect x="53" y="42" width="16" height="6"/><rect x="53" y="51" width="16" height="6"/><rect x="53" y="60" width="16" height="6"/><rect x="77" y="33" width="16" height="6"/><rect x="101" y="33" width="16" height="6"/></g>'],
  ['f','학기 연표','묶음 × 학기 표. 언제 만든 앱인지 함께',
-  '<rect x="3" y="4" width="114" height="68" rx="3" fill="#fffdf8" stroke="#b9b09c"/><rect x="82" y="4" width="35" height="68" fill="#e6efe3"/><path d="M24 14 H117 M3 14 H24 M24 4 V72 M53 4 V72 M82 4 V72 M3 28 H117 M3 42 H117 M3 56 H117" stroke="#b9b09c" fill="none"/><path d="M24 14 H117" stroke="#24221e" stroke-width="1.6"/><g fill="#d9d1bf"><rect x="28" y="18" width="10" height="7"/><rect x="57" y="18" width="10" height="7"/><rect x="69" y="18" width="10" height="7"/><rect x="86" y="18" width="10" height="7"/><rect x="57" y="32" width="10" height="7"/><rect x="86" y="32" width="10" height="7"/><rect x="98" y="32" width="10" height="7"/><rect x="28" y="46" width="10" height="7"/><rect x="57" y="46" width="10" height="7"/><rect x="86" y="60" width="10" height="7"/></g>']
+  '<rect x="3" y="4" width="114" height="68" rx="3" fill="#fffdf8" stroke="#b9b09c"/><rect x="82" y="4" width="35" height="68" fill="#e6efe3"/><path d="M24 14 H117 M3 14 H24 M24 4 V72 M53 4 V72 M82 4 V72 M3 28 H117 M3 42 H117 M3 56 H117" stroke="#b9b09c" fill="none"/><path d="M24 14 H117" stroke="#24221e" stroke-width="1.6"/><g fill="#d9d1bf"><rect x="28" y="18" width="10" height="7"/><rect x="57" y="18" width="10" height="7"/><rect x="69" y="18" width="10" height="7"/><rect x="86" y="18" width="10" height="7"/><rect x="57" y="32" width="10" height="7"/><rect x="86" y="32" width="10" height="7"/><rect x="98" y="32" width="10" height="7"/><rect x="28" y="46" width="10" height="7"/><rect x="57" y="46" width="10" height="7"/><rect x="86" y="60" width="10" height="7"/></g>'],
+ ['t','차트형','가운데 제목에서 양쪽으로 갈라지는 트리. 직각선, 가지마다 색은 앱 지도처럼',
+  '<g stroke="#3d4a9a" stroke-width="1.3" fill="none"><path d="M48 38 H42 M42 14 V62 M42 14 H34 M42 38 H34 M42 62 H34 M72 38 H78 M78 20 V56 M78 20 H86 M78 56 H86 M110 20 H116 M112 12 V28 M112 12 H112"/></g><g fill="#e9ecf8" stroke="#3d4a9a"><rect x="48" y="31" width="24" height="14" rx="3"/><rect x="10" y="9" width="24" height="10" rx="3"/><rect x="10" y="33" width="24" height="10" rx="3"/><rect x="10" y="57" width="24" height="10" rx="3"/><rect x="86" y="15" width="24" height="10" rx="3"/><rect x="86" y="51" width="24" height="10" rx="3"/></g>']
 ];
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -623,6 +644,37 @@ const hubTxt=c=>`<b class="dh hubt">${esc(c.n)}</b><small class="hubn" data-hub=
 const rootHTML=()=>`<div class="root"><span class="dom">my.arete929.kr</span><b class="tt">${esc(TITLE)}</b><span class="cnt" data-root></span></div>`;
 const weight=c=>(c.k==='ar'&&!OPEN_AR?1:vis(c).length)+1.6;
 
+/* 차트형(계통도) — 가운데 제목에서 양쪽(왼쪽·오른쪽)으로 갈라지는 트리. 큰 가지를 양쪽에 나눠 놓고 직각선으로 잇는다 */
+const tLeaf=(a,c,l)=>`<div class="t-item t-leaf${l?' t-l':''}" style="--c:${c.c}">${chip(a,c)}</div>`;
+function tItem(n,l){
+  const hub=`<div class="t-hub" style="--c:${n.c}" data-k="${n.k}">${nodeTxt(n)}</div>`;
+  let kids='';
+  if(!isFoldN(n)){
+    if(n.k==='ar') kids=OPEN_AR?vis(n.cat).map(a=>tLeaf(a,n.cat,l)).join(''):`<div class="t-item t-leaf${l?' t-l':''}" style="--c:${n.c}"><button class="chip more" style="--c:${n.c}" data-more data-cat="ar">지난 앱 ${vis(n.cat).length}개 펼치기</button></div>`;
+    else kids=n.kids.map(k=>tItem(k,l)).join('')+directOf(n).map(a=>tLeaf(a,n.cat,l)).join('');
+  }
+  return `<div class="t-item${l?' t-l':''}" style="--c:${n.c}">${hub}${kids?`<div class="t-kids">${kids}</div>`:''}</div>`;
+}
+function layT(){
+  const roots=ROOTS.concat(AR_NODE?[AR_NODE]:[]), L=[], R=[]; let lw=0, rw=0;
+  roots.forEach(n=>{const w=n.k==='ar'?2:wN(n); if(rw<=lw){R.push(n);rw+=w}else{L.push(n);lw+=w}});
+  return `<div class="t-wrap"><div class="t-item t-top">${L.length?`<div class="t-kids t-kl">${L.map(n=>tItem(n,true)).join('')}</div>`:''}${rootHTML()}${R.length?`<div class="t-kids t-kr">${R.map(n=>tItem(n,false)).join('')}</div>`:''}</div><svg class="wires"></svg></div>`;
+}
+function wiresT(){
+  const svg=main.querySelector('.wires'); if(!svg) return;
+  sizeSvg(svg); const R=hostRect(); let s='';
+  const link=(pe,kb,left,top)=>{
+    const p=R(pe), ks=[...kb.children]; if(!ks.length) return;
+    const cs=ks.map(k=>({r:R(k.firstElementChild),c:k.style.getPropertyValue('--c')||'#24221e'}));
+    const px=left?p.l:p.r, ex=c=>left?c.r.r:c.r.l, near=left?Math.max(...cs.map(c=>c.r.r)):Math.min(...cs.map(c=>c.r.l)), mx=(px+near)/2;
+    cs.forEach(c=>{ s+=`<path d="M${px},${p.cy} H${mx} V${c.r.cy} H${ex(c)}" stroke="${c.c}" stroke-width="${top?3.5:1.6}" fill="none" stroke-linejoin="round" stroke-linecap="round" opacity="${top?1:.8}"/>` });
+  };
+  main.querySelectorAll('.t-item').forEach(it=>{
+    if(it.matches('.t-top')){ const root=it.querySelector(':scope>.root'); it.querySelectorAll(':scope>.t-kids').forEach(kb=>link(root,kb,kb.classList.contains('t-kl'),true)); return }
+    const kb=it.querySelector(':scope>.t-kids'); if(kb) link(it.firstElementChild,kb,it.classList.contains('t-l'));
+  });
+  svg.innerHTML=s;
+}
 /* 가지형 */
 function layA(){
   const L=[],R=[];let l=0,r=0;
@@ -941,7 +993,7 @@ document.addEventListener('pointerup',endDrag); document.addEventListener('point
 document.addEventListener('click',e=>{ if(NOCLICK){e.stopPropagation();e.preventDefault()} },true);
 document.addEventListener('dblclick',e=>{
   if(VIEW!=='map'||!e.target.closest('main')) return;
-  const h=e.target.closest('.d-hub,.d-sub,.hub,.ih,.e-hub'); if(!h) return;
+  const h=e.target.closest('.d-hub,.d-sub,.hub,.ih,.e-hub,.t-hub'); if(!h) return;
   const k=(h.closest('[data-k]')||{dataset:{}}).dataset.k, nd=NODEMAP[k]; if(!nd) return;
   e.preventDefault(); getSelection().removeAllRanges();
   if(k==='ar'){ OPEN_AR=!OPEN_AR; render(); toast(OPEN_AR?'지난 앱을 펼쳤어요':'지난 앱을 접었어요 (이름표를 두 번 누르면 펼쳐요)'); return }
@@ -1051,7 +1103,7 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('#mm [data-mm]'); if(b){ mmCmd(b.dataset.mm); return }
   if(NOCLICK||GUEST||VIEW!=='map'||!STATE) return;
   if(e.target.closest('#mm,.pop,#dlgOv,.zoom,.mm-in,button,a,.sw,.chip,.tile')) return;
-  const el=e.target.closest('.d-hub,.d-sub,.hub,.ih,.e-hub,.root');
+  const el=e.target.closest('.d-hub,.d-sub,.hub,.ih,.e-hub,.t-hub,.root');
   if(el){ if(el.matches('.root')) selectNode('root'); else{ const k=(el.closest('[data-k]')||{dataset:{}}).dataset.k, n=NODEMAP[k]; if(n&&n.k!=='ar') selectNode(n.k) } return }
   if(e.target.closest('main')){ SEL=null; mmMark(); mmPlace() }
 });
@@ -1071,7 +1123,7 @@ function resetPos(){ POS={}; savePos('가지 위치 처음대로'); if(VIEW==='m
 let PAN=null;
 main.addEventListener('pointerdown',e=>{
   if(e.pointerType==='touch'||e.button!==0||DRAG||VIEW!=='map'||!e.target.closest('.zin')) return;
-  if(e.target.closest('.d-hub,.d-sub,.chip,.tile,.hub,.ih,.pop,button,a,input,.sw,.more')) return;
+  if(e.target.closest('.d-hub,.d-sub,.chip,.tile,.hub,.ih,.t-hub,.pop,button,a,input,.sw,.more')) return;
   PAN={pid:e.pointerId,sx:e.clientX,sy:e.clientY,l:main.scrollLeft,t:scrollY,moved:false};
 });
 main.addEventListener('pointermove',e=>{
@@ -1244,10 +1296,10 @@ function wiresG(){
   svg.innerHTML=s;
 }
 const dNarrow=()=>false;   /* 원형 방사는 폭과 상관없이 방사형으로 둔다(좁으면 옆으로 밀어서 본다) */
-function post(){ if(!STATE||VIEW==='list'||!main.querySelector('.zin')) return; if(VIEW==='gate'){ zWidth(); applyG(); wiresG(); zBox(); return } zWidth(); if(V==='a'){applyXY();wiresA()} else if(V==='b'){applyXY();wiresB()} else if(V==='d') placeD(); zBox(); zAuto(); mmMark(); mmPlace(); }
+function post(){ if(!STATE||VIEW==='list'||!main.querySelector('.zin')) return; if(VIEW==='gate'){ zWidth(); applyG(); wiresG(); zBox(); return } zWidth(); if(V==='a'){applyXY();wiresA()} else if(V==='b'){applyXY();wiresB()} else if(V==='d') placeD(); else if(V==='t') wiresT(); zBox(); zAuto(); mmMark(); mmPlace(); }
 /* 확대·축소를 한 번도 안 만졌다면 창 폭에 맞춰 한눈에 보이게(저장 안 함) — 배치는 그대로, 크기만 맞춘다 */
 function zAuto(){
-  if(!ZAUTO||V!=='d') return; const zi=main.querySelector('.zin'); if(!zi) return;
+  if(!ZAUTO||(V!=='d'&&V!=='t')) return; const zi=main.querySelector('.zin'); if(!zi) return;
   const f=Math.max(ZSTEPS[0],Math.min(1,Math.floor(zi.clientWidth/Math.max(zi.scrollWidth,1)*100)/100));
   if(Math.abs(f-Z)>.001){ Z=f; zWidth(); zBox() }
 }
@@ -1282,7 +1334,7 @@ function render(){
   const lay=VIEW==='list'?'list':VIEW==='gate'?'g':V;
   main.className='lay-'+lay;
   ZAUTO=ZS[lay]===undefined; Z=zClamp(ZS[lay]||1); const hasMap=VIEW!=='list'&&(VIEW==='gate'||visCats().length>0);
-  const body=VIEW==='gate'?layG():visCats().length||VIEW==='list'?({list:layList,a:layA,b:layB,d:layD,e:layE,f:layF}[lay]||layE)():`<div class="wait">${GUEST?'공개한 앱이 없습니다.':'앱이 없습니다. «목록»에서 앱을 추가해 주세요.'}</div>`;
+  const body=VIEW==='gate'?layG():visCats().length||VIEW==='list'?({list:layList,a:layA,b:layB,d:layD,e:layE,f:layF,t:layT}[lay]||layE)():`<div class="wait">${GUEST?'공개한 앱이 없습니다.':'앱이 없습니다. «목록»에서 앱을 추가해 주세요.'}</div>`;
   main.innerHTML=(VIEW==='gate'?gateBar():'')+(hasMap?`<div class="zbox"><div class="zin">${body}</div></div>`:body); $('#filt').style.display=VIEW==='gate'?'none':'';
   $('#zoom').hidden=!hasMap;
   counts(); applyFilter(); drawLog();

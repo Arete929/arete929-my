@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.16.0 — 관문 보기에서 이름표·칸을 끌어 옮기기(위치 저장) | @version 2.15.0 — «주소 칸»을 «관문»으로 이름 바꿈 · «관문» 보기(연결한 칸만 따로 마인드맵, 방식별/주제별 묶기) · 칸마다 주제 | @version 2.13.0 — 화면 HTML 칸에 «📋 붙여넣기»(클립보드에서 바로)·«🗑 코드 비우기» 버튼 | @version 2.12.0 — 주소 칸 아코디언(접었다 펼치기) · 화면 HTML 코드 아코디언(코드 있음 표시) · 글자 말고 이름 짓기(vote 등) · 수정·삭제 | @version 2.11.1 — «HTML 붙여넣기» → «화면 HTML»(툴팁·안내: 스크립트는 JSON API 로) · 주소 칸을 머리글로 꺼냄 · HTML 붙여넣기(파일 올리기·미리보기) · 주소 칸 «자체 페이지» 모드(구글 주소 거치지 않음) · 주소 칸 a–z(a.arete929.kr…z) · 앱 카드에서 바로 연결 · 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.16.1 — 관문 보기 끌기: 아래로 제한 없이(바탕이 늘어남) | @version 2.16.0 — 관문 보기에서 이름표·칸을 끌어 옮기기(위치 저장) | @version 2.15.0 — «주소 칸»을 «관문»으로 이름 바꿈 · «관문» 보기(연결한 칸만 따로 마인드맵, 방식별/주제별 묶기) · 칸마다 주제 | @version 2.13.0 — 화면 HTML 칸에 «📋 붙여넣기»(클립보드에서 바로)·«🗑 코드 비우기» 버튼 | @version 2.12.0 — 주소 칸 아코디언(접었다 펼치기) · 화면 HTML 코드 아코디언(코드 있음 표시) · 글자 말고 이름 짓기(vote 등) · 수정·삭제 | @version 2.11.1 — «HTML 붙여넣기» → «화면 HTML»(툴팁·안내: 스크립트는 JSON API 로) · 주소 칸을 머리글로 꺼냄 · HTML 붙여넣기(파일 올리기·미리보기) · 주소 칸 «자체 페이지» 모드(구글 주소 거치지 않음) · 주소 칸 a–z(a.arete929.kr…z) · 앱 카드에서 바로 연결 · 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -302,7 +302,9 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 }
 @media (min-width:1100px){
   .lay-g .g-hub,.lay-g .g-leaf{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
-  .lay-g .dragging{cursor:grabbing;z-index:6;box-shadow:0 8px 20px rgba(0,0,0,.2)}
+  .lay-g .g-leaf.dragging{cursor:grabbing;z-index:6;box-shadow:0 8px 20px rgba(0,0,0,.2)}
+  .lay-g .g-br.dragging{z-index:6}
+  .lay-g .g-br.dragging .g-hub{box-shadow:0 8px 20px rgba(0,0,0,.2)}
 }
 .g-reset{border:1px solid #bfb6a3;background:var(--card);border-radius:6px;padding:5px 10px;font-size:12.5px;cursor:pointer}
 .gtopic{display:flex;flex-direction:column;gap:6px}
@@ -520,8 +522,8 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.16.0',
-  deployed:'2026-11-20 00:25'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.16.1',
+  deployed:'2026-11-20 00:33'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -846,11 +848,12 @@ document.addEventListener('pointerdown',e=>{
 document.addEventListener('pointermove',e=>{
   const D=DRAG; if(!D||e.pointerId!==D.pid) return;
   const dx=(e.clientX-D.sx)/Z, dy=(e.clientY-D.sy)/Z;   /* 확대·축소한 만큼 되돌려 지도 안 거리로 */
-  if(!D.moved){ if(Math.hypot(dx*Z,dy*Z)<5) return; D.moved=true; D.el.classList.add('dragging'); closePop(); try{D.el.setPointerCapture(e.pointerId)}catch(_){ } }
+  if(!D.moved){ if(Math.hypot(dx*Z,dy*Z)<5) return; D.moved=true; D.el.classList.add('dragging'); if(D.gate) main.classList.add('panning'); closePop(); try{D.el.setPointerCapture(e.pointerId)}catch(_){ } }
   if(D.gate){
     const mr=main.querySelector('.zin').getBoundingClientRect(), r=D.el.getBoundingClientRect(), cur=D.el._o||[0,0], bx=r.left-cur[0]*Z, by=r.top-cur[1]*Z;
-    const nx=Math.max((mr.left+2-bx)/Z,Math.min((mr.right-r.width-2-bx)/Z,D.start[0]+dx)), ny=Math.max((mr.top+2-by)/Z,Math.min((mr.bottom-r.height-2-by)/Z,D.start[1]+dy));
-    POS[D.key]=[+(nx/D.W).toFixed(4),+(ny/D.W).toFixed(4)]; applyG(); wiresG(); return;
+    /* 좌우는 화면 안, 위는 그림 맨 위까지, 아래는 제한 없이(바탕이 따라 늘어난다 · 저장값 한도 ±2.9×폭) */
+    const nx=Math.max((mr.left+2-bx)/Z,Math.min((mr.right-r.width-2-bx)/Z,D.start[0]+dx)), ny=Math.max((mr.top+2-by)/Z,Math.min(2.9*D.W,D.start[1]+dy));
+    POS[D.key]=[+(nx/D.W).toFixed(4),+(ny/D.W).toFixed(4)]; applyG(); wiresG(); zBox(); return;
   }
   if(D.xy){
     const mr=main.querySelector('.zin').getBoundingClientRect(), r=D.el.getBoundingClientRect(), cur=D.el._o||[0,0], bx=r.left-cur[0]*Z, by=r.top-cur[1]*Z;
@@ -923,7 +926,7 @@ function moveApp(a,k,keepAt){
 }
 function endDrag(e){
   const D=DRAG; if(!D||(e&&e.pointerId!==D.pid)) return; DRAG=null;
-  D.el.classList.remove('dragging'); main.querySelectorAll('.drop').forEach(x=>x.classList.remove('drop'));
+  D.el.classList.remove('dragging'); main.classList.remove('panning'); main.querySelectorAll('.drop').forEach(x=>x.classList.remove('drop'));
   if(D.moved){
     NOCLICK=true; setTimeout(()=>{NOCLICK=false},0);
     if(D.gate){ savePos(`관문 위치 · ${D.hub?D.el.dataset.gk:D.el.dataset.gopen}`); return }
@@ -1219,11 +1222,12 @@ function applyG(){
   const W=main.clientWidth;
   all.forEach(el=>{const o=posOf(gKey(el),W); el._o=o; el.style.transform=(o[0]||o[1])?`translate(${o[0]}px,${o[1]}px)`:''});
 }
+document.addEventListener('selectstart',e=>{ if(DRAG&&DRAG.gate) e.preventDefault() });
 document.addEventListener('pointerdown',e=>{
   if(!gxOn()||(e.pointerType==='mouse'&&e.button!==0)) return;
   const hb=e.target.closest('.g-hub'), lf=!hb&&e.target.closest('.g-leaf'), el=hb?hb.parentElement:lf;
   if(!el||!main.contains(el)) return;
-  const W=main.clientWidth; DRAG={el,gate:true,hub:!!hb,pid:e.pointerId,sx:e.clientX,sy:e.clientY,moved:false,key:gKey(el),W};
+  const W=main.clientWidth; try{getSelection().removeAllRanges()}catch(_){ } DRAG={el,gate:true,hub:!!hb,pid:e.pointerId,sx:e.clientX,sy:e.clientY,moved:false,key:gKey(el),W};
   DRAG.start=posOf(DRAG.key,W);
 });
 function wiresG(){

@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.12.0 — 주소 칸 아코디언(접었다 펼치기) · 화면 HTML 코드 아코디언(코드 있음 표시) · 글자 말고 이름 짓기(vote 등) · 수정·삭제 | @version 2.11.1 — «HTML 붙여넣기» → «화면 HTML»(툴팁·안내: 스크립트는 JSON API 로) · 주소 칸을 머리글로 꺼냄 · HTML 붙여넣기(파일 올리기·미리보기) · 주소 칸 «자체 페이지» 모드(구글 주소 거치지 않음) · 주소 칸 a–z(a.arete929.kr…z) · 앱 카드에서 바로 연결 · 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.13.0 — 화면 HTML 칸에 «📋 붙여넣기»(클립보드에서 바로)·«🗑 코드 비우기» 버튼 | @version 2.12.0 — 주소 칸 아코디언(접었다 펼치기) · 화면 HTML 코드 아코디언(코드 있음 표시) · 글자 말고 이름 짓기(vote 등) · 수정·삭제 | @version 2.11.1 — «HTML 붙여넣기» → «화면 HTML»(툴팁·안내: 스크립트는 JSON API 로) · 주소 칸을 머리글로 꺼냄 · HTML 붙여넣기(파일 올리기·미리보기) · 주소 칸 «자체 페이지» 모드(구글 주소 거치지 않음) · 주소 칸 a–z(a.arete929.kr…z) · 앱 카드에서 바로 연결 · 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -223,6 +223,7 @@ body:not(.guest) .d-hub.dragging,body:not(.guest) .d-sub.dragging,body:not(.gues
 .slotrow .sh{font-family:Consolas,'Courier New',monospace;font-size:13px;min-height:130px;resize:vertical;white-space:pre;overflow:auto}
 .pgtools{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .pgfile{display:inline-block;cursor:pointer}
+.pgtools .btn.wr{color:#b5502f}
 .slotrow .ctl{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .slotrow .btn{padding:6px 10px;font-size:12.5px;text-decoration:none;color:var(--ink);display:inline-block}
 .slotrow .btn.f{color:#fff}
@@ -470,8 +471,8 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.12.0',
-  deployed:'2026-11-19 16:36'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.13.0',
+  deployed:'2026-11-19 17:55'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -1275,7 +1276,7 @@ function slotRowHTML(l){
     +'<div class="pgbox"'+(pg?'':' hidden')+'><div class="sm pghint" title="'+esc(tip)+'">이 칸은 학생이 보는 <b>화면(HTML)</b>입니다. 데이터는 앱스크립트를 <b>JSON API</b>로 바꿔 화면이 불러오게 하세요.</div>'
     +'<button type="button" class="codehd" data-slotcode="'+l+'" aria-expanded="'+codeOpen+'"><b>📄 화면 HTML 코드</b><span class="sm codesum">'+(hasCode?'코드 있음 · '+kb(r.pl)+' · 저장 '+esc((r.at||'').slice(5,16))+' · 눌러서 보기':'아직 붙여 넣은 코드가 없어요')+'</span><span class="chev" aria-hidden="true">▾</span></button>'
     +'<div class="codebd"'+(codeOpen?'':' hidden')+'><textarea class="inp sh" rows="8" spellcheck="false" placeholder="여기에 화면 HTML 전체를 붙여 넣으세요 (&lt;!doctype html&gt;…)"></textarea>'
-    +'<div class="pgtools"><label class="btn pgfile">파일 올리기<input type="file" class="pgf" accept=".html,.htm,text/html" hidden></label><button type="button" class="btn" data-slotprev>미리보기</button><span class="sm pgsize">'+(hasCode?kb(r.pl)+' 저장됨 · 아래 «저장»을 누르면 이 내용으로 바뀝니다':'0자 / 400K자')+'</span></div></div></div>'
+    +'<div class="pgtools"><label class="btn pgfile">파일 올리기<input type="file" class="pgf" accept=".html,.htm,text/html" hidden></label><button type="button" class="btn" data-slotpaste>📋 붙여넣기</button><button type="button" class="btn wr" data-slotempty>🗑 코드 비우기</button><button type="button" class="btn" data-slotprev>미리보기</button><span class="sm pgsize">'+(hasCode?kb(r.pl)+' 저장됨 · 아래 «저장»을 누르면 이 내용으로 바뀝니다':'0자 / 400K자')+'</span></div></div></div>'
     +'<div class="sm">'+(has?(on?'연결 중':'꺼 둠')+' · 저장 '+esc((r.at||'').slice(5,16)):'저장하면 20초쯤 뒤 열립니다')+'</div>'
     +'<div class="ctl"><button class="btn f" data-slotsave="'+l+'">저장</button>'
     +(has?'<a class="btn" href="https://'+l+'.arete929.kr/" target="_blank" rel="noopener">열기</a><button class="btn" data-slotcopy="'+l+'">주소 복사</button><button class="btn" data-slotdel="'+l+'">삭제</button>':'<button class="btn" data-slotdraftdel="'+l+'">취소</button>')
@@ -1398,6 +1399,13 @@ document.addEventListener('click',async e=>{
   if(t.dataset.slotdraftdel){delete SLOT_DRAFT[t.dataset.slotdraftdel]; slotsRefresh(); return}
   if(t.dataset.slotm){const row=t.closest('.slotrow'), m=t.dataset.slotm; row.dataset.m=m; row.querySelectorAll('.mb').forEach(b=>b.classList.toggle('on',b===t)); row.querySelector('.su').hidden=(m!=='go'); row.querySelector('.hostnote').hidden=(m!=='host'); row.querySelector('.pgbox').hidden=(m!=='page'); return}
   if(t.dataset.slotload!==undefined){const row=t.closest('.slotrow'), l=row.dataset.l; t.disabled=true; try{const j=await api('slotPage',{letter:l}); const ta=row.querySelector('.sh'); ta.value=j.html||''; ta.dataset.dirty=''; ta.dataset.loaded='1'; pgSize(row); toast('저장된 HTML 을 불러왔어요')}catch(e){toast(e.message||'불러오지 못했어요')} t.disabled=false; return}
+  if(t.dataset.slotpaste!==undefined){const row=t.closest('.slotrow'), ta=row.querySelector('.sh'); let txt=''; try{txt=await navigator.clipboard.readText()}catch(e){toast('클립보드를 읽지 못했어요 — 코드 칸을 눌러 직접 붙여 넣어 주세요'); ta.focus(); return}
+    if(!String(txt).trim()){toast('클립보드에 복사해 둔 코드가 없어요'); return}
+    if(ta.value.trim()&&!await uiConfirm('코드 칸의 내용을 클립보드 내용으로 바꿀까요?','바꾸기')) return;
+    ta.value=txt; ta.dataset.dirty='1'; ta.dataset.loaded=''; pgSize(row); toast('붙여 넣었어요 — 아래 «저장»을 눌러야 반영돼요'); return}
+  if(t.dataset.slotempty!==undefined){const row=t.closest('.slotrow'), ta=row.querySelector('.sh'), cur=SL()[row.dataset.l]; if(!ta.value&&!(cur&&cur.pl)){toast('이미 비어 있어요'); return}
+    if(!await uiConfirm('코드 칸을 비울까요? «저장»을 누르기 전에는 서버에 저장된 기존 코드가 그대로 있어요.','비우기')) return;
+    ta.value=''; ta.dataset.dirty='1'; ta.dataset.loaded=''; pgSize(row); const el=row.querySelector('.pgsize'); if(el) el.textContent='비웠어요 · 새 코드를 붙여 넣고 «저장»하면 바뀌어요 (저장 전엔 기존 코드 그대로)'; ta.focus(); return}
   if(t.dataset.slotprev!==undefined){const row=t.closest('.slotrow'), h=row.querySelector('.sh').value; if(!h.trim()){toast('먼저 HTML 을 붙여 넣거나 파일을 올려 주세요');return} try{const u=URL.createObjectURL(new Blob([h],{type:'text/html'})); window.open(u,'_blank','noopener'); setTimeout(()=>URL.revokeObjectURL(u),60000)}catch(e){toast('미리보기를 열지 못했어요')} return}
   if(t.dataset.slotsave){const row=t.closest('.slotrow'), l=t.dataset.slotsave, m=row.dataset.m==='host'?'host':row.dataset.m==='page'?'page':'go', u=row.querySelector('.su').value.trim(), n=row.querySelector('.sn').value.trim(), cur=SL()[l];
     if(m==='go'&&!u){toast('링크를 붙여 넣어 주세요');return}

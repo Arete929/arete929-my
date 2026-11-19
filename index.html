@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.13.0 — 화면 HTML 칸에 «📋 붙여넣기»(클립보드에서 바로)·«🗑 코드 비우기» 버튼 | @version 2.12.0 — 주소 칸 아코디언(접었다 펼치기) · 화면 HTML 코드 아코디언(코드 있음 표시) · 글자 말고 이름 짓기(vote 등) · 수정·삭제 | @version 2.11.1 — «HTML 붙여넣기» → «화면 HTML»(툴팁·안내: 스크립트는 JSON API 로) · 주소 칸을 머리글로 꺼냄 · HTML 붙여넣기(파일 올리기·미리보기) · 주소 칸 «자체 페이지» 모드(구글 주소 거치지 않음) · 주소 칸 a–z(a.arete929.kr…z) · 앱 카드에서 바로 연결 · 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.15.0 — «주소 칸»을 «관문»으로 이름 바꿈 · «관문» 보기(연결한 칸만 따로 마인드맵, 방식별/주제별 묶기) · 칸마다 주제 | @version 2.13.0 — 화면 HTML 칸에 «📋 붙여넣기»(클립보드에서 바로)·«🗑 코드 비우기» 버튼 | @version 2.12.0 — 주소 칸 아코디언(접었다 펼치기) · 화면 HTML 코드 아코디언(코드 있음 표시) · 글자 말고 이름 짓기(vote 등) · 수정·삭제 | @version 2.11.1 — «HTML 붙여넣기» → «화면 HTML»(툴팁·안내: 스크립트는 JSON API 로) · 주소 칸을 머리글로 꺼냄 · HTML 붙여넣기(파일 올리기·미리보기) · 주소 칸 «자체 페이지» 모드(구글 주소 거치지 않음) · 주소 칸 a–z(a.arete929.kr…z) · 앱 카드에서 바로 연결 · 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -188,7 +188,7 @@ body:not(.guest) .d-hub.dragging,body:not(.guest) .d-sub.dragging,body:not(.gues
 .mseg .mb:first-child{border-left:0}
 .mseg .mb.on{background:var(--ink);color:#fff}
 .slotrow [hidden]{display:none!important}
-/* v2.12 — 주소 칸 아코디언 · 이름 짓기 */
+/* v2.12 — 관문 아코디언 · 이름 짓기 */
 .slotrow.acc{display:block;padding:0;overflow:hidden}
 .slotrow .acchd{display:flex;align-items:stretch;gap:0}
 .slotrow .accmain{all:unset;box-sizing:border-box;flex:1;min-width:0;display:grid;grid-template-columns:minmax(120px,auto) minmax(0,1fr) auto 22px;gap:6px 12px;align-items:center;padding:10px 12px;cursor:pointer}
@@ -262,6 +262,46 @@ body:not(.guest) .d-hub.dragging,body:not(.guest) .d-sub.dragging,body:not(.gues
 .zin{position:relative;transform-origin:0 0;cursor:grab}
 .zin button,.zin a,.zin .sw{cursor:pointer}
 main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-user-select:none}
+/* v2.15 — 관문 보기: 연결한 a~z.arete929.kr 만 따로 마인드맵 */
+.lay-g{position:relative;padding:22px 20px 30px;overflow-x:auto}
+.g-bar{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap;max-width:1400px;margin:0 auto 6px;padding:14px 20px 0}
+.g-bar .lab{font-size:13px;color:var(--sub);font-weight:700}
+.g-note{font-size:12.5px;color:var(--sub)}
+.g-wrap{position:relative;z-index:1;display:grid;grid-template-columns:1fr 200px 1fr;gap:0 56px;align-items:center;max-width:1400px;margin:0 auto}
+.g-side{display:flex;flex-direction:column;gap:24px}
+.g-br{display:flex;align-items:center;gap:46px}
+.g-br.l{flex-direction:row-reverse}
+.g-hub{flex:none;width:122px;padding:8px;border:2px solid var(--c);border-radius:8px;background:var(--card);text-align:center}
+.g-hub .hubt{display:block}
+.g-kids{display:flex;flex-direction:column;gap:7px;min-width:0;flex:1}
+.g-leaf{all:unset;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr);gap:1px 8px;align-items:center;border:1.5px dashed var(--c);border-radius:7px;background:var(--card);padding:6px 11px;cursor:pointer;min-width:0}
+.g-leaf:hover{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.g-leaf:focus-visible{outline:3px solid #2e7d4f;outline-offset:2px}
+.g-leaf .gd{width:9px;height:9px;border-radius:50%;background:var(--on);grid-row:1/3}
+.g-leaf.off .gd{background:var(--off)}
+.g-leaf.off{opacity:.7}
+.g-leaf b{font-size:14px;font-weight:800;white-space:nowrap}
+.g-leaf b i{font-style:normal;font-weight:500;color:var(--sub);font-size:12.5px}
+.g-leaf small{grid-column:2;font-size:12px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.g-mid{display:flex;flex-direction:column;gap:14px;align-items:stretch}
+.g-add{border:1.5px dashed #a79f8c;background:transparent;border-radius:999px;padding:7px 12px;color:var(--sub);cursor:pointer;font-size:13px}
+.g-add:hover{color:var(--ink);border-color:var(--ink)}
+@media (max-width:1099px){
+  .lay-g{padding:16px}
+  .g-bar{padding:6px 0 0}
+  .g-wrap{display:flex;flex-direction:column;align-items:stretch}
+  .g-mid{order:-1}
+  .g-mid .root{display:flex;align-items:baseline;gap:10px;text-align:left;padding:12px 14px}
+  .g-mid .root b{font-size:24px;margin:0}
+  .g-side{gap:18px;margin-left:12px;border-left:3px solid #c9c1ae;padding:18px 0 4px 18px}
+  .g-side.r{padding-top:0;padding-bottom:18px}
+  .g-br,.g-br.l{flex-direction:column;align-items:stretch;gap:7px;position:relative}
+  .g-br::before{content:'';position:absolute;left:-21px;top:14px;width:16px;border-top:3px solid var(--c)}
+  .g-hub{width:auto;text-align:left;border:0;background:none;padding:2px 0;display:flex;align-items:baseline;gap:8px}
+  .g-kids{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:6px}
+}
+.gtopic{display:flex;flex-direction:column;gap:6px}
+.gtopic .sa-quick{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
 .lay-a,.lay-b,.lay-e,.lay-f{overflow-x:auto}
 .zoom{position:fixed;right:14px;bottom:14px;z-index:30;display:flex;border:1.5px solid var(--ink);border-radius:8px;background:var(--card);box-shadow:0 4px 14px rgba(0,0,0,.18);overflow:hidden}
 .zoom[hidden]{display:none}
@@ -458,10 +498,10 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 <body>
 <header class="top">
   <div class="brand"><span class="dom">my.arete929.kr</span><h1 class="tt" id="appTitle" tabindex="0" role="button" title="제목을 누르면 바꿀 수 있어요">Atlas of ARETE</h1><span class="ver" id="verPill"></span></div>
-  <div class="seg" id="view"><button data-w="map">지도</button><button data-w="list">목록</button></div>
+  <div class="seg" id="view"><button data-w="map">지도</button><button data-w="list">목록</button><button data-w="gate" title="연결한 a~z.arete929.kr 만 따로 보기">관문</button></div>
   <div class="seg" id="filt"><button class="on" data-f="all">전체<em data-n="all"></em></button><button data-f="pub">공개<em data-n="pub"></em></button><button data-f="priv">비공개<em data-n="priv"></em></button></div>
   <a class="hic" id="sheetLink" href="#" target="_blank" rel="noopener" title="앱 목록 구글 시트 열기"><img alt="시트" src="data:image/png;base64,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"></a>
-  <button class="setbtn" id="openSlotsBtn" title="a.arete929.kr … z.arete929.kr 주소 칸">주소 칸</button>
+  <button class="setbtn" id="openSlotsBtn" title="a.arete929.kr … z.arete929.kr 관문 만들기·고치기">관문 설정</button>
   <button class="setbtn" id="openSet">설정</button>
   <div class="stamp" id="stamp"><i class="ck"></i><span id="stampTxt">마지막 저장 · -</span></div>
 </header>
@@ -475,8 +515,8 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.14.1',
-  deployed:'2026-11-19 22:41'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.15.0',
+  deployed:'2026-11-20 00:15'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -551,7 +591,7 @@ function links(a){
 const GUESS=[[/세특|생기부/,'✍️'],[/배드민턴/,'🏸'],[/배구|발리/,'🏐'],[/넷볼/,'🥅'],[/킨볼/,'🔴'],[/베이스볼|야구/,'⚾'],[/축구|족구/,'⚽'],[/농구/,'🏀'],[/걷기/,'🚶'],[/PAPS|체력|운동/,'💪'],[/대회|체육의 날|리그/,'🏆'],[/점수|성적|채점|수행|평가|분석/,'📝'],[/출석|출결/,'🗓️'],[/설문|투표|추천/,'🗳️'],[/쿠폰|칭찬/,'🎟️'],[/대시보드|전광판|순위/,'📊'],[/명렬|명단|짝꿍|모둠|섞기|편성|자리|짝순환/,'👥'],[/시간표|학사일정|일정|예약/,'📅'],[/진도|수업/,'📚'],[/선정|선수|종목/,'🎯'],[/영어|TickTick|태스크|할일/,'✅'],[/가정통신|신청|접수|민원|보수/,'📮'],[/급식/,'🍚'],[/역할|청소/,'🧹'],[/GAS|웹앱/,'🧩'],[/유콜|전환기/,'📞'],[/훈련|프로그램/,'🏃'],[/도우미|생성/,'🪄']];
 const EMOJIS=['✍️','📝','📊','🗓️','📅','📚','🏐','🥅','⚾','🏸','⚽','🏆','🏃','🚶','🎟️','🗳️','👥','🎯','✅','📮','🧩','🪄','🔗','🍚'];
 const iconOf=a=>{ const i=String(a.icon||'').trim(); if(i&&i!=='📱') return i; for(const [re,e] of GUESS) if(re.test(a.n)) return e; return '📱' };
-/* 주소 칸 a–z — a.arete929.kr … z.arete929.kr 로 들어오면 이 앱 주소(링크)로 보내 준다 */
+/* 관문 a–z — a.arete929.kr … z.arete929.kr 로 들어오면 이 앱 주소(링크)로 보내 준다 */
 const SLOT_LETTERS='abcdefghijklmnopqrstuvwxyz'.split('');
 const SL=()=>(STATE&&STATE.slots)||{};
 const slotOfApp=a=>Object.keys(SL()).find(l=>SL()[l]&&SL()[l].on!==false&&SL()[l].u===a.u&&okUrl(a.u))||null;
@@ -747,7 +787,7 @@ function zSet(z){
   z=zClamp(z); if(Math.abs(z-Z)<.001) return;
   const zb=main.querySelector('.zbox'); let fx=0,fy=0;
   if(zb){ const r=zb.getBoundingClientRect(); fx=(main.scrollLeft+main.clientWidth/2-(r.left-main.getBoundingClientRect().left+main.scrollLeft))/Z; fy=(innerHeight/2-r.top)/Z }
-  Z=z; ZS[V]=Z; ZAUTO=false; try{localStorage.setItem('my-zoom',JSON.stringify(ZS))}catch(e){}
+  Z=z; ZS[VIEW==='gate'?'g':V]=Z; ZAUTO=false; try{localStorage.setItem('my-zoom',JSON.stringify(ZS))}catch(e){}
   closePop(); post();
   if(zb){ const r=zb.getBoundingClientRect(), mr=main.getBoundingClientRect(); main.scrollLeft=fx*Z+(r.left-mr.left+main.scrollLeft)-main.clientWidth/2; scrollBy(0,r.top+fy*Z-innerHeight/2) }
 }
@@ -1033,9 +1073,9 @@ $('#zoom').addEventListener('click',e=>{
 function slotBlock(a){
   if(GUEST||!okUrl(a.u)) return '';
   const L=slotOfApp(a);
-  if(L) return `<div class="slp"><b>주소 칸</b> <span>${L}.arete929.kr</span><div class="pb"><a class="pbtn" href="https://${L}.arete929.kr/" target="_blank" rel="noopener">열기</a><button class="pbtn" data-slotcopy="${L}">주소 복사</button><button class="pbtn" data-slotclear="${L}" data-app="${a.id}">끊기</button></div></div>`;
+  if(L) return `<div class="slp"><b>관문</b> <span>${L}.arete929.kr</span><div class="pb"><a class="pbtn" href="https://${L}.arete929.kr/" target="_blank" rel="noopener">열기</a><button class="pbtn" data-slotcopy="${L}">주소 복사</button><button class="pbtn" data-slotclear="${L}" data-app="${a.id}">끊기</button></div></div>`;
   const free=SLOT_LETTERS.filter(l=>!SL()[l]);
-  return `<div class="slp"><b>주소 칸에 연결</b> <span>빈 칸만 골라집니다</span><div class="letters">${SLOT_LETTERS.map(l=>SL()[l]?`<button class="lt use" disabled>${l}</button>`:`<button class="lt" data-sl="${l}">${l}</button>`).join('')}</div>${free.length?`<div class="pb"><button class="pbtn go" data-slotgo="${a.id}" disabled>칸을 고르세요</button></div>`:'<span>빈 칸이 없어요</span>'}</div>`;
+  return `<div class="slp"><b>관문에 연결</b> <span>빈 칸만 골라집니다</span><div class="letters">${SLOT_LETTERS.map(l=>SL()[l]?`<button class="lt use" disabled>${l}</button>`:`<button class="lt" data-sl="${l}">${l}</button>`).join('')}</div>${free.length?`<div class="pb"><button class="pbtn go" data-slotgo="${a.id}" disabled>칸을 고르세요</button></div>`:'<span>빈 칸이 없어요</span>'}</div>`;
 }
 function openPop(a,anchor){
   closePop(); const p=document.createElement('div'); p.className='pop';
@@ -1078,7 +1118,7 @@ function layList(){
   const groups=(GROUP==='cat'
     ?ROOTS.map(n=>[n.name,allAppsOf(n),n])
     :GROUP==='dom'
-    ?[['주소 칸에 연결됨 (a~z.arete929.kr)',all.filter(a=>slotOfApp(a)),null,true],['연결 안 됨',all.filter(a=>!slotOfApp(a))]]
+    ?[['관문에 연결됨 (a~z.arete929.kr)',all.filter(a=>slotOfApp(a)),null,true],['연결 안 됨',all.filter(a=>!slotOfApp(a))]]
     :GROUP==='pub'
     ?[['공개',all.filter(a=>a.pub)],['비공개',all.filter(a=>!a.pub)]]
     :[['clasp · GitHub 둘 다',all.filter(a=>cl(a)&&gh(a))],['clasp만 (GitHub 주소 없음)',all.filter(a=>cl(a)&&!gh(a))],['GitHub만',all.filter(a=>!cl(a)&&gh(a))],['둘 다 없음 (바로가기 등)',all.filter(a=>!cl(a)&&!gh(a))]]).concat([['지난 앱',ar]]);
@@ -1126,8 +1166,52 @@ function wiresB(){
   });
   svg.innerHTML=s;
 }
+/* ── 관문 보기 — 연결한 a~z.arete929.kr 만 따로 마인드맵으로. 방식별 / 주제별로 묶는다 ── */
+let GGROUP='mode'; try{if(localStorage.getItem('my-ggrp')==='topic') GGROUP='topic'}catch(e){}
+const GMODES=[['go','링크로 이동','#34539c'],['page','화면 HTML','#2f7a55'],['host','자체 페이지','#a46c12']];
+const slotMode=r=>r.m==='host'||r.m==='page'?r.m:'go';
+const NOTOPIC='주제 없음';
+/* 칸의 주제 — 직접 정한 것(g)이 먼저, 없으면 같은 링크를 쓰는 앱의 큰 묶음 이름 */
+function slotTopic(l){
+  const r=SL()[l]; if(!r) return '';
+  if(r.g) return r.g;
+  if(r.u){ const a=STATE.apps.find(x=>x.u===r.u); if(a&&a.tab) return a.tab.split(' / ')[0] }
+  return '';
+}
+const topicNames=()=>{const t=[]; Object.keys(SL()).forEach(l=>{const g=SL()[l].g; if(g&&t.indexOf(g)<0) t.push(g)}); CATS.filter(c=>c.k!=='ar').forEach(c=>{const r=c.n.split(' / ')[0]; if(t.indexOf(r)<0) t.push(r)}); return t.slice(0,14)};
+function gateGroups(){
+  const ls=slotNames().filter(l=>SL()[l]);
+  if(GGROUP==='mode') return GMODES.map(([k,n,c])=>({k,n,c,items:ls.filter(l=>slotMode(SL()[l])===k)})).filter(g=>g.items.length);
+  const by={}; ls.forEach(l=>{const t=slotTopic(l)||NOTOPIC; (by[t]=by[t]||[]).push(l)});
+  const names=Object.keys(by).sort((x,y)=>x===NOTOPIC?1:y===NOTOPIC?-1:x.localeCompare(y,'ko'));
+  return names.map((n,i)=>{const cat=CATS.find(c=>c.k!=='ar'&&c.n.split(' / ')[0]===n); return {k:'t'+i,n,c:n===NOTOPIC?AR_COLOR:cat?cat.c:PAL[i%PAL.length],items:by[n]}});
+}
+function gateBar(){
+  return `<div class="g-bar"><span class="lab">묶어 보기</span><div class="seg" id="gseg"><button data-ggrp="mode"${GGROUP==='mode'?' class="on"':''}>방식별</button><button data-ggrp="topic"${GGROUP==='topic'?' class="on"':''}>주제별</button></div><span class="g-note">연결한 관문만 보여요 · 칸을 누르면 고칠 수 있어요${GGROUP==='topic'?' · 주제는 칸을 고칠 때 정해요 (앱과 같은 링크면 앱의 묶음 이름을 따라가요)':''}</span></div>`;
+}
+function layG(){
+  const gs=gateGroups(), all=Object.keys(SL()), on=all.filter(l=>SL()[l].on!==false).length;
+  if(!gs.length) return `<div class="wait">연결한 관문이 아직 없어요.<br><br><button class="btn f" data-gadd>＋ 관문 추가</button></div>`;
+  const leaf=l=>{const r=SL()[l], o=r.on!==false; return `<button class="g-leaf${o?'':' off'}" data-gopen="${esc(l)}" title="${esc(l)}.arete929.kr — ${o?'연결 중':'꺼 둠'} · 눌러서 고치기"><span class="gd"></span><b>${esc(l)}<i>.arete929.kr</i></b><small>${esc(r.n||'이름 없음')}</small></button>`};
+  const br=(g,s)=>{const o=g.items.filter(l=>SL()[l].on!==false).length; return `<section class="g-br ${s}" style="--c:${g.c}"><div class="g-hub"><b class="dh hubt">${esc(g.n)}</b><small class="hubn">${g.items.length}칸${o<g.items.length?' · 켜짐 '+o:''}</small></div><div class="g-kids">${g.items.map(leaf).join('')}</div></section>`};
+  const L=[],R=[]; let l=0,r=0; gs.forEach(g=>{const w=g.items.length+1.6; if(r<=l){R.push(g);r+=w}else{L.push(g);l+=w}});
+  const free=SLOT_LETTERS.filter(x=>!SL()[x]).length;
+  return `<div class="g-wrap"><div class="g-side l">${L.map(g=>br(g,'l')).join('')}</div><div class="g-mid"><div class="root"><span class="dom">my.arete929.kr</span><b class="tt">${esc(TITLE)}</b><span class="cnt">관문 ${all.length}칸 · 켜짐 ${on}</span></div><button class="g-add" data-gadd title="새 주소 만들기">＋ 관문 추가${free?` <small>(빈 글자 ${free}개)</small>`:''}</button></div><div class="g-side r">${R.map(g=>br(g,'r')).join('')}</div></div><svg class="wires"></svg>`;
+}
+function wiresG(){
+  const svg=main.querySelector('.wires'); if(!svg) return;
+  if(innerWidth<1100){svg.innerHTML='';return}
+  sizeSvg(svg); const R=hostRect(), root=R(main.querySelector('.g-mid .root')); let s='';
+  main.querySelectorAll('.g-br').forEach(br=>{
+    const L=br.classList.contains('l'), c=br.style.getPropertyValue('--c'), h=R(br.querySelector('.g-hub'));
+    s+=`<path d="${curve(L?root.l:root.r,root.cy,L?h.r:h.l,h.cy)}" stroke="${c}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+    const hx=L?h.l:h.r;
+    br.querySelectorAll('.g-kids>.g-leaf').forEach(t=>{const r=R(t);s+=`<path d="${curve(hx,h.cy,L?r.r:r.l,r.cy)}" stroke="${c}" stroke-width="1.6" fill="none" opacity=".75"/>`});
+  });
+  svg.innerHTML=s;
+}
 const dNarrow=()=>false;   /* 원형 방사는 폭과 상관없이 방사형으로 둔다(좁으면 옆으로 밀어서 본다) */
-function post(){ if(!STATE||VIEW==='list'||!main.querySelector('.zin')) return; zWidth(); if(V==='a'){applyXY();wiresA()} else if(V==='b'){applyXY();wiresB()} else if(V==='d') placeD(); zBox(); zAuto(); mmMark(); mmPlace(); }
+function post(){ if(!STATE||VIEW==='list'||!main.querySelector('.zin')) return; if(VIEW==='gate'){ zWidth(); wiresG(); zBox(); return } zWidth(); if(V==='a'){applyXY();wiresA()} else if(V==='b'){applyXY();wiresB()} else if(V==='d') placeD(); zBox(); zAuto(); mmMark(); mmPlace(); }
 /* 확대·축소를 한 번도 안 만졌다면 창 폭에 맞춰 한눈에 보이게(저장 안 함) — 배치는 그대로, 크기만 맞춘다 */
 function zAuto(){
   if(!ZAUTO||V!=='d') return; const zi=main.querySelector('.zin'); if(!zi) return;
@@ -1162,11 +1246,11 @@ function render(){
   closePop();
   document.body.classList.toggle('guest',GUEST); buildTree();
   $$('#view button').forEach(b=>b.classList.toggle('on',b.dataset.w===VIEW));
-  const lay=VIEW==='list'?'list':V;
+  const lay=VIEW==='list'?'list':VIEW==='gate'?'g':V;
   main.className='lay-'+lay;
-  ZAUTO=ZS[lay]===undefined; Z=zClamp(ZS[lay]||1); const hasMap=VIEW!=='list'&&visCats().length>0;
-  const body=visCats().length||VIEW==='list'?({list:layList,a:layA,b:layB,d:layD,e:layE,f:layF}[lay]||layE)():`<div class="wait">${GUEST?'공개한 앱이 없습니다.':'앱이 없습니다. «목록»에서 앱을 추가해 주세요.'}</div>`;
-  main.innerHTML=hasMap?`<div class="zbox"><div class="zin">${body}</div></div>`:body;
+  ZAUTO=ZS[lay]===undefined; Z=zClamp(ZS[lay]||1); const hasMap=VIEW!=='list'&&(VIEW==='gate'||visCats().length>0);
+  const body=VIEW==='gate'?layG():visCats().length||VIEW==='list'?({list:layList,a:layA,b:layB,d:layD,e:layE,f:layF}[lay]||layE)():`<div class="wait">${GUEST?'공개한 앱이 없습니다.':'앱이 없습니다. «목록»에서 앱을 추가해 주세요.'}</div>`;
+  main.innerHTML=(VIEW==='gate'?gateBar():'')+(hasMap?`<div class="zbox"><div class="zin">${body}</div></div>`:body); $('#filt').style.display=VIEW==='gate'?'none':'';
   $('#zoom').hidden=!hasMap;
   counts(); applyFilter(); drawLog();
   requestAnimationFrame(post);
@@ -1319,6 +1403,7 @@ function slotRowHTML(l){
     +(has?'<button class="ssw'+(on?' on':'')+'" data-slotsw="'+l+'" title="'+(on?'끄면 «연결 안 된 주소»가 나옵니다':'켜면 다시 열립니다')+'"><i></i>'+(on?'연결':'꺼짐')+'</button>':'')+'</div>'
     +'<div class="accbd" id="sb_'+l+'"'+(open?'':' hidden')+'>'
     +'<input class="inp sn" maxlength="40" placeholder="이름 (선택) — 예: 전환기 투표" value="'+esc(has?r.n:'')+'" autocomplete="off" aria-label="이 주소의 이름">'
+    +'<div class="gtopic"><span class="sm"><b>주제</b> (선택) — 관문 보기의 «주제별»로 묶을 때 쓰는 이름</span><input class="inp sg" maxlength="20" placeholder="예: 전환기 · 체육 · 진학" value="'+esc(has?(r.g||''):'')+'" autocomplete="off" aria-label="이 주소의 주제">'+(topicNames().length?'<div class="sa-quick"><span class="sm">주제 고르기</span>'+topicNames().map(t=>'<button type="button" class="pk" data-slottopic="'+esc(t)+'">'+esc(t)+'</button>').join('')+'</div>':'')+'</div>'
     +'<div class="mseg" role="group" aria-label="연결 방식"><button type="button" class="mb'+(mo==='go'?' on':'')+'" data-slotm="go">링크로 이동</button><button type="button" class="mb'+(pg?' on':'')+'" data-slotm="page" title="'+esc(tip)+'">화면 HTML</button><button type="button" class="mb'+(host?' on':'')+'" data-slotm="host" title="GitHub pages 저장소의 글자 폴더를 보여 줍니다(파일이 여러 개인 앱)">자체 페이지(저장소)</button></div>'
     +'<input class="inp su" type="url" maxlength="500" placeholder="링크를 붙여 넣으세요 (https://…)" value="'+esc(has&&mo==='go'?r.u:'')+'" autocomplete="off"'+(mo==='go'?'':' hidden')+'>'
     +'<div class="sm hostnote"'+(host?'':' hidden')+'>이 주소 그대로 <b>pages 저장소의 «'+l+'» 폴더</b>를 보여 줍니다(구글 주소를 거치지 않음)</div>'
@@ -1344,7 +1429,7 @@ function slotsBody(){
 
 function openSlots(){
   const s=(STATE&&STATE.saved)||{};
-  dlg(`<div class="dlg-h"><h2 class="dh">주소 칸</h2><button class="dlg-x" data-closedlg aria-label="닫기">×</button></div>
+  dlg(`<div class="dlg-h"><h2 class="dh">관문</h2><button class="dlg-x" data-closedlg aria-label="닫기">×</button></div>
   <p class="hint">링크를 넣고 저장하면 몇 초 안에 <b>a.arete929.kr</b> 이 그 사이트로 연결됩니다(이동 방식 — 주소창에는 대상 주소가 보입니다). 비워 두거나 꺼 두면 «아직 연결 안 된 주소» 안내가 나옵니다. 앱 칸을 눌러도 바로 연결할 수 있습니다. <b>«화면 HTML»</b>은 학생이 보는 화면을 붙여 넣는 방식이고, 그 화면이 쓰는 앱스크립트는 화면을 내지 않는 <b>JSON API</b>로 만들어야 합니다.</p>
   <div class="savedat" id="slotSaved">마지막 저장 · ${esc(s.slots||'-')}</div><div id="slotBody">${slotsBody()}</div>`,'slots');
   $('#dlgOv .dlg').style.width='min(820px,100%)';
@@ -1355,11 +1440,11 @@ document.addEventListener('change',e=>{const f=e.target; if(!f.classList||!f.cla
   if(file.size>1000000){toast('파일이 너무 커요 (약 400KB 까지)');f.value='';return}
   const rd=new FileReader(); rd.onload=()=>{const ta=row.querySelector('.sh'); ta.value=String(rd.result||''); ta.dataset.dirty='1'; ta.dataset.loaded=''; pgSize(row); toast(file.name+' 을(를) 불러왔어요. «저장»을 눌러야 반영됩니다'); f.value=''}; rd.onerror=()=>toast('파일을 읽지 못했어요'); rd.readAsText(file,'utf-8')});
 function slotsRefresh(){ const b=$('#slotBody'); if(b) b.innerHTML=slotsBody(); const t=$('#slotSaved'); if(t&&STATE.saved&&STATE.saved.slots) t.textContent='저장됨 · '+STATE.saved.slots }
-async function slotSave(l,u,n,on,msg,m,html){
+async function slotSave(l,u,n,on,msg,m,html,g){
   try{
-    const j=await api('slotSet',{letter:l,u:u,n:n,on:on,m:m||'go',html:html});
+    const j=await api('slotSet',{letter:l,u:u,n:n,on:on,m:m||'go',html:html,g:g});
     STATE.slots=j.slots; delete SLOT_DRAFT[l]; STATE.saved=STATE.saved||{}; STATE.saved.slots=STATE.saved.last=j.savedAt;
-    saved(j.savedAt,msg||`주소 칸 ${l} ${u?'저장':'비움'}`); slotsRefresh(); render();
+    saved(j.savedAt,msg||`관문 ${l} ${u?'저장':'비움'}`); slotsRefresh(); render();
     return true;
   }catch(e){ toast(e.message||'저장하지 못했어요'); return false }
 }
@@ -1438,6 +1523,10 @@ document.addEventListener('click',async e=>{
   if(t.dataset.closedlg!==undefined){closeDlg();return}
   if(t.id==='reload'){loadState();return}
   if(!STATE) return;
+  if(t.dataset.ggrp){GGROUP=t.dataset.ggrp==='topic'?'topic':'mode'; try{localStorage.setItem('my-ggrp',GGROUP)}catch(e){} render(); return}
+  if(t.dataset.gopen){const l=t.dataset.gopen; SLOT_OPEN[l]=true; openSlots(); setTimeout(()=>{const r=document.querySelector('.slotrow[data-l="'+l+'"]'); if(r) r.scrollIntoView({block:'center'})},60); return}
+  if(t.dataset.gadd!==undefined){openSlots(); setTimeout(()=>{const i=$('#saName'); if(i) i.focus()},60); return}
+  if(t.dataset.slottopic!==undefined){const row=t.closest('.slotrow'); if(row){row.querySelector('.sg').value=t.dataset.slottopic} return}
   if(t.dataset.slots!==undefined){openSlots();return}
   if(t.dataset.slotacc){const row=t.closest('.slotrow'), l=t.dataset.slotacc, open=t.getAttribute('aria-expanded')!=='true'; t.setAttribute('aria-expanded',open); row.querySelector('.accbd').hidden=!open; SLOT_OPEN[l]=open; return}
   if(t.dataset.slotcode){const row=t.closest('.slotrow'), l=t.dataset.slotcode, open=t.getAttribute('aria-expanded')!=='true', cb=row.querySelector('.codebd'), ta=row.querySelector('.sh'); t.setAttribute('aria-expanded',open); cb.hidden=!open; SLOT_CODE[l]=open;
@@ -1459,12 +1548,12 @@ document.addEventListener('click',async e=>{
   if(t.dataset.slotsave){const row=t.closest('.slotrow'), l=t.dataset.slotsave, m=row.dataset.m==='host'?'host':row.dataset.m==='page'?'page':'go', u=row.querySelector('.su').value.trim(), n=row.querySelector('.sn').value.trim(), cur=SL()[l];
     if(m==='go'&&!u){toast('링크를 붙여 넣어 주세요');return}
     let html; if(m==='page'){ const ta=row.querySelector('.sh'), v=ta.value; if(v.trim()){ if(v.length>400000){toast('HTML 이 너무 커요 (40만 자까지)');return} html=v } else if(!(cur&&cur.m==='page'&&cur.pl)){toast('HTML 을 붙여 넣거나 파일을 올려 주세요');return} else if(ta.dataset.loaded){toast('내용이 비어 있어요');return} }
-    t.disabled=true; await slotSave(l,m==='go'?u:'',n,cur?cur.on!==false:true,m==='host'?`주소 칸 ${l} 자체 페이지`:m==='page'?`주소 칸 ${l} 화면 HTML`:undefined,m,html); t.disabled=false; return}
-  if(t.dataset.slotsw){const l=t.dataset.slotsw, cur=SL()[l]; if(cur) await slotSave(l,cur.u,cur.n,cur.on===false,`주소 칸 ${l} ${cur.on===false?'연결':'꺼 둠'}`,cur.m); return}
+    t.disabled=true; await slotSave(l,m==='go'?u:'',n,cur?cur.on!==false:true,m==='host'?`관문 ${l} 자체 페이지`:m==='page'?`관문 ${l} 화면 HTML`:undefined,m,html,row.querySelector('.sg').value.trim()); t.disabled=false; return}
+  if(t.dataset.slotsw){const l=t.dataset.slotsw, cur=SL()[l]; if(cur) await slotSave(l,cur.u,cur.n,cur.on===false,`관문 ${l} ${cur.on===false?'연결':'꺼 둠'}`,cur.m); return}
   if(t.dataset.slotdel){const l=t.dataset.slotdel; if(!await uiConfirm(`${l}.arete929.kr 주소를 삭제할까요? 붙여 넣은 화면 HTML 코드도 함께 지워지고, 이 주소로 들어오면 «연결 안 된 주소» 안내가 나옵니다.`,'삭제')) return; await slotSave(l,'','',true); return}
   if(t.dataset.sl){const p=t.closest('.pop'); p.querySelectorAll('.lt').forEach(b=>b.classList.toggle('pick',b===t)); const go=p.querySelector('.go'); go.disabled=false; go.dataset.letter=t.dataset.sl; go.textContent=`${t.dataset.sl} 칸에 연결 (${t.dataset.sl}.arete929.kr)`; return}
   if(t.dataset.slotgo){const a=findApp(t.dataset.slotgo), l=t.dataset.letter; if(a&&l){ closePop(); if(await slotSave(l,a.u,a.n,true,`${a.n} → ${l}.arete929.kr`)) toast(`${l}.arete929.kr 에 «${a.n}» 을(를) 연결했어요`) } return}
-  if(t.dataset.slotclear){const l=t.dataset.slotclear; closePop(); if(await slotSave(l,'','',true,`주소 칸 ${l} 끊음`)) toast(`${l}.arete929.kr 연결을 끊었어요`); return}
+  if(t.dataset.slotclear){const l=t.dataset.slotclear; closePop(); if(await slotSave(l,'','',true,`관문 ${l} 끊음`)) toast(`${l}.arete929.kr 연결을 끊었어요`); return}
   if(t.dataset.slotcopy){copyText(`https://${t.dataset.slotcopy}.arete929.kr/`,`${t.dataset.slotcopy}.arete929.kr 주소를 복사했어요`); return}
   if(t.dataset.resetpos!==undefined){if(!Object.keys(POS).length){toast('옮긴 가지가 없어요');return} if(!await uiConfirm('옮겨 둔 가지 위치를 모두 처음대로 되돌릴까요?','되돌리기')) return; resetPos(); toast('처음 자리로 되돌렸어요'); return}
   if(t.dataset.pop){openPop(findApp(t.dataset.pop),t);return}
@@ -1498,7 +1587,7 @@ function demoApi(act,d){
   if(!DEMO_STATE){
     const S='https://docs.google.com/spreadsheets/d/demo', F='https://drive.google.com/drive/folders/demo', G='https://script.google.com/d/demo/edit', H='https://github.com/Arete929/gas-apps';
     const mk=(tab,rows)=>rows.map(r=>({n:r[0],u:'https://example.com/'+encodeURIComponent(r[0]),d:'',tab,pub:!!r[1],feed:!!r[1],hidden:false,gas:r[4]===0?'':G,sheet:S,folder:r[2]?F:'',git:r[5]===0?'':H,term:r[3]||'',ver:'',upd:'2026-09-10',kind:'app'}));
-    DEMO_STATE={ok:true,title:'내 앱 지도',cats:['체육수업','평가','담임','출결','학교 업무','개인'],layout:QS.get('v')||'d',slots:(QS.get('slots')==='1'?{a:{u:'https://example.com/apk',n:'전환기보드 앱 설치',m:'go',on:true,at:'2026.11.18 11:14:02'},b:{u:'https://example.com/notion',n:'특성화고 면접 기출 문제 모음',m:'go',on:true,at:'2026.11.18 11:20:40'},d:{u:'',n:'전환기 12월 영화관람',m:'page',on:true,at:'2026.11.19 15:53:21',pl:17350},f:{u:'',n:'',m:'host',on:false,at:'2026.11.17 09:02:11'},vote:{u:'',n:'전환기 투표',m:'page',on:true,at:'2026.11.19 16:10:05',pl:16709}}:{}),saved:{share:'2026.11.16 22:41:07',layout:'2026.11.16 22:30:12',app:'',last:'2026.11.16 22:41:07'},sheetUrl:S,apps:[].concat(
+    DEMO_STATE={ok:true,title:'내 앱 지도',cats:['체육수업','평가','담임','출결','학교 업무','개인'],layout:QS.get('v')||'d',slots:(QS.get('slots')==='1'?{a:{u:'https://example.com/apk',n:'전환기보드 앱 설치',m:'go',on:true,at:'2026.11.18 11:14:02',g:'전환기'},b:{u:'https://example.com/notion',n:'특성화고 면접 기출 문제 모음',m:'go',on:true,at:'2026.11.18 11:20:40',g:'진학'},d:{u:'',n:'전환기 12월 영화관람',m:'page',on:true,at:'2026.11.19 15:53:21',pl:17350,g:'전환기'},f:{u:'',n:'',m:'host',on:false,at:'2026.11.17 09:02:11'},vote:{u:'',n:'전환기 투표',m:'page',on:true,at:'2026.11.19 16:10:05',pl:16709,g:'전환기'}}:{}),saved:{share:'2026.11.16 22:41:07',layout:'2026.11.16 22:30:12',app:'',last:'2026.11.16 22:41:07'},sheetUrl:S,apps:[].concat(
       mk('체육수업',[['스포츠대회 관리 마스터',0,1,'26-1'],['짝순환경기 (명렬표판)',0,0,'26-2'],['방과후 배드민턴 짝순환',0,0,'26-1'],['베이스볼5 경기 시스템',0,0,'26-1'],['빅발리볼 리그전 결과 입력',0,0,'26-2'],['킨볼 통합 관리',0,1,'26-2'],['teammix 모둠 섞기',0,0,'26-1'],['넷볼 훈련 프로그램',0,1,'26-1'],['체육의 날 관리 시스템',0,1,'26-2'],['2학기 스포츠종목 선정',1,0,'26-2']]),
       mk('평가',[['2학년 넷볼 평가',0,0,'26-1'],['수행평가 점수 조회 (3-1)',0,0,'26-1'],['빅발리볼 서브 점수 조회',0,0,'26-2'],['과세특 작성 도우미',1,1,'26-1'],['학부모 설문 조회',0,0,'26-1'],['성적분석',0,1,'26-1']]),
       mk('담임',[['2026 짝꿍 선정',1,0,'26-1'],['주장 추천 시스템',0,0,'26-1'],['학생 출결 관리',0,0,'26-1'],['칭찬쿠폰 관리',0,0,'26-1'],['1인1역할 배정',0,0,'26-1'],['학생 추천투표',0,0,'26-2'],['빅발리볼 모둠 편성',0,0,'26-2']]),
@@ -1519,7 +1608,7 @@ function demoApi(act,d){
     if(act==='edit'){Object.assign(find(d.key),d.data);S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='add'){S.apps.push(Object.assign({pub:false,feed:false,upd:'2026-11-17',kind:'app',ver:''},d.data));S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='move'){find(d.key).tab=d.tab;S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
-    if(act==='slotSet'){S.slots=S.slots||{}; const l=String(d.letter||'').toLowerCase(); if(!/^[a-z0-9](?:[a-z0-9-]{0,28}[a-z0-9])?$/.test(l)) return res({ok:false,error:'주소 이름은 영문 소문자·숫자·- 만 쓸 수 있어요.'}); if(d.m==='page'){S.pages=S.pages||{}; if(d.html!=null){S.pages[l]=String(d.html)} else if(!(S.slots[l]&&S.slots[l].m==='page')) return res({ok:false,error:'HTML 내용을 붙여 넣어 주세요.'}); S.slots[l]={u:'',n:d.n||'',m:'page',on:d.on!==false,at:now(),pl:(S.pages[l]||'').length}} else if(d.m==='host'){S.slots[l]={u:'',n:d.n||'',m:'host',on:d.on!==false,at:now()}} else if(!d.u){delete S.slots[l]} else if(!/^https:\/\//i.test(d.u)){return res({ok:false,error:'링크는 https:// 로 시작해야 합니다.'})} else {S.slots[l]={u:d.u,n:d.n||'',m:'go',on:d.on!==false,at:now()}} S.saved.slots=S.saved.last=now(); return res({ok:true,savedAt:S.saved.slots,slots:JSON.parse(JSON.stringify(S.slots))})}
+    if(act==='slotSet'){S.slots=S.slots||{}; const og=(S.slots[String(d.letter||'').toLowerCase()]||{}).g||'', gg=d.g!=null?String(d.g).replace(/\s+/g,' ').trim().slice(0,20):og; const l=String(d.letter||'').toLowerCase(); if(!/^[a-z0-9](?:[a-z0-9-]{0,28}[a-z0-9])?$/.test(l)) return res({ok:false,error:'주소 이름은 영문 소문자·숫자·- 만 쓸 수 있어요.'}); if(d.m==='page'){S.pages=S.pages||{}; if(d.html!=null){S.pages[l]=String(d.html)} else if(!(S.slots[l]&&S.slots[l].m==='page')) return res({ok:false,error:'HTML 내용을 붙여 넣어 주세요.'}); S.slots[l]={u:'',n:d.n||'',m:'page',on:d.on!==false,at:now(),pl:(S.pages[l]||'').length,g:gg}} else if(d.m==='host'){S.slots[l]={u:'',n:d.n||'',m:'host',on:d.on!==false,at:now(),g:gg}} else if(!d.u){delete S.slots[l]} else if(!/^https:\/\//i.test(d.u)){return res({ok:false,error:'링크는 https:// 로 시작해야 합니다.'})} else {S.slots[l]={u:d.u,n:d.n||'',m:'go',on:d.on!==false,at:now(),g:gg}} S.saved.slots=S.saved.last=now(); return res({ok:true,savedAt:S.saved.slots,slots:JSON.parse(JSON.stringify(S.slots))})}
     if(act==='slotPage'){return res({ok:true,html:(S.pages&&S.pages[String(d.letter||'')])||''})}
     if(act==='catAdd'){const p=normTab(d.path); if(S.cats.indexOf(p)<0) S.cats.push(p); S.saved.app=S.saved.last=now(); return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='catRename'){const f=normTab(d.from), t=normTab(d.to), sn=new Set(), l=[]; S.cats.forEach(c=>{const x=catMap(c,f,t); if(!sn.has(x)){sn.add(x);l.push(x)}}); S.apps.forEach(a=>{const x=catMap(a.tab,f,t); if(x!==a.tab){a.tab=x; if(!sn.has(x)){sn.add(x);l.push(x)}}}); S.cats=l; S.saved.app=S.saved.last=now(); return res({ok:true,savedAt:S.saved.app,state:copy()})}
@@ -1537,7 +1626,7 @@ $('#appTitle').textContent=TITLE; document.title=TITLE; fillFoot();
   if(m){SETUP=decodeURIComponent(m[1]);history.replaceState(null,'',location.pathname+location.search)}
   if(DEMO){
     const g=QS.get('gate'); if(g){main.innerHTML='';gate(g);return}
-    await loadState(); if(QS.get('view')==='list'){VIEW='list';render()} if(QS.get('set')==='1') openSet(); if(QS.get('slots')==='1') openSlots(); if(QS.get('edit')==='1') openEdit(STATE.apps[13]);
+    await loadState(); if(QS.get('view')==='list'){VIEW='list';render()} if(QS.get('view')==='gate'){if(QS.get('grp')==='topic')GGROUP='topic'; VIEW='gate';render()} if(QS.get('set')==='1') openSet(); if(QS.get('slots')==='1') openSlots(); if(QS.get('edit')==='1') openEdit(STATE.apps[13]);
     return;
   }
   try{TOK=localStorage.getItem('my-tok')||''}catch(e){}

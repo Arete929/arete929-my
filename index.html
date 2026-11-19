@@ -5,11 +5,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>내 앱 지도</title>
+<title>Atlas of ARETE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css">
 <style>
+@font-face{font-family:'Hiikr';src:url('https://cdn.jsdelivr.net/gh/Project-Noonnu/2607101609@hikr-extrabold/hikr-extrabold/HiKR-ExtraBold.woff2') format('woff2');font-weight:700;font-display:swap}
 :root{--paper:#f4f1e9;--ink:#24221e;--sub:#6f6a5e;--line:#d6cfbf;--card:#fffdf8;--on:#2e7d4f;--off:#bdb6a6}
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -17,6 +18,10 @@ body{background:var(--paper);color:var(--ink);font-family:Pretendard,'Malgun Got
 button{font:inherit;color:inherit}
 a{color:inherit;text-decoration:none}
 .dh{font-family:'Do Hyeon',Pretendard,sans-serif;font-weight:400}
+.tt{font-family:'Hiikr','Do Hyeon',Pretendard,sans-serif;font-weight:700;letter-spacing:-.3px}   /* 제목 글꼴 — 눈누 HiKR ExtraBold (못 불러오면 도현체) */
+body:not(.guest) #appTitle{cursor:pointer;border-radius:6px;padding:2px 4px;margin:-2px -4px;transition:background .12s}
+body:not(.guest) #appTitle:hover{background:rgba(36,34,30,.07)}
+body:not(.guest) #appTitle:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
 
 /* ── 머리 ── */
 .top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;padding:10px 20px;background:rgba(244,241,233,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
@@ -452,7 +457,7 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 </head>
 <body>
 <header class="top">
-  <div class="brand"><span class="dom">my.arete929.kr</span><h1 class="dh" id="appTitle">내 앱 지도</h1><span class="ver" id="verPill"></span></div>
+  <div class="brand"><span class="dom">my.arete929.kr</span><h1 class="tt" id="appTitle" tabindex="0" role="button" title="제목을 누르면 바꿀 수 있어요">Atlas of ARETE</h1><span class="ver" id="verPill"></span></div>
   <div class="seg" id="view"><button data-w="map">지도</button><button data-w="list">목록</button></div>
   <div class="seg" id="filt"><button class="on" data-f="all">전체<em data-n="all"></em></button><button data-f="pub">공개<em data-n="pub"></em></button><button data-f="priv">비공개<em data-n="priv"></em></button></div>
   <div class="seg" id="mode"><button data-m="admin">관리자</button><button data-m="guest">방문자 화면</button></div>
@@ -471,11 +476,14 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.13.0',
-  deployed:'2026-11-19 17:55'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.14.0',
+  deployed:'2026-11-19 22:30'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
+/* 제목 — 머리글 제목을 누르면 바꾼다(서버에 저장, 어느 기기에서나 같게). 처음 화면은 마지막으로 본 제목을 기억해 깜빡임을 줄인다 */
+const DEF_TITLE='Atlas of ARETE', TITLE_MAX=30;
+let TITLE=DEF_TITLE; try{const t=localStorage.getItem('my-title'); if(t) TITLE=t}catch(e){}
 const SHEET_IMG=document.querySelector('#sheetLink img').src;
 const PAL=['#2f7a55','#34539c','#b5502f','#a46c12','#6a4c9c','#1f7a8c','#9c3d6b','#5a6676'], AR_COLOR='#8a8578';
 const FOLDER='<svg viewBox="0 0 24 24"><path d="M2.5 6.2c0-.9.7-1.6 1.6-1.6h5l2 2.1h8.8c.9 0 1.6.7 1.6 1.6v9.6c0 .9-.7 1.6-1.6 1.6H4.1c-.9 0-1.6-.7-1.6-1.6z" fill="#f4bf4f" stroke="#c78f1f" stroke-width="1.1"/><path d="M2.5 9h19" stroke="#c78f1f" stroke-width="1.1"/></svg>';
@@ -565,7 +573,7 @@ function kids(c,row){
   return L.map(a=>tile(a,c,row)).join('')+(c.k==='ar'?`<button class="more" style="--c:${c.c}" data-more>지난 앱 접기</button>`:'');
 }
 const hubTxt=c=>`<b class="dh hubt">${esc(c.n)}</b><small class="hubn" data-hub="${c.k}"></small>${isFold(c)?`<small class="fnote">접힘 · 두 번 누르면 펼쳐요</small>`:''}`;
-const rootHTML=()=>`<div class="root"><span class="dom">my.arete929.kr</span><b class="dh">내 앱 지도</b><span class="cnt" data-root></span></div>`;
+const rootHTML=()=>`<div class="root"><span class="dom">my.arete929.kr</span><b class="tt">${esc(TITLE)}</b><span class="cnt" data-root></span></div>`;
 const weight=c=>(c.k==='ar'&&!OPEN_AR?1:vis(c).length)+1.6;
 
 /* 가지형 */
@@ -1183,8 +1191,9 @@ async function api(act,data){
 }
 function adopt(state){
   STATE=state; build(); posLoad();
+  if(STATE.mapTitle) setTitle(STATE.mapTitle,true);
   const s=STATE.saved||{};
-  LOG=[[s.share,'공개 스위치'],[s.layout,'지도 모양'],[s.app,'앱 정보']].filter(x=>x[0]).map(x=>({t:x[0],x:x[1]})).sort((a,b)=>a.t<b.t?1:-1);
+  LOG=[[s.share,'공개 스위치'],[s.layout,'지도 모양'],[s.app,'앱 정보'],[s.title,'제목']].filter(x=>x[0]).map(x=>({t:x[0],x:x[1]})).sort((a,b)=>a.t<b.t?1:-1);
   $('#stampTxt').textContent=`마지막 저장 · ${s.last||'-'}`;
   const sl=$('#sheetLink'); if(okUrl(STATE.sheetUrl)) sl.href=STATE.sheetUrl; else sl.style.display='none';
   render();
@@ -1199,7 +1208,7 @@ async function loadState(){
 function gate(mode,note){
   closeGate(); closeDlg();
   const g=document.createElement('div'); g.className='gate'; g.id='gate'; g.dataset.mode=mode;
-  const head=`<h2 class="dh">내 앱 지도</h2>`;
+  const head=`<h2 class="tt">${esc(TITLE)}</h2>`;
   if(mode==='login') g.innerHTML=`<form class="gcard" id="gform">${head}<p>${esc(note||'비밀번호를 넣어 주세요. 이 기기는 한 번 들어오면 기억합니다.')}</p><label class="fld"><span>비밀번호</span><input type="password" id="g_pw" autocomplete="current-password" autofocus></label><div class="msg" id="g_msg"></div><button class="btn f w" type="submit">들어가기</button></form>`;
   else if(mode==='setup') g.innerHTML=`<form class="gcard" id="gform">${head}<p>여기서 쓸 비밀번호를 정해 주세요. 8자 이상이고, 다른 곳에서 쓰지 않는 것이 좋습니다.</p><label class="fld"><span>새 비밀번호</span><input type="password" id="g_pw" autocomplete="new-password" autofocus></label><label class="fld"><span>한 번 더</span><input type="password" id="g_pw2" autocomplete="new-password"></label><div class="msg" id="g_msg"></div><button class="btn f w" type="submit">비밀번호 정하기</button></form>`;
   else g.innerHTML=`<div class="gcard">${head}<p>아직 비밀번호를 정하지 않았습니다. 받아 둔 «처음 설정 링크»로 들어와 주세요.</p></div>`;
@@ -1223,6 +1232,48 @@ document.addEventListener('submit',async e=>{
   if(e.target.id==='eform'){e.preventDefault();saveEdit()}
   if(e.target.id==='pwform'){e.preventDefault();savePw()}
 });
+
+/* ── 제목 바꾸기 ── */
+const cleanTitle=v=>String(v||'').replace(/\s+/g,' ').trim().slice(0,TITLE_MAX)||DEF_TITLE;
+function fillFoot(){const f=$('#footLine'); if(f) f.textContent=`${TITLE} · ${CFG.version} · ${CFG.deployed?'배포 '+CFG.deployed+' (KST)':'배포 전'}`}
+function setTitle(t,keep){
+  TITLE=cleanTitle(t);
+  const h=$('#appTitle'); if(h) h.textContent=TITLE;
+  document.title=TITLE; fillFoot();
+  try{localStorage.setItem('my-title',TITLE)}catch(e){}
+  if(!keep&&STATE) render();
+}
+async function saveTitle(v){
+  const old=TITLE, nv=cleanTitle(v);
+  closeDlg(); if(nv===old) return;
+  setTitle(nv);
+  try{
+    const j=await api('title',{title:nv});
+    STATE.mapTitle=nv; STATE.saved=STATE.saved||{}; STATE.saved.title=j.savedAt;
+    saved(j.savedAt,`제목 → ${nv}`); toast('제목을 바꿨어요');
+  }catch(e){ setTitle(old); toast(e.message||'제목을 저장하지 못했어요') }
+}
+function openTitleEdit(){
+  if(GUEST||!STATE) return;
+  const at=(STATE.saved&&STATE.saved.title)||'';
+  const o=dlg(`<div class="dlg-h"><h2 class="tt" style="font-size:22px">제목 바꾸기</h2><button class="dlg-x" data-closedlg aria-label="닫기">×</button></div>
+  <p class="hint">머리글 · 가운데 제목 · 목록 · 바닥글이 함께 바뀌고, 어느 기기에서 열어도 같게 저장돼요. (${TITLE_MAX}자까지)</p>
+  <input id="ttIn" maxlength="${TITLE_MAX}" value="${esc(TITLE)}" autocomplete="off" spellcheck="false" aria-label="제목" style="width:100%;font-size:16px;font-family:inherit;border:1.5px solid #bfb6a3;border-radius:6px;padding:9px 11px;background:#fff;color:var(--ink)">
+  <div class="tt" id="ttPrev" style="font-size:26px;line-height:1.2;margin:12px 2px 0;min-height:32px;word-break:break-all"></div>
+  <div class="dbtns"><button class="btn" data-ttdef>기본값 · ${esc(DEF_TITLE)}</button><button class="btn" data-closedlg>취소</button><button class="btn f" data-ttsave>저장</button></div>
+  <div class="hint" id="ttSaved" style="margin:10px 0 0">${at?'마지막 저장 · '+esc(at):'아직 바꾼 적이 없습니다.'}</div>`,'title');
+  o.querySelector('.dlg').style.width='min(440px,100%)';
+  const inp=o.querySelector('#ttIn'), prev=o.querySelector('#ttPrev');
+  const show=()=>{prev.textContent=inp.value.trim()||DEF_TITLE};
+  inp.addEventListener('input',show); show();
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveTitle(inp.value)}});
+  o.addEventListener('click',e=>{
+    if(e.target.closest('[data-ttsave]')) saveTitle(inp.value);
+    else if(e.target.closest('[data-ttdef]')){inp.value=DEF_TITLE;show();inp.focus()}
+  });
+  setTimeout(()=>{inp.focus();inp.select()},30);
+}
+{const h=$('#appTitle'); h.addEventListener('click',openTitleEdit); h.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openTitleEdit()}})}
 
 /* ── 대화상자 ── */
 function dlg(html,id){closeDlg();const o=document.createElement('div');o.className='ov';o.id='dlgOv';o.dataset.kind=id||'';o.innerHTML=`<div class="dlg" role="dialog" aria-modal="true">${html}</div>`;document.body.appendChild(o);return o}
@@ -1465,6 +1516,7 @@ function demoApi(act,d){
   return new Promise(res=>setTimeout(()=>{
     if(act==='state') return res(copy());
     if(act==='pub'){find(d.key).pub=d.pub;S.saved.share=S.saved.last=now();return res({ok:true,savedAt:S.saved.share})}
+    if(act==='title'){S.mapTitle=cleanTitle(d.title);S.saved.title=S.saved.last=now();return res({ok:true,title:S.mapTitle,savedAt:S.saved.title})}
     if(act==='layout'){S.layout=d.layout;S.saved.layout=S.saved.last=now();return res({ok:true,savedAt:S.saved.layout})}
     if(act==='pos'){S.pos=d.pos;S.saved.layout=S.saved.last=now();return res({ok:true,savedAt:S.saved.layout})}
     if(act==='edit'){Object.assign(find(d.key),d.data);S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
@@ -1482,7 +1534,7 @@ function demoApi(act,d){
 
 /* ── 시작 ── */
 $('#verPill').textContent=CFG.version;
-$('#footLine').textContent=`${$('#appTitle').textContent} · ${CFG.version} · ${CFG.deployed?'배포 '+CFG.deployed+' (KST)':'배포 전'}`;
+$('#appTitle').textContent=TITLE; document.title=TITLE; fillFoot();
 (async function(){
   const m=location.hash.match(/setup=([^&]+)/);
   if(m){SETUP=decodeURIComponent(m[1]);history.replaceState(null,'',location.pathname+location.search)}

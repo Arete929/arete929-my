@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.11.1 — «HTML 붙여넣기» → «화면 HTML»(툴팁·안내: 스크립트는 JSON API 로) · 주소 칸을 머리글로 꺼냄 · HTML 붙여넣기(파일 올리기·미리보기) · 주소 칸 «자체 페이지» 모드(구글 주소 거치지 않음) · 주소 칸 a–z(a.arete929.kr…z) · 앱 카드에서 바로 연결 · 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
+<!-- 파일명: index.html | my.arete929.kr 내 앱 지도(런처보드) — 비밀번호로 들어가는 나만의 화면 | @version 2.12.0 — 주소 칸 아코디언(접었다 펼치기) · 화면 HTML 코드 아코디언(코드 있음 표시) · 글자 말고 이름 짓기(vote 등) · 수정·삭제 | @version 2.11.1 — «HTML 붙여넣기» → «화면 HTML»(툴팁·안내: 스크립트는 JSON API 로) · 주소 칸을 머리글로 꺼냄 · HTML 붙여넣기(파일 올리기·미리보기) · 주소 칸 «자체 페이지» 모드(구글 주소 거치지 않음) · 주소 칸 a–z(a.arete929.kr…z) · 앱 카드에서 바로 연결 · 앱 이름 앞 이모지 아이콘(자동 추측·직접 고르기) · 마인드맵 편집(가지 추가·이름·삭제·끌어 붙이기) · 도메인 연결 선 아이콘 · 도메인 연결 모아보기 · 중간 다리(묶음 이름의 슬래시) · 지도 바탕 고정 크기+자유 끌기 · 지난 앱 이름표도 더블클릭으로 접기·펴기 · 목록을 묶음(다리)별로 나눠 보기(기본) · 이름표 더블클릭으로 묶음 접기·펴기 · 묶음 옮기기는 놓자마자 바로 바뀌고 저장은 뒤에서 · 앱을 끌어 다른 묶음 가지에 놓으면 묶음 변경 · 빈 곳 끌어 화면 이동 · 확대·축소 단추(맞춤 포함) · 고른 모양을 모든 화면에서 · 가지 끌기 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -183,6 +183,41 @@ body:not(.guest) .d-hub.dragging,body:not(.guest) .d-sub.dragging,body:not(.gues
 .mseg .mb:first-child{border-left:0}
 .mseg .mb.on{background:var(--ink);color:#fff}
 .slotrow [hidden]{display:none!important}
+/* v2.12 — 주소 칸 아코디언 · 이름 짓기 */
+.slotrow.acc{display:block;padding:0;overflow:hidden}
+.slotrow .acchd{display:flex;align-items:stretch;gap:0}
+.slotrow .accmain{all:unset;box-sizing:border-box;flex:1;min-width:0;display:grid;grid-template-columns:minmax(120px,auto) minmax(0,1fr) auto 22px;gap:6px 12px;align-items:center;padding:10px 12px;cursor:pointer}
+.slotrow .accmain:focus-visible{outline:3px solid #2e7d4f;outline-offset:-3px}
+.slotrow .accmain .dom{font-size:16px}
+.slotrow .accmain .nm{font-size:14px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slotrow .accmain .nm.none{color:var(--sub)}
+.slotrow .schips{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.slotrow .sch{border:1px solid #cfc7b4;border-radius:999px;padding:2px 9px;font-size:11.5px;background:#fff;color:var(--sub);white-space:nowrap}
+.slotrow .sch.code{background:#eaf5ee;border-color:#9ccaae;color:#1f6a40;font-weight:700}
+.slotrow .sch.nocode{background:#fff3e6;border-color:#e8c08a;color:#8a5a14;font-weight:700}
+.slotrow .chev{display:inline-block;transition:transform .15s;color:var(--sub);text-align:center}
+.slotrow .accmain[aria-expanded="true"] .chev,.slotrow .codehd[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.slotrow .acchd .ssw{padding:0 12px;border-left:1px solid var(--line)}
+.slotrow .accbd{border-top:1px solid var(--line);padding:10px 12px 12px;display:flex;flex-direction:column;gap:10px;background:#fffefb}
+.slotrow .accbd[hidden]{display:none!important}
+.slotrow .codehd{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border:1.5px solid #bfb6a3;border-radius:8px;background:#fff;cursor:pointer;font-size:13px}
+.slotrow .codehd b{font-weight:800}
+.slotrow .codehd .sm{flex:1;min-width:0}
+.slotrow .codehd:focus-visible{outline:3px solid #2e7d4f;outline-offset:1px}
+.slotrow .codebd{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.slotrow .codebd[hidden]{display:none!important}
+.slotrow.empty{border-left-color:#7a9fd0;background:#f6f9ff}
+.slotadd{background:var(--card);border:1.5px solid var(--ink);border-radius:10px;padding:10px 12px;margin:8px 0 12px;display:flex;flex-direction:column;gap:8px}
+.slotadd .sa-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.slotadd .sa-in{display:flex;align-items:center;flex:1;min-width:220px;border:1.5px solid #bfb6a3;border-radius:6px;background:#fff;overflow:hidden}
+.slotadd .sa-in:focus-within{border-color:var(--ink)}
+.slotadd .sa-in input{border:0;outline:0;flex:1;min-width:0;padding:7px 4px 7px 10px;font-size:16px;font-family:inherit;color:var(--ink);background:none}
+.slotadd .sa-in span{padding-right:10px;color:var(--sub);font-size:14px;white-space:nowrap}
+.slotadd .sa-quick{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.slotadd .sa-quick .lt{min-width:30px}
+.slotadd .samsg{font-size:12.5px;min-height:1em}.slotadd .samsg.bad{color:#b5502f;font-weight:700}
+@media (max-width:640px){.slotrow .accmain{grid-template-columns:minmax(0,1fr) 22px}.slotrow .accmain .nm,.slotrow .accmain .schips{grid-column:1/2;justify-content:flex-start}.slotrow .accmain .chev{grid-column:2;grid-row:1}}
+
 .pgbox{display:flex;flex-direction:column;gap:6px}
 .pghint{background:#fff7e0;border:1px solid #ecd9a0;border-radius:6px;padding:6px 9px;color:#6b5314;line-height:1.5}
 .slotrow .sh{font-family:Consolas,'Courier New',monospace;font-size:13px;min-height:130px;resize:vertical;white-space:pre;overflow:auto}
@@ -435,8 +470,8 @@ main.panning,main.panning *{cursor:grabbing!important;user-select:none;-webkit-u
 const CFG={
   api:'https://script.google.com/macros/s/AKfycbwot9uum8L5CUb6ouJdI03nwg6jS8WPJ0zu91y8EthdYWf0mVSMLws4zV2I6cEWry_0/exec',
   front:'https://arete929.kr/',
-  version:'v2.11.1',
-  deployed:'2026-11-18 15:25'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
+  version:'v2.12.0',
+  deployed:'2026-11-19 16:36'                          // 배포할 때 실제 시각(KST, 예: 2026-11-17 21:30)을 넣는다
 };
 /* ──────────────────────────────────────────────────── */
 const QS=new URLSearchParams(location.search), DEMO=QS.get('demo')==='1';
@@ -511,7 +546,7 @@ const iconOf=a=>{ const i=String(a.icon||'').trim(); if(i&&i!=='📱') return i;
 /* 주소 칸 a–z — a.arete929.kr … z.arete929.kr 로 들어오면 이 앱 주소(링크)로 보내 준다 */
 const SLOT_LETTERS='abcdefghijklmnopqrstuvwxyz'.split('');
 const SL=()=>(STATE&&STATE.slots)||{};
-const slotOfApp=a=>SLOT_LETTERS.find(l=>SL()[l]&&SL()[l].on!==false&&SL()[l].u===a.u&&okUrl(a.u))||null;
+const slotOfApp=a=>Object.keys(SL()).find(l=>SL()[l]&&SL()[l].on!==false&&SL()[l].u===a.u&&okUrl(a.u))||null;
 const slb=a=>{ if(GUEST) return ''; const l=slotOfApp(a); return l?`<em class="slt" title="${l}.arete929.kr 에 연결됨">${l}</em>`:'' };
 const ic=a=>`<span class="ico" aria-hidden="true">${esc(iconOf(a))}</span>`;
 const sw=a=>GUEST?'':`<button class="sw" role="switch" aria-checked="${a.pub}" data-id="${a.id}" title="정문(arete929.kr)에 공개"><i></i><span>${a.pub?'공개':'비공개'}</span></button>`;
@@ -1213,21 +1248,53 @@ function openSet(){
   <h3>바로가기</h3><div class="acct"><a class="btn" href="${esc(CFG.front)}" target="_blank" rel="noopener">정문 보기 (arete929.kr)</a>${okUrl(STATE.sheetUrl)?`<a class="btn" href="${esc(STATE.sheetUrl)}" target="_blank" rel="noopener">앱 목록 시트 열기</a>`:''}</div>
   <h3>계정</h3><div class="acct"><button class="btn" data-acct="pw">비밀번호 바꾸기</button><button class="btn" data-acct="out">로그아웃</button><button class="btn" data-acct="outall">모든 기기에서 로그아웃</button></div>`,'set');
 }
-let SLOTS_ALL=false;
+const SLOT_RESERVED=['my','www','hw-easy','arete','mail','api','admin','root','ns','ftp','smtp'];
+const SLOT_NAME_RE=/^[a-z0-9](?:[a-z0-9-]{0,28}[a-z0-9])?$/;
+let SLOT_OPEN={}, SLOT_DRAFT={}, SLOT_CODE={};
+const kb=n=>n<1000?n+'자':Math.round(n/1000)+'K자';
+function slotNames(){
+  const all=Object.keys(SL()).concat(Object.keys(SLOT_DRAFT).filter(k=>!SL()[k]));
+  return all.sort((x,y)=>(x.length===1)!==(y.length===1)?(x.length===1?-1:1):x.localeCompare(y));
+}
 function slotRowHTML(l){
   const r=SL()[l], has=!!r, on=has&&r.on!==false, mo=has?(r.m==='host'||r.m==='page'?r.m:'go'):'go', host=mo==='host', pg=mo==='page';
-  return `<div class="slotrow${on?' on':has?' off':''}" data-l="${l}" data-m="${mo}"><div class="dom">${l}<i>.arete929.kr</i></div><div class="f"><input class="inp sn" maxlength="40" placeholder="이름 (선택)" value="${esc(has?r.n:'')}" autocomplete="off"><div class="mseg" role="group" aria-label="연결 방식"><button type="button" class="mb${mo==='go'?' on':''}" data-slotm="go">링크로 이동</button><button type="button" class="mb${pg?' on':''}" data-slotm="page" title="이 칸에 «화면 HTML»을 붙여 넣거나 .html 파일로 올리면 이 주소(글자.arete929.kr)에서 바로 열립니다. 구글 주소를 거치지 않아 만 13세 미만 계정도 열립니다. ※ 이 화면이 데이터를 쓰려면 앱스크립트(clasp)는 화면을 내지 말고 JSON API 로 바꿔야 합니다(화면이 fetch 로 그 API 를 부릅니다).">화면 HTML</button><button type="button" class="mb${host?' on':''}" data-slotm="host" title="GitHub pages 저장소의 글자 폴더를 보여 줍니다(파일이 여러 개인 앱)">자체 페이지(저장소)</button></div><input class="inp su" type="url" maxlength="500" placeholder="링크를 붙여 넣으세요 (https://…)" value="${esc(has&&mo==='go'?r.u:'')}" autocomplete="off"${mo==='go'?'':' hidden'}><div class="sm hostnote"${host?'':' hidden'}>이 주소 그대로 <b>pages 저장소의 «${l}» 폴더</b>를 보여 줍니다(구글 주소를 거치지 않음)</div><div class="pgbox"${pg?'':' hidden'}><div class="sm pghint" title="이 칸에 «화면 HTML»을 붙여 넣거나 .html 파일로 올리면 이 주소(글자.arete929.kr)에서 바로 열립니다. 구글 주소를 거치지 않아 만 13세 미만 계정도 열립니다. ※ 이 화면이 데이터를 쓰려면 앱스크립트(clasp)는 화면을 내지 말고 JSON API 로 바꿔야 합니다(화면이 fetch 로 그 API 를 부릅니다).">이 칸은 학생이 보는 <b>화면(HTML)</b>입니다. 데이터는 앱스크립트를 <b>JSON API</b>로 바꿔 화면이 불러오게 하세요.</div><textarea class="inp sh" rows="7" spellcheck="false" placeholder="여기에 화면 HTML 전체를 붙여 넣으세요 (&lt;!doctype html&gt;…)">${pg&&r.pl?'':''}</textarea><div class="pgtools"><label class="btn pgfile">파일 올리기<input type="file" class="pgf" accept=".html,.htm,text/html" hidden></label><button type="button" class="btn" data-slotprev>미리보기</button><span class="sm pgsize">${pg&&r.pl?(r.pl<1000?r.pl+'자':Math.round(r.pl/1000)+'K자')+' 저장됨 · «불러오기»를 누르면 수정할 수 있어요':'0자 / 400K자'}</span>${pg&&r.pl?'<button type="button" class="btn" data-slotload>저장된 내용 불러오기</button>':''}</div></div><div class="sm">${has?(on?'연결 중':'꺼 둠')+(host?' · 자체 페이지(저장소)':pg?' · 화면 HTML':'')+' · 저장 '+esc((r.at||'').slice(5,16)):'비어 있음'}</div></div><div class="ctl">${has?`<button class="ssw${on?' on':''}" data-slotsw="${l}"><i></i>${on?'연결':'꺼짐'}</button>`:''}<button class="btn f" data-slotsave="${l}">저장</button>${has?`<a class="btn" href="https://${l}.arete929.kr/" target="_blank" rel="noopener">열기</a><button class="btn" data-slotdel="${l}">지우기</button>`:''}</div></div>`;
+  const open=!!SLOT_OPEN[l]||!has, modeTxt=host?'자체 페이지(저장소)':pg?'화면 HTML':'링크로 이동', hasCode=pg&&has&&r.pl>0;
+  const chips=(has?'<span class="sch">'+modeTxt+'</span>':'<span class="sch">새 주소 · 아직 저장 안 됨</span>')
+    +(pg?(hasCode?'<span class="sch code">💾 코드 있음 · '+kb(r.pl)+'</span>':'<span class="sch nocode">코드 없음</span>'):'');
+  const tip='이 칸에 «화면 HTML»을 붙여 넣거나 .html 파일로 올리면 이 주소에서 바로 열립니다. 구글 주소를 거치지 않아 만 13세 미만 계정도 열립니다. ※ 이 화면이 데이터를 쓰려면 앱스크립트(clasp)는 화면을 내지 말고 JSON API 로 바꿔야 합니다(화면이 fetch 로 그 API 를 부릅니다).';
+  const codeOpen=!!SLOT_CODE[l]||(pg&&!hasCode);
+  return '<div class="slotrow acc'+(on?' on':has?' off':' empty')+'" data-l="'+l+'" data-m="'+mo+'">'
+    +'<div class="acchd"><button type="button" class="accmain" data-slotacc="'+l+'" aria-expanded="'+open+'" aria-controls="sb_'+l+'">'
+    +'<span class="dom">'+l+'<i>.arete929.kr</i></span><span class="nm'+(has&&r.n?'':' none')+'">'+(has&&r.n?esc(r.n):'이름 없음')+'</span><span class="schips">'+chips+'</span><span class="chev" aria-hidden="true">▾</span></button>'
+    +(has?'<button class="ssw'+(on?' on':'')+'" data-slotsw="'+l+'" title="'+(on?'끄면 «연결 안 된 주소»가 나옵니다':'켜면 다시 열립니다')+'"><i></i>'+(on?'연결':'꺼짐')+'</button>':'')+'</div>'
+    +'<div class="accbd" id="sb_'+l+'"'+(open?'':' hidden')+'>'
+    +'<input class="inp sn" maxlength="40" placeholder="이름 (선택) — 예: 전환기 투표" value="'+esc(has?r.n:'')+'" autocomplete="off" aria-label="이 주소의 이름">'
+    +'<div class="mseg" role="group" aria-label="연결 방식"><button type="button" class="mb'+(mo==='go'?' on':'')+'" data-slotm="go">링크로 이동</button><button type="button" class="mb'+(pg?' on':'')+'" data-slotm="page" title="'+esc(tip)+'">화면 HTML</button><button type="button" class="mb'+(host?' on':'')+'" data-slotm="host" title="GitHub pages 저장소의 글자 폴더를 보여 줍니다(파일이 여러 개인 앱)">자체 페이지(저장소)</button></div>'
+    +'<input class="inp su" type="url" maxlength="500" placeholder="링크를 붙여 넣으세요 (https://…)" value="'+esc(has&&mo==='go'?r.u:'')+'" autocomplete="off"'+(mo==='go'?'':' hidden')+'>'
+    +'<div class="sm hostnote"'+(host?'':' hidden')+'>이 주소 그대로 <b>pages 저장소의 «'+l+'» 폴더</b>를 보여 줍니다(구글 주소를 거치지 않음)</div>'
+    +'<div class="pgbox"'+(pg?'':' hidden')+'><div class="sm pghint" title="'+esc(tip)+'">이 칸은 학생이 보는 <b>화면(HTML)</b>입니다. 데이터는 앱스크립트를 <b>JSON API</b>로 바꿔 화면이 불러오게 하세요.</div>'
+    +'<button type="button" class="codehd" data-slotcode="'+l+'" aria-expanded="'+codeOpen+'"><b>📄 화면 HTML 코드</b><span class="sm codesum">'+(hasCode?'코드 있음 · '+kb(r.pl)+' · 저장 '+esc((r.at||'').slice(5,16))+' · 눌러서 보기':'아직 붙여 넣은 코드가 없어요')+'</span><span class="chev" aria-hidden="true">▾</span></button>'
+    +'<div class="codebd"'+(codeOpen?'':' hidden')+'><textarea class="inp sh" rows="8" spellcheck="false" placeholder="여기에 화면 HTML 전체를 붙여 넣으세요 (&lt;!doctype html&gt;…)"></textarea>'
+    +'<div class="pgtools"><label class="btn pgfile">파일 올리기<input type="file" class="pgf" accept=".html,.htm,text/html" hidden></label><button type="button" class="btn" data-slotprev>미리보기</button><span class="sm pgsize">'+(hasCode?kb(r.pl)+' 저장됨 · 아래 «저장»을 누르면 이 내용으로 바뀝니다':'0자 / 400K자')+'</span></div></div></div>'
+    +'<div class="sm">'+(has?(on?'연결 중':'꺼 둠')+' · 저장 '+esc((r.at||'').slice(5,16)):'저장하면 20초쯤 뒤 열립니다')+'</div>'
+    +'<div class="ctl"><button class="btn f" data-slotsave="'+l+'">저장</button>'
+    +(has?'<a class="btn" href="https://'+l+'.arete929.kr/" target="_blank" rel="noopener">열기</a><button class="btn" data-slotcopy="'+l+'">주소 복사</button><button class="btn" data-slotdel="'+l+'">삭제</button>':'<button class="btn" data-slotdraftdel="'+l+'">취소</button>')
+    +'</div></div></div>';
 }
 function slotsBody(){
-  const used=SLOT_LETTERS.filter(l=>SL()[l]), freeAll=SLOT_LETTERS.filter(l=>!SL()[l]);
-  const showFree=SLOTS_ALL?freeAll:freeAll.slice(0,Math.max(0,6-used.length));
-  const letters=SLOT_LETTERS.filter(l=>used.includes(l)||showFree.includes(l)), hidden=freeAll.length-showFree.length;
-  const on=used.filter(l=>SL()[l].on!==false).length;
-  return `<div class="stat"><span class="pill">연결 중 <b>${on}</b></span><span class="pill">꺼짐 ${used.length-on}</span><span class="pill">비어 있음 ${freeAll.length}</span></div>${letters.map(slotRowHTML).join('')}${hidden>0?`<button class="btn" data-slotmore>비어 있는 칸 ${hidden}개 펼치기</button>`:(SLOTS_ALL&&freeAll.length>6?'<button class="btn" data-slotmore>비어 있는 칸 접기</button>':'')}`;
+  const names=slotNames(), used=Object.keys(SL()), on=used.filter(l=>SL()[l].on!==false).length;
+  const freeL=SLOT_LETTERS.filter(l=>!SL()[l]&&!SLOT_DRAFT[l]);
+  return '<div class="stat"><span class="pill">연결 중 <b>'+on+'</b></span><span class="pill">꺼짐 '+(used.length-on)+'</span><span class="pill">전체 '+used.length+'개</span></div>'
+    +'<div class="slotadd"><label for="saName" style="font-weight:800">＋ 새 주소 만들기 <span class="sm" style="font-weight:400">— 글자 하나가 아니어도 돼요</span></label>'
+    +'<div class="sa-row"><div class="sa-in"><input id="saName" maxlength="30" placeholder="원하는 이름 (영문 소문자·숫자·-)" autocomplete="off" autocapitalize="off" spellcheck="false"><span>.arete929.kr</span></div><button type="button" class="btn f" data-slotnew>만들기</button></div>'
+    +'<div class="samsg" id="saMsg">예: <b>vote</b> · <b>movie</b> · <b>ho-1</b> (30자까지, 한글은 주소로 쓸 수 없어요 — 설명은 아래 «이름»에 한글로 쓰세요)</div>'
+    +(freeL.length?'<div class="sa-quick"><span class="sm">빈 글자 바로 쓰기</span>'+freeL.slice(0,12).map(l=>'<button type="button" class="lt" data-slotquick="'+l+'">'+l+'</button>').join('')+'</div>':'')+'</div>'
+    +(names.length?names.map(slotRowHTML).join(''):'<p class="hint">아직 만든 주소가 없어요. 위에서 이름을 넣고 «만들기»를 누르세요.</p>');
 }
+
 function openSlots(){
   const s=(STATE&&STATE.saved)||{};
-  dlg(`<div class="dlg-h"><h2 class="dh">주소 칸 a–z</h2><button class="dlg-x" data-closedlg aria-label="닫기">×</button></div>
+  dlg(`<div class="dlg-h"><h2 class="dh">주소 칸</h2><button class="dlg-x" data-closedlg aria-label="닫기">×</button></div>
   <p class="hint">링크를 넣고 저장하면 몇 초 안에 <b>a.arete929.kr</b> 이 그 사이트로 연결됩니다(이동 방식 — 주소창에는 대상 주소가 보입니다). 비워 두거나 꺼 두면 «아직 연결 안 된 주소» 안내가 나옵니다. 앱 칸을 눌러도 바로 연결할 수 있습니다. <b>«화면 HTML»</b>은 학생이 보는 화면을 붙여 넣는 방식이고, 그 화면이 쓰는 앱스크립트는 화면을 내지 않는 <b>JSON API</b>로 만들어야 합니다.</p>
   <div class="savedat" id="slotSaved">마지막 저장 · ${esc(s.slots||'-')}</div><div id="slotBody">${slotsBody()}</div>`,'slots');
   $('#dlgOv .dlg').style.width='min(820px,100%)';
@@ -1241,7 +1308,7 @@ function slotsRefresh(){ const b=$('#slotBody'); if(b) b.innerHTML=slotsBody(); 
 async function slotSave(l,u,n,on,msg,m,html){
   try{
     const j=await api('slotSet',{letter:l,u:u,n:n,on:on,m:m||'go',html:html});
-    STATE.slots=j.slots; STATE.saved=STATE.saved||{}; STATE.saved.slots=STATE.saved.last=j.savedAt;
+    STATE.slots=j.slots; delete SLOT_DRAFT[l]; STATE.saved=STATE.saved||{}; STATE.saved.slots=STATE.saved.last=j.savedAt;
     saved(j.savedAt,msg||`주소 칸 ${l} ${u?'저장':'비움'}`); slotsRefresh(); render();
     return true;
   }catch(e){ toast(e.message||'저장하지 못했어요'); return false }
@@ -1322,7 +1389,13 @@ document.addEventListener('click',async e=>{
   if(t.id==='reload'){loadState();return}
   if(!STATE) return;
   if(t.dataset.slots!==undefined){openSlots();return}
-  if(t.dataset.slotmore!==undefined){SLOTS_ALL=!SLOTS_ALL;slotsRefresh();return}
+  if(t.dataset.slotacc){const row=t.closest('.slotrow'), l=t.dataset.slotacc, open=t.getAttribute('aria-expanded')!=='true'; t.setAttribute('aria-expanded',open); row.querySelector('.accbd').hidden=!open; SLOT_OPEN[l]=open; return}
+  if(t.dataset.slotcode){const row=t.closest('.slotrow'), l=t.dataset.slotcode, open=t.getAttribute('aria-expanded')!=='true', cb=row.querySelector('.codebd'), ta=row.querySelector('.sh'); t.setAttribute('aria-expanded',open); cb.hidden=!open; SLOT_CODE[l]=open;
+    const cur=SL()[l]; if(open&&cur&&cur.m==='page'&&cur.pl&&!ta.value&&!ta.dataset.dirty){ ta.placeholder='저장된 코드를 불러오는 중…'; try{const j=await api('slotPage',{letter:l}); ta.value=j.html||''; ta.dataset.loaded='1'; pgSize(row)}catch(e){toast(e.message||'불러오지 못했어요')} ta.placeholder='여기에 화면 HTML 전체를 붙여 넣으세요'} return}
+  if(t.dataset.slotnew!==undefined||t.dataset.slotquick){const inp=$('#saName'), msg=$('#saMsg'), nm=String(t.dataset.slotquick||inp.value).trim().toLowerCase(), bad=m=>{msg.textContent=m; msg.className='samsg bad'};
+    if(nm.length<1) return bad('이름을 넣어 주세요'); if(/[^a-z0-9-]/.test(nm)) return bad('영문 소문자·숫자·- 만 쓸 수 있어요 (한글은 주소가 되지 않아요)'); if(!SLOT_NAME_RE.test(nm)) return bad('처음과 끝은 글자나 숫자여야 해요 (30자까지)'); if(SLOT_RESERVED.includes(nm)) return bad('«'+nm+'» 은(는) 이미 쓰는 주소라 만들 수 없어요');
+    if(!SL()[nm]) SLOT_DRAFT[nm]=true; SLOT_OPEN[nm]=true; slotsRefresh(); const row=document.querySelector('.slotrow[data-l="'+nm+'"]'); if(row) row.scrollIntoView({block:'center',behavior:'smooth'}); return}
+  if(t.dataset.slotdraftdel){delete SLOT_DRAFT[t.dataset.slotdraftdel]; slotsRefresh(); return}
   if(t.dataset.slotm){const row=t.closest('.slotrow'), m=t.dataset.slotm; row.dataset.m=m; row.querySelectorAll('.mb').forEach(b=>b.classList.toggle('on',b===t)); row.querySelector('.su').hidden=(m!=='go'); row.querySelector('.hostnote').hidden=(m!=='host'); row.querySelector('.pgbox').hidden=(m!=='page'); return}
   if(t.dataset.slotload!==undefined){const row=t.closest('.slotrow'), l=row.dataset.l; t.disabled=true; try{const j=await api('slotPage',{letter:l}); const ta=row.querySelector('.sh'); ta.value=j.html||''; ta.dataset.dirty=''; ta.dataset.loaded='1'; pgSize(row); toast('저장된 HTML 을 불러왔어요')}catch(e){toast(e.message||'불러오지 못했어요')} t.disabled=false; return}
   if(t.dataset.slotprev!==undefined){const row=t.closest('.slotrow'), h=row.querySelector('.sh').value; if(!h.trim()){toast('먼저 HTML 을 붙여 넣거나 파일을 올려 주세요');return} try{const u=URL.createObjectURL(new Blob([h],{type:'text/html'})); window.open(u,'_blank','noopener'); setTimeout(()=>URL.revokeObjectURL(u),60000)}catch(e){toast('미리보기를 열지 못했어요')} return}
@@ -1331,7 +1404,7 @@ document.addEventListener('click',async e=>{
     let html; if(m==='page'){ const ta=row.querySelector('.sh'), v=ta.value; if(v.trim()){ if(v.length>400000){toast('HTML 이 너무 커요 (40만 자까지)');return} html=v } else if(!(cur&&cur.m==='page'&&cur.pl)){toast('HTML 을 붙여 넣거나 파일을 올려 주세요');return} else if(ta.dataset.loaded){toast('내용이 비어 있어요');return} }
     t.disabled=true; await slotSave(l,m==='go'?u:'',n,cur?cur.on!==false:true,m==='host'?`주소 칸 ${l} 자체 페이지`:m==='page'?`주소 칸 ${l} 화면 HTML`:undefined,m,html); t.disabled=false; return}
   if(t.dataset.slotsw){const l=t.dataset.slotsw, cur=SL()[l]; if(cur) await slotSave(l,cur.u,cur.n,cur.on===false,`주소 칸 ${l} ${cur.on===false?'연결':'꺼 둠'}`,cur.m); return}
-  if(t.dataset.slotdel){const l=t.dataset.slotdel; if(!await uiConfirm(`${l}.arete929.kr 칸을 비울까요? 이 주소로 들어오면 «연결 안 된 주소» 안내가 나옵니다.`,'비우기')) return; await slotSave(l,'','',true); return}
+  if(t.dataset.slotdel){const l=t.dataset.slotdel; if(!await uiConfirm(`${l}.arete929.kr 주소를 삭제할까요? 붙여 넣은 화면 HTML 코드도 함께 지워지고, 이 주소로 들어오면 «연결 안 된 주소» 안내가 나옵니다.`,'삭제')) return; await slotSave(l,'','',true); return}
   if(t.dataset.sl){const p=t.closest('.pop'); p.querySelectorAll('.lt').forEach(b=>b.classList.toggle('pick',b===t)); const go=p.querySelector('.go'); go.disabled=false; go.dataset.letter=t.dataset.sl; go.textContent=`${t.dataset.sl} 칸에 연결 (${t.dataset.sl}.arete929.kr)`; return}
   if(t.dataset.slotgo){const a=findApp(t.dataset.slotgo), l=t.dataset.letter; if(a&&l){ closePop(); if(await slotSave(l,a.u,a.n,true,`${a.n} → ${l}.arete929.kr`)) toast(`${l}.arete929.kr 에 «${a.n}» 을(를) 연결했어요`) } return}
   if(t.dataset.slotclear){const l=t.dataset.slotclear; closePop(); if(await slotSave(l,'','',true,`주소 칸 ${l} 끊음`)) toast(`${l}.arete929.kr 연결을 끊었어요`); return}
@@ -1369,7 +1442,7 @@ function demoApi(act,d){
   if(!DEMO_STATE){
     const S='https://docs.google.com/spreadsheets/d/demo', F='https://drive.google.com/drive/folders/demo', G='https://script.google.com/d/demo/edit', H='https://github.com/Arete929/gas-apps';
     const mk=(tab,rows)=>rows.map(r=>({n:r[0],u:'https://example.com/'+encodeURIComponent(r[0]),d:'',tab,pub:!!r[1],feed:!!r[1],hidden:false,gas:r[4]===0?'':G,sheet:S,folder:r[2]?F:'',git:r[5]===0?'':H,term:r[3]||'',ver:'',upd:'2026-09-10',kind:'app'}));
-    DEMO_STATE={ok:true,title:'내 앱 지도',cats:['체육수업','평가','담임','출결','학교 업무','개인'],layout:QS.get('v')||'d',slots:{},saved:{share:'2026.11.16 22:41:07',layout:'2026.11.16 22:30:12',app:'',last:'2026.11.16 22:41:07'},sheetUrl:S,apps:[].concat(
+    DEMO_STATE={ok:true,title:'내 앱 지도',cats:['체육수업','평가','담임','출결','학교 업무','개인'],layout:QS.get('v')||'d',slots:(QS.get('slots')==='1'?{a:{u:'https://example.com/apk',n:'전환기보드 앱 설치',m:'go',on:true,at:'2026.11.18 11:14:02'},b:{u:'https://example.com/notion',n:'특성화고 면접 기출 문제 모음',m:'go',on:true,at:'2026.11.18 11:20:40'},d:{u:'',n:'전환기 12월 영화관람',m:'page',on:true,at:'2026.11.19 15:53:21',pl:17350},f:{u:'',n:'',m:'host',on:false,at:'2026.11.17 09:02:11'},vote:{u:'',n:'전환기 투표',m:'page',on:true,at:'2026.11.19 16:10:05',pl:16709}}:{}),saved:{share:'2026.11.16 22:41:07',layout:'2026.11.16 22:30:12',app:'',last:'2026.11.16 22:41:07'},sheetUrl:S,apps:[].concat(
       mk('체육수업',[['스포츠대회 관리 마스터',0,1,'26-1'],['짝순환경기 (명렬표판)',0,0,'26-2'],['방과후 배드민턴 짝순환',0,0,'26-1'],['베이스볼5 경기 시스템',0,0,'26-1'],['빅발리볼 리그전 결과 입력',0,0,'26-2'],['킨볼 통합 관리',0,1,'26-2'],['teammix 모둠 섞기',0,0,'26-1'],['넷볼 훈련 프로그램',0,1,'26-1'],['체육의 날 관리 시스템',0,1,'26-2'],['2학기 스포츠종목 선정',1,0,'26-2']]),
       mk('평가',[['2학년 넷볼 평가',0,0,'26-1'],['수행평가 점수 조회 (3-1)',0,0,'26-1'],['빅발리볼 서브 점수 조회',0,0,'26-2'],['과세특 작성 도우미',1,1,'26-1'],['학부모 설문 조회',0,0,'26-1'],['성적분석',0,1,'26-1']]),
       mk('담임',[['2026 짝꿍 선정',1,0,'26-1'],['주장 추천 시스템',0,0,'26-1'],['학생 출결 관리',0,0,'26-1'],['칭찬쿠폰 관리',0,0,'26-1'],['1인1역할 배정',0,0,'26-1'],['학생 추천투표',0,0,'26-2'],['빅발리볼 모둠 편성',0,0,'26-2']]),
@@ -1389,7 +1462,7 @@ function demoApi(act,d){
     if(act==='edit'){Object.assign(find(d.key),d.data);S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='add'){S.apps.push(Object.assign({pub:false,feed:false,upd:'2026-11-17',kind:'app',ver:''},d.data));S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='move'){find(d.key).tab=d.tab;S.saved.app=S.saved.last=now();return res({ok:true,savedAt:S.saved.app,state:copy()})}
-    if(act==='slotSet'){S.slots=S.slots||{}; const l=String(d.letter||'').toLowerCase(); if(!/^[a-z]$/.test(l)) return res({ok:false,error:'칸은 a 부터 z 까지입니다.'}); if(d.m==='page'){S.pages=S.pages||{}; if(d.html!=null){S.pages[l]=String(d.html)} else if(!(S.slots[l]&&S.slots[l].m==='page')) return res({ok:false,error:'HTML 내용을 붙여 넣어 주세요.'}); S.slots[l]={u:'',n:d.n||'',m:'page',on:d.on!==false,at:now(),pl:(S.pages[l]||'').length}} else if(d.m==='host'){S.slots[l]={u:'',n:d.n||'',m:'host',on:d.on!==false,at:now()}} else if(!d.u){delete S.slots[l]} else if(!/^https:\/\//i.test(d.u)){return res({ok:false,error:'링크는 https:// 로 시작해야 합니다.'})} else {S.slots[l]={u:d.u,n:d.n||'',m:'go',on:d.on!==false,at:now()}} S.saved.slots=S.saved.last=now(); return res({ok:true,savedAt:S.saved.slots,slots:JSON.parse(JSON.stringify(S.slots))})}
+    if(act==='slotSet'){S.slots=S.slots||{}; const l=String(d.letter||'').toLowerCase(); if(!/^[a-z0-9](?:[a-z0-9-]{0,28}[a-z0-9])?$/.test(l)) return res({ok:false,error:'주소 이름은 영문 소문자·숫자·- 만 쓸 수 있어요.'}); if(d.m==='page'){S.pages=S.pages||{}; if(d.html!=null){S.pages[l]=String(d.html)} else if(!(S.slots[l]&&S.slots[l].m==='page')) return res({ok:false,error:'HTML 내용을 붙여 넣어 주세요.'}); S.slots[l]={u:'',n:d.n||'',m:'page',on:d.on!==false,at:now(),pl:(S.pages[l]||'').length}} else if(d.m==='host'){S.slots[l]={u:'',n:d.n||'',m:'host',on:d.on!==false,at:now()}} else if(!d.u){delete S.slots[l]} else if(!/^https:\/\//i.test(d.u)){return res({ok:false,error:'링크는 https:// 로 시작해야 합니다.'})} else {S.slots[l]={u:d.u,n:d.n||'',m:'go',on:d.on!==false,at:now()}} S.saved.slots=S.saved.last=now(); return res({ok:true,savedAt:S.saved.slots,slots:JSON.parse(JSON.stringify(S.slots))})}
     if(act==='slotPage'){return res({ok:true,html:(S.pages&&S.pages[String(d.letter||'')])||''})}
     if(act==='catAdd'){const p=normTab(d.path); if(S.cats.indexOf(p)<0) S.cats.push(p); S.saved.app=S.saved.last=now(); return res({ok:true,savedAt:S.saved.app,state:copy()})}
     if(act==='catRename'){const f=normTab(d.from), t=normTab(d.to), sn=new Set(), l=[]; S.cats.forEach(c=>{const x=catMap(c,f,t); if(!sn.has(x)){sn.add(x);l.push(x)}}); S.apps.forEach(a=>{const x=catMap(a.tab,f,t); if(x!==a.tab){a.tab=x; if(!sn.has(x)){sn.add(x);l.push(x)}}}); S.cats=l; S.saved.app=S.saved.last=now(); return res({ok:true,savedAt:S.saved.app,state:copy()})}
@@ -1407,7 +1480,7 @@ $('#footLine').textContent=`${$('#appTitle').textContent} · ${CFG.version} · $
   if(m){SETUP=decodeURIComponent(m[1]);history.replaceState(null,'',location.pathname+location.search)}
   if(DEMO){
     const g=QS.get('gate'); if(g){main.innerHTML='';gate(g);return}
-    await loadState(); if(QS.get('view')==='list'){VIEW='list';render()} if(QS.get('set')==='1') openSet(); if(QS.get('edit')==='1') openEdit(STATE.apps[13]);
+    await loadState(); if(QS.get('view')==='list'){VIEW='list';render()} if(QS.get('set')==='1') openSet(); if(QS.get('slots')==='1') openSlots(); if(QS.get('edit')==='1') openEdit(STATE.apps[13]);
     return;
   }
   try{TOK=localStorage.getItem('my-tok')||''}catch(e){}
